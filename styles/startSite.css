@@ -1,0 +1,101 @@
+@import url("gameIntroduction.css");  /*import style for dialog game introduction*/
+
+/* Allgemeine Schriftart + Grundlayout */
+* {
+    font-family: 'Cabin', sans-serif;
+    font-weight: bold;
+    /* margin/padding auskommentiert – gut, wenn du manche Elemente bewusst positionierst */
+}
+
+/* verhindert Text-Selektionscursor überall */
+*:hover {
+    cursor: default;
+}
+
+/* Ausnahme für Buttons: Zeiger-Cursor beim Hover */
+button:hover {
+    cursor: pointer;
+}
+
+body {
+    overflow: auto;
+    display: grid;
+    grid-template-columns: 25vw 50vw 25vw;  /* Aufteilung in 3 Spalten */
+    grid-template-rows: 25vh 50vh 25vh;     /* 3 Reihen – obere, mittlere, untere Zone */
+    margin: 0;
+    gap: 0;
+    background-image: url("../images/redGradientBackground.png");  /* Hintergrundgrafik */
+}
+
+/* HEADER – Titel & Credits */
+div#header {
+    align-self: start;       /* oben im Grid platzieren */
+    text-align: center;
+    overflow: hidden;        /* verhindert, dass Text überläuft */
+    grid-column: 1 / -1;     /* über alle 3 Spalten */
+    color: #ECD407;
+    font-size: 5em;
+
+    #gameTitle {
+        margin: 0;
+        -webkit-text-stroke: 0.045em white;  /* weißer Umriss */
+        font-size: 100%;                     /* bezieht sich auf das 5em vom Eltern-Element */
+        font-weight: 900;
+        text-shadow: -0.13em 0.07em black;   /* dicker Schatten für Kontrast */
+    }
+
+    #credits {
+        margin: 0;
+        font-size: 25%;   /* skaliert mit dem 5em => eher klein */
+    }
+}
+
+/* Mittelbereich */
+div#main {
+    overflow: hidden;
+    text-align: center;
+    grid-column: 1 / -1;
+    grid-row: 2;
+}
+
+/* Unteres Menü */
+div#menu {
+    overflow: hidden;
+    text-align: center;
+    grid-column: 1 / -1;
+    grid-row: 3;
+
+    section.menu {
+        font-size: 100%;
+        width: 100%;
+        height: 100%;
+        /* alles in voller Breite/Höhe der Grid-Zelle */
+    }
+
+    button {
+        aspect-ratio: 2.5/1;
+        width: 20%;
+        background-color: #ECD407;
+        border: solid 0.5cqh white;       /* ❗️cqh = container-height unit – bitte check Kompatibilität */
+        border-radius: 15%;
+        font-weight: 800;
+        font-size: 4cqw;                 /* ❗️cqw = container-width unit – modern, aber nicht überall unterstützt */
+    }
+
+    #start {
+        width: 25%;
+        margin-left: 5%;
+        margin-right: 5%;
+        font-size: 6cqw;                /* größerer Start-Button */
+    }
+}
+
+/* Bild (Gruppenbild oder ähnliches) */
+#group {
+    justify-self: center;
+    aspect-ratio: 1/1;
+    width: 25%;
+    max-width: 100cqh;                /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
+    background-image: url("../images/group.png");
+    background-size: contain;         /* Inhalt skalieren, ohne zu beschneiden */
+}
