@@ -1,0 +1,198 @@
+@import url("intro.css");
+
+.checkmark{
+    cursor: pointer;
+}
+
+#gamestart{
+
+    #mainwrapper{
+        grid-column: 1/-1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    h2{
+
+        justify-self: center;
+        align-self: center;
+        text-align: center;
+        font-size: 2.5em;
+        color: white;
+        font-weight: 800;
+        -webkit-text-stroke: 0.05em black;
+        margin:0;
+    }
+
+    #start-settings {
+        border: 0.2em solid white;
+        border-radius: 8%;
+        width: 45%;
+        height: 100%;
+        justify-self: center;
+        /*grid-column: 2;*/
+        /*grid-column: 1/-1;*/
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+
+        h3 {
+            font-size: 1.5em;
+            margin: 0;
+            color: white;
+            font-weight: 800;
+            -webkit-text-stroke: 0.05em black;
+            &.amount::after{
+                padding-left: 0.25em;
+                padding-right: 0.25em;
+                margin-left: 0.25em;
+                content: "4";
+                border: 0.1em solid #6c6c6c;
+                background-color: rgba(159, 155, 155, 0.5);
+            }
+        }
+        button.amount{
+            margin:0;
+            padding: 0;
+            aspect-ratio: 1/1;
+            width: 2cqw;
+        }
+        input[type="range"] {
+            margin: 0;
+            width: 65%;
+            -webkit-appearance: none;
+            background: #ECD407;
+            height: 0.5em;
+            border-radius: 4em;
+            border: 0.08em solid black;
+
+            &::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                height: 2em;
+                width: 2em;
+                background: #ECD407;
+                border-radius: 50%;
+                border: 0.1em solid black;
+                cursor: grab;
+            }
+            &::-webkit-slider-thumb:active{
+                cursor: grabbing;
+            }
+        }
+
+
+    }
+    #special-cards {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-template-rows: auto auto;
+        text-align: center;
+        padding-left: 3em;
+        padding-right: 3em;
+    }
+    .container {
+        padding-left: 2cqw;
+        -webkit-text-stroke: 0.05em black;
+        color: white;
+        font-weight: 850;
+        display: block;
+        position: relative;
+        /*padding-left: 1em;*/
+        margin-top: 0.3cqw;
+        cursor: pointer;
+        font-size: 1.6cqw;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .container input {
+        -webkit-appearance: none;
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+
+    }
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 2cqw;
+        width: 2cqw;
+        background-color: #eee;
+        border: 0.1em solid black;
+
+    }
+    .container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+    .container input:checked ~ .checkmark {
+        /*background-color: #2196F3;*/
+        background-color: #ECD407;
+    }
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    .container input:checked ~ .checkmark:after {
+        display: block;
+    }
+    .container .checkmark:after {
+        left: 0.7cqw;
+        top: 0.3cqw;
+        width: 0.5cqw;
+        height: 1cqw;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+}
+
+input .amount{
+    border: 0.1em solid black;
+}
+
+div#menu-GameStart {
+    overflow: hidden;
+    text-align: center;
+    grid-column: 1 / -1;
+    grid-row: 3;
+
+    section.menu-GameStart {
+        font-size: 100%;
+        width: 100%;
+        height: 100%;
+        /* alles in voller Breite/Höhe der Grid-Zelle */
+    }
+
+    button {
+        aspect-ratio: 2.9/1;
+        width: 20%;
+        background-color: #ECD407;
+        border: solid 0.5cqh white;
+        border-radius: 15%;
+        font-weight: 800;
+        font-size: 2.5cqw;
+        margin: 1em;
+    }
+}
+
+#help-GameStart{
+    position: absolute;
+    aspect-ratio: 2.6/1;
+    width: 10%;
+    background-color: #ECD407;
+    border: solid 0.5cqh white;
+    border-radius: 15%;
+    font-weight: 800;
+    font-size: 2.5cqw;
+    margin: 1em;
+}

@@ -1,0 +1,28 @@
+
+/* Allgemeine Schriftart + Grundlayout */
+* {
+    font-family: 'Cabin', sans-serif;
+    font-weight: bold;
+    /* margin/padding auskommentiert – gut, wenn du manche Elemente bewusst positionierst */
+}
+
+/* verhindert Text-Selektionscursor überall */
+*:hover {
+    cursor: default;
+}
+
+button{
+    box-shadow: 0 0.25em 0 #808080;
+}
+
+/* Ausnahme für Buttons: Zeiger-Cursor beim Hover */
+button:hover {
+    cursor: pointer;
+}
+
+button:active {
+    box-shadow: none;
+    transform: translateY(0.25em);
+    transition: all.1s;
+}
+
