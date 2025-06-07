@@ -12,27 +12,7 @@ body {
 }
 
 /* HEADER – Titel & Credits */
-div#header {
-    align-self: start;       /* oben im Grid platzieren */
-    text-align: center;
-    overflow: hidden;        /* verhindert, dass Text überläuft */
-    grid-column: 1 / -1;     /* über alle 3 Spalten */
-    color: #ECD407;
-    font-size: 5em;
 
-    #gameTitle {
-        margin: 0;
-        -webkit-text-stroke: 0.045em white;  /* weißer Umriss */
-        font-size: 100%;                     /* bezieht sich auf das 5em vom Eltern-Element */
-        font-weight: 900;
-        text-shadow: -0.13em 0.07em black;   /* dicker Schatten für Kontrast */
-    }
-
-    #credits {
-        margin: 0;
-        font-size: 25%;   /* skaliert mit dem 5em => eher klein */
-    }
-}
 
 /* Mittelbereich */
 div#main {

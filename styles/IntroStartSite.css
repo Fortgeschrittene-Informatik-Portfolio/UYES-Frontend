@@ -23,6 +23,9 @@
 #intro5 .speech.startsite {
     font-size: 2.5cqw;
 }
+#intro65 .speech.startsite {
+    font-size: 4.5cqw;
+}
 
 
 
@@ -54,7 +57,7 @@ body:not(:has(#intro4[open])) {
     }
 }
 
-body:not(:has(#intro5[open])) {
+body:not(:has(#intro65[open])) {
     &:has(#intro6[open]) #start {
 
         z-index:102;
