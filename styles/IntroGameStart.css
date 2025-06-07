@@ -41,7 +41,9 @@ button.introduction.gamestart{
 #intro9 .speech.gamestart {
     font-size: 3cqw;
 }
-
+#intro85 .speech.gamestart {
+    font-size: 2.3cqw;
+}
 
 
 body:not(:has(#intro1[open])) {

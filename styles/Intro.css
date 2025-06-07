@@ -85,9 +85,12 @@ button.introduction {
     border: 0.25em solid black;
     box-shadow: none;
 
-    &:active{
+    &:hover{
+        cursor: pointer;
         transform: scale(1.2);
-        transition: all.1s;
+    }
+    &:active{
+        transform: scale(0.8);
     }
     &#NO {
         left: 45%; /* gilt nur für Button mit id="NO" */
@@ -104,30 +107,34 @@ button.introduction {
 
 
 /* Intro-Steuerung: zeigt immer nur ein Dialogfeld gleichzeitig */
-#intro1wrap:has(dialog[open]) + #intro2wrap {
+
+.intro:has(.speech-bubble[open])~.intro{
     display: none;
 }
-#intro2wrap:has(dialog[open]) + #intro3wrap {
-    display: none;
-}
-#intro3wrap:has(dialog[open]) + #intro4wrap {
-    display: none;
-}
-#intro4wrap:has(dialog[open]) + #intro5wrap {
-    display: none;
-}
-#intro5wrap:has(dialog[open]) + #intro6wrap {
-    display: none;
-}
-#intro6wrap:has(dialog[open]) + #intro7wrap {
-    display: none;
-}
-#intro7wrap:has(dialog[open]) + #intro8wrap {
-    display: none;
-}
-#intro8wrap:has(dialog[open]) + #intro9wrap {
-    display: none;
-}
+/*#intro1wrap:has(dialog[open]) + #intro2wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro2wrap:has(dialog[open]) + #intro3wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro3wrap:has(dialog[open]) + #intro4wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro4wrap:has(dialog[open]) + #intro5wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro5wrap:has(dialog[open]) + #intro6wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro6wrap:has(dialog[open]) + #intro7wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro7wrap:has(dialog[open]) + #intro8wrap {*/
+/*    display: none;*/
+/*}*/
+/*#intro8wrap:has(dialog[open]) + #intro9wrap {*/
+/*    display: none;*/
+/*}*/
 
 
 /*if no speech bubble dialog open anymore close intro mode*/
