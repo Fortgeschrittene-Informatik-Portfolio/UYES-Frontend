@@ -1,21 +1,5 @@
-@import url("gameIntroduction.css");  /*import style for dialog game introduction*/
+@import url("intro.css");
 
-/* Allgemeine Schriftart + Grundlayout */
-* {
-    font-family: 'Cabin', sans-serif;
-    font-weight: bold;
-    /* margin/padding auskommentiert – gut, wenn du manche Elemente bewusst positionierst */
-}
-
-/* verhindert Text-Selektionscursor überall */
-*:hover {
-    cursor: default;
-}
-
-/* Ausnahme für Buttons: Zeiger-Cursor beim Hover */
-button:hover {
-    cursor: pointer;
-}
 
 body {
     overflow: auto;
@@ -57,7 +41,6 @@ div#main {
     grid-column: 1 / -1;
     grid-row: 2;
 }
-
 /* Unteres Menü */
 div#menu {
     overflow: hidden;
@@ -75,6 +58,7 @@ div#menu {
     button {
         aspect-ratio: 2.5/1;
         width: 20%;
+
         background-color: #ECD407;
         border: solid 0.5cqh white;       /* ❗️cqh = container-height unit – bitte check Kompatibilität */
         border-radius: 15%;
@@ -98,4 +82,31 @@ div#menu {
     max-width: 100cqh;                /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
     background-image: url("../images/group.png");
     background-size: contain;         /* Inhalt skalieren, ohne zu beschneiden */
+}
+
+@media only screen and (max-width: 600px){
+    #group{
+        width: 100%
+    }
+
+    #menu button {
+        position: relative;
+    }
+
+    div#menu #start {
+        width: 35%;
+    }
+
+    div#menu #help {
+        width: 25%;
+
+        top: 50%;
+    }
+
+    div#menu #about {
+        width: 25%;
+
+        top: 50%;
+    }
+
 }

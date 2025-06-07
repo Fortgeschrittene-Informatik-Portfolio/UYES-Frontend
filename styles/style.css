@@ -1,4 +1,7 @@
-@import url("startSite.css");
-@import url("gameIntroduction.css");
-@import url("sampleCard.css");
+@import url("GeneralStyles.css");
 
+@import url("startSite.css");
+@import url("gameStart.css");
+
+
+@import url("sampleCard.css");
