@@ -1,4 +1,7 @@
-
+/*one card consists out of 3 spans while the outer one
+gets the classes card and the size (big, normal, small) and the color (red, blue, yellow, green or if
+the backside is visible back
+the inner one contains the shown card value as a normal content*/
 .card{
     container-type: inline-size; /*set span as a container to create different relative card sizes */
     display: inline-block; /*makes card a block*/
@@ -8,10 +11,10 @@
     background-color: white;
     padding: 0.08em;
     &.big {
-        width: 3em;
+        width: 8em;
     }
     &.normal {
-        width: 2em;
+        width: 5em;
     }
     &.small{
         width: 1em;
@@ -51,6 +54,8 @@
                 color: transparent; /* not show card number*/
                 -webkit-text-stroke: initial;
                 text-shadow: initial;
+
+
 
                 &:before{   /*add the uno/uyes logo*/
                     position: absolute;
