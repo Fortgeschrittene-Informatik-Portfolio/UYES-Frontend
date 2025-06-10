@@ -1,0 +1,20 @@
+#aboutText {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ecd40a;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+#back-to-main-menu {
+    text-align: center;
+    font-size: 1.2em;
+    height: fit-content;
+    width: fit-content;
+    position: center;
+    
+
+}
