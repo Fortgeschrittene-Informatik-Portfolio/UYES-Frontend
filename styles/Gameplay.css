@@ -1,0 +1,175 @@
+#player-hand-container{
+    grid-row: 3;
+    grid-column: 1/-1;
+    width: 100%;
+    font-size: 1.2em;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+#yourTurn{
+    grid-row: 3;
+    grid-column: 3;
+    /*position:absolute;*/
+    text-align: center;
+    font-size: 2cqw;
+    font-weight: 900;
+    color: #ECD407;
+    -webkit-text-stroke: 0.07cqw white;
+    text-shadow: -0.18cqw 0.2cqw black;
+
+    top: 72%;
+    left: 65%;
+
+    div{
+        align-content: center;
+        justify-self: center;
+        aspect-ratio: 1/1;
+        width: 30%;
+        border: 0.25cqw solid white;
+        font-size: 7cqw;
+    }
+
+}
+
+.card.normal {
+    margin-left: -2em;
+    flex-shrink: 0;
+    transition: all 0.5s;
+
+    &:hover{
+        transform: translateY(-1.6em);
+        z-index: 999;
+
+        +.card{
+            transform: translatex(0.5em);
+        }
+    }
+    &:has(+.card:hover){
+        transform: translatex(-0.5em);
+    }
+
+}
+
+#piles{
+    grid-column: 1/-1;
+    display: flex;
+    flex-wrap: wrap;
+    /*justify-content: center;*/
+    justify-content: center;
+    align-items: center;
+
+    .pile{
+        margin-left: 2em;
+        margin-right: 2em;
+
+
+        h2{
+            text-align: center;
+            font-size: 2cqw;
+            font-weight: 900;
+            color: white;
+            -webkit-text-stroke: 0.07cqw black;
+            margin: 0;
+        }
+
+    }
+}
+
+
+#player-avatars{
+    z-index: -1;
+    align-self: center;
+    position: fixed;
+    width: 90%;
+    left: 5%;
+    height: 100%;
+
+    top: 22%;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15%;
+
+    .row{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+}
+.avatar{
+    border: 0.2cqw solid white;
+    border-radius: 10%;
+    aspect-ratio: 1/1;
+    width: 10%;
+    background-color: rgba(169, 169, 169, 0.5); /* Grauton mit 50% Transparenz */
+    flex-grow: 0;
+    /*display: flex;*/
+    .cardHands{
+        position: relative;
+        top: 20%;
+
+        display: flex;
+        flex-direction: column;
+        .avatar-row{
+            .cardsleft{
+                color: white;
+                -webkit-text-stroke: 0.07cqw black;
+                margin: 0;
+            }
+
+            display:flex;
+            justify-content: center;
+        }
+        .card{
+
+            width: 25%;
+        }
+    }
+
+}
+
+#player1, #player2{
+    .cardHands{
+        left: 105%;
+    }
+}
+#player3, #player4{
+    .cardHands{
+        right: 105%;
+    }
+}
+
+#player2{
+    border: 0.8cqw solid #c8ac22;
+    background-color: rgba(149, 145, 4, 0.5);
+
+    background-image: url("../images/dragonavatar.png");
+    background-size: contain;
+}
+#player1{
+    background-image: url("../images/pirateavatar.png");
+    background-size: contain;
+}
+#player3{
+    background-image: url("../images/elfavatar.png");
+    background-size: contain;
+}
+
+#own-avatar{
+
+    border: 0.2cqw solid white;
+    border-radius: 10%;
+    aspect-ratio: 1/1;
+    width: 10%;
+    position: fixed;
+    background-image: url("../images/boyavatar.png");
+    background-size: contain;
+    top: 78%;
+    left: 19%;
+
+}
