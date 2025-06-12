@@ -150,6 +150,7 @@
 
     background-image: url("../images/dragonavatar.png");
     background-size: contain;
+
 }
 #player1{
     background-image: url("../images/pirateavatar.png");
@@ -172,4 +173,27 @@
     top: 78%;
     left: 19%;
 
+}
+
+body#gameplay2 #player2{
+    border: 0.2cqw solid white;
+
+    &:after {
+        content: "UYES!";
+        position: absolute;
+        top: -8%;
+        left: 13%;
+        font-size: 3cqw;
+        color: white;
+        -webkit-text-stroke: 0.07cqw black;
+        background-color: rgba(149, 145, 4, 0.5);
+        border: 0.25cqw solid black;
+        border-radius: 25% 25% 25% 0;
+    }
+}
+
+body#gameplay2 #player3{
+
+    border: 0.8cqw solid #c8ac22;
+    background-color: rgba(149, 145, 4, 0.5);
 }
