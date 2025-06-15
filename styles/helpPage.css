@@ -135,3 +135,14 @@ body.help-page-body {
     margin-top: -130px;   /* Move up */
     margin-left: 20px;   /* Move right */
 }
+
+#help-language{
+    float: right;
+    margin-right: 175px;
+}
+
+#help-language-dropdown{
+    background-color: #ECD407;
+    border-radius: 10px;
+
+}
