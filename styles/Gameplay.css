@@ -150,6 +150,7 @@
 
     background-image: url("../images/dragonavatar.png");
     background-size: contain;
+
 }
 #player1{
     background-image: url("../images/pirateavatar.png");
@@ -185,8 +186,8 @@ body#gameplay2 #player2{
         font-size: 3cqw;
         color: white;
         -webkit-text-stroke: 0.07cqw black;
-        background-color:   #c8ac22;
-        border: 0.25cqw solid #ffffff;
+        background-color: rgba(149, 145, 4, 0.5);
+        border: 0.25cqw solid black;
         border-radius: 25% 25% 25% 0;
     }
 }
@@ -195,5 +196,4 @@ body#gameplay2 #player3{
 
     border: 0.8cqw solid #c8ac22;
     background-color: rgba(149, 145, 4, 0.5);
-
 }

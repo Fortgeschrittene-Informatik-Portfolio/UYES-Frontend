@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UYES Help Page</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="/images/logo.png" type="image.png">
+</head>
+<body class="help-page-body">
+
+<div class="help-rules-container">
+    <details class="help-collapsible-section" open>
+        <summary class="help-section-header">
+            <h2>UYES! Rules <span class="help-arrow-icon">></span></h2>
+        </summary>
+        <div class="help-section-content">
+            <ul>
+                <li>Each player gets 7 cards.</li>
+                <li>The rest goes into a draw pile; one card is turned over to start the discard pile.</li>
+                <li>You can play a card if it matches the same color or number.</li>
+                <li>Special cards:
+                    <ul>
+                        <li><strong>+2</strong>: Next player draws 2 cards and skips a turn</li>
+                        <li><strong>Skip</strong>: Next player is skipped</li>
+                        <li><strong>Reverse</strong>: Reverses the direction of play</li>
+                        <li><strong>Wild</strong>: Player chooses the next color</li>
+                        <li><strong>+4 Wild</strong>: Like Wild, but next player draws 4 cards</li>
+                    </ul>
+                </li>
+                <li>Say "UYES!" when you only have 1 card left!</li>
+                <li>The first player to get rid of all their cards wins.</li>
+            </ul>
+        </div>
+    </details>
+
+    <details class="help-collapsible-section">
+        <summary class="help-section-header">
+            <h2>Volume and Language Settings<span class="help-arrow-icon">></span></h2>
+        </summary>
+        <div class="help-section-content">
+            <div id="help-volume">
+                <h3 class="help-amount">Volume:</h3>
+                <button class="help-reduce-volume">-</button>
+                <input type="range" min="-3" max="3" step="1.0" value="0">
+                <button class="help-increase-volume">+</button>
+            </div>
+            <br>
+            <div id="help-language">
+                <label class="help-language">Language:</label>
+                <select name="language" id="help-language-dropdown">>
+
+
+                    <option value="English">English</option>
+
+
+                    <option value="German">German</option>
+
+                </select>
+            </div>
+
+
+        </div>
+    </details>
+
+    <details class="help-collapsible-section">
+        <summary class="help-section-header">
+            <h2>Troubleshooting<span class="help-arrow-icon">></span></h2>
+        </summary>
+        <div class="help-section-content">
+            <strong>Having problems while playing?</strong>
+            <ul>Check your internet connection</ul>
+            <ul>Refresh the website/app</ul>
+            <ul>Make sure your device is updated to the latest Android/iOS/Windows version</ul>
+        </div>
+    </details>
+</div>
+
+<div id="header">
+    <section>
+        <h1 id="gameTitle">UYES!</h1>
+        <p id="credits">by Andrii, Bilal, Daria , Simon, Srisharanya</p>
+    </section>
+</div>
+
+<button class="help-go-back-button">Go back!</button>
+
+</body>
+</html>
