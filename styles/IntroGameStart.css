@@ -94,3 +94,47 @@ body:not(:has(#intro7[open])) {
 }
 
 
+@media only screen and (max-width: 600px){
+    #eichberg.gamestart {
+        width: 50%;
+        position: absolute;
+        top: 10%;
+        left: -30%;
+    }
+    .speech-bubble.gamestart{
+        top: 8vw;
+        left: 50vw;
+        width: 30vw;
+    }
+    .speech.gamestart{
+        font-size: 4.3cqw;
+    }
+    button.introduction.gamestart{
+        left: 53%;
+        top: 76%;
+        width: 17cqw;
+        font-size: 3.6cqw;
+    }
+    /* Schriftgröße für bestimmte Intros */
+    #intro2 .speech.gamestart {
+        font-size: 4.8cqw;
+    }
+    #intro3 .speech.gamestart {
+        font-size: 4.8cqw;
+    }
+    #intro7 .speech.gamestart {
+        font-size: 3.9cqw;
+    }
+    #intro8 .speech.gamestart{
+        font-size: 4.1cqw;
+    }
+    #intro85 .speech.gamestart{
+        font-size: 5.5cqw;
+    }
+    #intro9 .speech.gamestart{
+        font-size: 6cqw;
+    }
+
+}
+
+
