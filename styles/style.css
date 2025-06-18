@@ -1,7 +1,12 @@
 @import url("GeneralStyles.css");
 
 @import url("startSite.css");
+
 @import url("chooseLobby.css");
+@import url("createGame.css");
+@import url("joinLobby.css");
+
+
 @import url("createGame.css");
 @import url("Gameplay.css");
 
