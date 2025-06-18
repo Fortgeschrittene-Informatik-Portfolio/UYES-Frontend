@@ -24,7 +24,7 @@ body#chooseLobby{
                 width: 20%;
                 font-weight: 800;
                 font-size: 4cqw;
-                background-color: #ECD407;
+                background-color: var(--primary-yellow) ;
                 border: solid 0.5cqh white;
             }
         }

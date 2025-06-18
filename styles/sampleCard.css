@@ -55,7 +55,7 @@ the inner one contains the shown card value as a normal content*/
             background-color: black;
 
             > span {
-                background-color: #D72600;
+                background-color: var(--primary-red) ;
                 color: transparent; /* not show card number*/
                 -webkit-text-stroke: initial;
                 text-shadow: initial;
@@ -65,7 +65,7 @@ the inner one contains the shown card value as a normal content*/
                     position: absolute;
                     content: "UYES";
                     transform: rotate(-40deg);
-                    color: #ECD407;
+                    color: var(--primary-yellow) ;
                     -webkit-text-stroke: 0.045em white; /*white outline of logo text*/
                     font-size: 0.85em;
                     text-shadow: -0.13em 0.1em black;
@@ -77,19 +77,21 @@ the inner one contains the shown card value as a normal content*/
 }
 
 .red > span {
-    background-color: #D72600;
+    background-color: var(--primary-red);
 }
 
 .yellow > span {
-    background-color: #ECD407;
+    background-color: var(--primary-yellow)
+;
 }
 
 .blue > span {
-    background-color: #0956BF;
+    background-color: var(--primary-blue)
+;
 }
 
 .green > span {
-    background-color: #379711;
+    background-color: var(--primary-green);
 }
 
 
