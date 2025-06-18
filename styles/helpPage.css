@@ -132,16 +132,16 @@ body.help-page-body {
     font-weight: 800;
     font-size: 2.5cqw;
     margin: 0;
-    margin-top: -130px;   /* Move up */
-    margin-left: 20px;   /* Move right */
+    margin-top: -130px; /* Move up */
+    margin-left: 20px; /* Move right */
 }
 
-#help-language{
+#help-language {
     float: right;
     margin-right: 175px;
 }
 
-#help-language-dropdown{
+#help-language-dropdown {
     background-color: #ECD407;
     border-radius: 10px;
 

@@ -6,7 +6,7 @@
 body:has(dialog[open]) {
     #milch-glas-layer {
         background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);  /* erzeugt den "Milchglas"-Effekt */
+        backdrop-filter: blur(10px); /* erzeugt den "Milchglas"-Effekt */
         z-index: 100;
         width: 100%;
         height: 100%;
@@ -25,9 +25,9 @@ body:has(dialog[open]) {
 
 
 /*Eichbergdialog feld*/
-#eichberg{
-    z-index: 101;  /* muss über milch-glas-layer liegen */
-    aspect-ratio: 1/1;  /* saubere quadratische Form */
+#eichberg {
+    z-index: 101; /* muss über milch-glas-layer liegen */
+    aspect-ratio: 1/1; /* saubere quadratische Form */
 
     background-color: transparent;
     border: none;
@@ -38,8 +38,8 @@ body:has(dialog[open]) {
 
 /* Stil der Dialogblasen */
 .speech-bubble {
-    -webkit-filter: blur(0);  /* redundant */
-    filter: blur(0);          /* redundant */
+    -webkit-filter: blur(0); /* redundant */
+    filter: blur(0); /* redundant */
     opacity: 1;
     pointer-events: auto;
     z-index: 1000;
@@ -85,13 +85,15 @@ button.introduction {
     border: 0.25em solid black;
     box-shadow: none;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         transform: scale(1.2);
     }
-    &:active{
+
+    &:active {
         transform: scale(0.8);
     }
+
     &#NO {
         left: 45%; /* gilt nur für Button mit id="NO" */
     }
@@ -102,15 +104,16 @@ button.introduction {
 /* Text in der Sprechblase */
 .speech {
     margin: 0;
-    font-size: 3cqw;  /* responsive */
+    font-size: 3cqw; /* responsive */
 }
 
 
 /* Intro-Steuerung: zeigt immer nur ein Dialogfeld gleichzeitig */
 
-.intro:has(.speech-bubble[open])~.intro{
+.intro:has(.speech-bubble[open]) ~ .intro {
     display: none;
 }
+
 /*#intro1wrap:has(dialog[open]) + #intro2wrap {*/
 /*    display: none;*/
 /*}*/
@@ -165,9 +168,9 @@ body:not(:has(.speech-bubble[open])) #milch-glas-layer {
 }
 
 
-@media only screen and (max-width: 600px){
-    button.introduction#NO{
-        left:5%
+@media only screen and (max-width: 600px) {
+    button.introduction#NO {
+        left: 5%
     }
 
 }

@@ -1,4 +1,3 @@
-
 /* Stil des zentralen Dialogs ("eichberg-figur") */
 #eichberg.startsite {
     width: 35%;
@@ -7,7 +6,7 @@
 }
 
 /* Seitenspezifisches design/größe der sprechblase*/
-.speech-bubble.startsite{
+.speech-bubble.startsite {
     width: 35vw;
     min-height: 10em;
     /*height: 20vw;*/
@@ -20,16 +19,17 @@
 #intro4 .speech.startsite {
     font-size: 2.5cqw;
 }
+
 #intro5 .speech.startsite {
     font-size: 2.5cqw;
 }
+
 #intro65 .speech.startsite {
     font-size: 4.5cqw;
 }
 
 
-
-button.introduction.startsite{
+button.introduction.startsite {
     position: absolute;
     left: 75%;
     top: 80%;
@@ -38,11 +38,10 @@ button.introduction.startsite{
 }
 
 
-
 body:not(:has(#intro3[open])) {
     &:has(#intro4[open]) #about {
 
-        z-index:102;
+        z-index: 102;
         pointer-events: none;
         position: relative;
     }
@@ -51,7 +50,7 @@ body:not(:has(#intro3[open])) {
 body:not(:has(#intro4[open])) {
     &:has(#intro5[open]) #help {
 
-        z-index:102;
+        z-index: 102;
         pointer-events: none;
         position: relative;
     }
@@ -60,44 +59,51 @@ body:not(:has(#intro4[open])) {
 body:not(:has(#intro65[open])) {
     &:has(#intro6[open]) #start {
 
-        z-index:102;
+        z-index: 102;
         pointer-events: none;
         position: relative;
     }
 }
 
 
-@media only screen and (max-width: 600px){
+@media only screen and (max-width: 600px) {
     #eichberg.startsite {
         width: 50%;
         position: absolute;
         top: 40%;
         right: 40%;
     }
-    .speech-bubble.startsite{
+
+    .speech-bubble.startsite {
         top: 65vw;
         left: 50vw;
         width: 35vw;
     }
-    .speech.startsite{
+
+    .speech.startsite {
         font-size: 4.3cqw;
     }
-    button.introduction.startsite{
+
+    button.introduction.startsite {
         left: 53%;
         top: 76%;
         width: 17cqw;
         font-size: 3.6cqw;
     }
+
     /* Schriftgröße für bestimmte Intros */
     #intro2 .speech.startsite {
         font-size: 4.5cqw;
     }
+
     #intro3 .speech.startsite {
         font-size: 4.1cqw;
     }
+
     #intro4 .speech.startsite {
         font-size: 3.4cqw;
     }
+
     #intro5 .speech.startsite {
         font-size: 3.2cqw;
     }

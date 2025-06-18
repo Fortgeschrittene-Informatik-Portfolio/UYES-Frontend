@@ -1,4 +1,3 @@
-
 /* Allgemeine Schriftart + Grundlayout */
 * {
     font-family: 'Cabin', sans-serif;
@@ -11,7 +10,7 @@
     cursor: default;
 }
 
-button{
+button {
     box-shadow: 0 0.25em 0 #808080;
 }
 
@@ -23,54 +22,55 @@ button:hover {
 button:active {
     box-shadow: none;
     transform: translateY(0.25em);
-    transition: all.1s;
+    transition: all .1s;
 }
 
 div#header {
-    align-self: start;       /* oben im Grid platzieren */
+    align-self: start; /* oben im Grid platzieren */
     text-align: center;
-    overflow: hidden;        /* verhindert, dass Text überläuft */
-    grid-column: 1 / -1;     /* über alle 3 Spalten */
+    overflow: hidden; /* verhindert, dass Text überläuft */
+    grid-column: 1 / -1; /* über alle 3 Spalten */
     color: #ECD407;
     font-size: 5em;
 
     #gameTitle {
         margin: 0;
-        -webkit-text-stroke: 0.045em white;  /* weißer Umriss */
-        font-size: 100%;                     /* bezieht sich auf das 5em vom Eltern-Element */
+        -webkit-text-stroke: 0.045em white; /* weißer Umriss */
+        font-size: 100%; /* bezieht sich auf das 5em vom Eltern-Element */
         font-weight: 900;
-        text-shadow: -0.13em 0.07em black;   /* dicker Schatten für Kontrast */
+        text-shadow: -0.13em 0.07em black; /* dicker Schatten für Kontrast */
     }
 
     #credits {
         margin: 0;
-        font-size: 25%;   /* skaliert mit dem 5em => eher klein */
+        font-size: 25%; /* skaliert mit dem 5em => eher klein */
     }
 }
 
-#eichberg2{
+#eichberg2 {
     position: absolute;
     width: 8%;
     left: 90%;
     margin: 1%;
 
 
-    aspect-ratio: 1/1;  /* saubere quadratische Form */
+    aspect-ratio: 1/1; /* saubere quadratische Form */
     background-color: transparent;
     border: none;
     background-image: url("../images/UnoEichberg.png");
     background-size: contain;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         transform: scale(1.2);
     }
-    &:active{
+
+    &:active {
         transform: scale(0.8);
     }
 }
 
-body:has(.speech-bubble[open]) #eichberg2{
+body:has(.speech-bubble[open]) #eichberg2 {
     display: none;
 }
 

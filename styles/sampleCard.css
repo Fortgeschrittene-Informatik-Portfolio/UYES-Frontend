@@ -2,28 +2,32 @@
 gets the classes card and the size (big, normal, small) and the color (red, blue, yellow, green or if
 the backside is visible back
 the inner one contains the shown card value as a normal content*/
-.card{
+.card {
     container-type: inline-size; /*set span as a container to create different relative card sizes */
     display: inline-block; /*makes card a block*/
     aspect-ratio: 62/88; /*fixed card like aspect ratio*/
-    border-radius: 8%;     /*rounded corners cards*/
+    border-radius: 8%; /*rounded corners cards*/
     border: solid 0.06ex black;
     background-color: white;
     padding: 0.08em;
+
     &.big {
         width: 8em;
     }
+
     &.normal {
         width: 5em;
     }
-    &.small{
+
+    &.small {
         width: 1em;
     }
+
     * {
         font-size: 45cqw; /*font set as relative to container size(=card size)*/
     }
 
-    > span{ /*area on card with the color*/
+    > span { /*area on card with the color*/
         padding: 0;
         display: flex;
         width: 100%;
@@ -32,7 +36,7 @@ the inner one contains the shown card value as a normal content*/
         justify-content: center;
         align-items: center;
 
-        > span{ /*area with the oval and the number*/
+        > span { /*area with the oval and the number*/
             background-color: white;
             display: flex;
             width: 150%;
@@ -45,19 +49,19 @@ the inner one contains the shown card value as a normal content*/
         }
     }
 
-    &.back{ /*backside of the cards*/
-        > span{
+    &.back { /*backside of the cards*/
+
+        > span {
             background-color: black;
 
-            > span{
+            > span {
                 background-color: #D72600;
                 color: transparent; /* not show card number*/
                 -webkit-text-stroke: initial;
                 text-shadow: initial;
 
 
-
-                &:before{   /*add the uno/uyes logo*/
+                &:before { /*add the uno/uyes logo*/
                     position: absolute;
                     content: "UYES";
                     transform: rotate(-40deg);
@@ -72,16 +76,19 @@ the inner one contains the shown card value as a normal content*/
     }
 }
 
-.red > span{
+.red > span {
     background-color: #D72600;
 }
-.yellow > span{
+
+.yellow > span {
     background-color: #ECD407;
 }
-.blue > span{
+
+.blue > span {
     background-color: #0956BF;
 }
-.green > span{
+
+.green > span {
     background-color: #379711;
 }
 
