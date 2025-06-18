@@ -4,11 +4,11 @@
 body {
     overflow: auto;
     display: grid;
-    grid-template-columns: 25vw 50vw 25vw;  /* Aufteilung in 3 Spalten */
-    grid-template-rows: 25vh 50vh 25vh;     /* 3 Reihen – obere, mittlere, untere Zone */
+    grid-template-columns: 25vw 50vw 25vw; /* Aufteilung in 3 Spalten */
+    grid-template-rows: 25vh 50vh 25vh; /* 3 Reihen – obere, mittlere, untere Zone */
     margin: 0;
     gap: 0;
-    background-image: url("../images/redGradientBackground.png");  /* Hintergrundgrafik */
+    background-image: url("../images/redGradientBackground.png"); /* Hintergrundgrafik */
 }
 
 /* HEADER – Titel & Credits */
@@ -21,6 +21,7 @@ div#main {
     grid-column: 1 / -1;
     grid-row: 2;
 }
+
 /* Unteres Menü */
 div#menu {
     overflow: hidden;
@@ -40,17 +41,17 @@ div#menu {
         width: 20%;
 
         background-color: #ECD407;
-        border: solid 0.5cqh white;       /* ❗️cqh = container-height unit – bitte check Kompatibilität */
+        border: solid 0.5cqh white; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
         border-radius: 15%;
         font-weight: 800;
-        font-size: 4cqw;                 /* ❗️cqw = container-width unit – modern, aber nicht überall unterstützt */
+        font-size: 4cqw; /* ❗️cqw = container-width unit – modern, aber nicht überall unterstützt */
     }
 
     #start {
         width: 25%;
         margin-left: 5%;
         margin-right: 5%;
-        font-size: 6cqw;                /* größerer Start-Button */
+        font-size: 6cqw; /* größerer Start-Button */
     }
 }
 
@@ -59,13 +60,13 @@ div#menu {
     justify-self: center;
     aspect-ratio: 1/1;
     width: 25%;
-    max-width: 100cqh;                /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
+    max-width: 100cqh; /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
     background-image: url("../images/group.png");
-    background-size: contain;         /* Inhalt skalieren, ohne zu beschneiden */
+    background-size: contain; /* Inhalt skalieren, ohne zu beschneiden */
 }
 
-@media only screen and (max-width: 600px){
-    #group{
+@media only screen and (max-width: 600px) {
+    #group {
         width: 100%
     }
 
@@ -88,9 +89,10 @@ div#menu {
 
         top: 50%;
     }
-    #eichberg2{
-        top:85%;
-        left:36%;
+
+    #eichberg2 {
+        top: 85%;
+        left: 36%;
         width: 25%;
     }
 }

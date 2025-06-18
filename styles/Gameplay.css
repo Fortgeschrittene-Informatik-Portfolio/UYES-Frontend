@@ -1,19 +1,19 @@
-#UYES{
+#UYES {
     position: absolute;
     aspect-ratio: 2.5/1;
     width: 10%;
     pointer-events: none;
-    top:85%;
+    top: 85%;
     left: 70%;
     background-color: #676767;
-    border: solid 0.5cqh #3a3a3a;       /* ❗️cqh = container-height unit – bitte check Kompatibilität */
+    border: solid 0.5cqh #3a3a3a; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
     border-radius: 15%;
     font-weight: 800;
     font-size: 2cqw;
 
 }
 
-#player-hand-container{
+#player-hand-container {
     grid-row: 3;
     grid-column: 1/-1;
     width: 100%;
@@ -25,7 +25,7 @@
 
 }
 
-#yourTurn{
+#yourTurn {
     grid-row: 3;
     grid-column: 3;
     /*position:absolute;*/
@@ -39,7 +39,7 @@
     top: 72%;
     left: 65%;
 
-    div{
+    div {
         align-content: center;
         justify-self: center;
         aspect-ratio: 1/1;
@@ -55,21 +55,22 @@
     flex-shrink: 0;
     transition: all 0.5s;
 
-    &:hover{
+    &:hover {
         transform: translateY(-1.6em);
         z-index: 999;
 
-        +.card{
+        + .card {
             transform: translatex(0.5em);
         }
     }
-    &:has(+.card:hover){
+
+    &:has(+.card:hover) {
         transform: translatex(-0.5em);
     }
 
 }
 
-#piles{
+#piles {
     grid-column: 1/-1;
     display: flex;
     flex-wrap: wrap;
@@ -77,12 +78,12 @@
     justify-content: center;
     align-items: center;
 
-    .pile{
+    .pile {
         margin-left: 2em;
         margin-right: 2em;
 
 
-        h2{
+        h2 {
             text-align: center;
             font-size: 2cqw;
             font-weight: 900;
@@ -95,7 +96,7 @@
 }
 
 
-#player-avatars{
+#player-avatars {
     z-index: -1;
     align-self: center;
     position: fixed;
@@ -109,14 +110,15 @@
     flex-direction: column;
     gap: 15%;
 
-    .row{
+    .row {
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
 
 }
-.avatar{
+
+.avatar {
     border: 0.2cqw solid white;
     border-radius: 10%;
     aspect-ratio: 1/1;
@@ -124,23 +126,26 @@
     background-color: rgba(169, 169, 169, 0.5); /* Grauton mit 50% Transparenz */
     flex-grow: 0;
     /*display: flex;*/
-    .cardHands{
+
+    .cardHands {
         position: relative;
         top: 20%;
 
         display: flex;
         flex-direction: column;
-        .avatar-row{
-            .cardsleft{
+
+        .avatar-row {
+            .cardsleft {
                 color: white;
                 -webkit-text-stroke: 0.07cqw black;
                 margin: 0;
             }
 
-            display:flex;
+            display: flex;
             justify-content: center;
         }
-        .card{
+
+        .card {
 
             width: 25%;
         }
@@ -148,18 +153,19 @@
 
 }
 
-#player1, #player2{
-    .cardHands{
+#player1, #player2 {
+    .cardHands {
         left: 105%;
     }
 }
-#player3, #player4{
-    .cardHands{
+
+#player3, #player4 {
+    .cardHands {
         right: 105%;
     }
 }
 
-#player2{
+#player2 {
     border: 0.8cqw solid #c8ac22;
     background-color: rgba(149, 145, 4, 0.5);
 
@@ -167,16 +173,18 @@
     background-size: contain;
 
 }
-#player1{
+
+#player1 {
     background-image: url("../images/pirateavatar.png");
     background-size: contain;
 }
-#player3{
+
+#player3 {
     background-image: url("../images/elfavatar.png");
     background-size: contain;
 }
 
-#own-avatar{
+#own-avatar {
 
     border: 0.2cqw solid white;
     border-radius: 10%;
@@ -190,8 +198,8 @@
 
 }
 
-body#gameplay2{
-    #player2{
+body#gameplay2 {
+    #player2 {
         border: 0.2cqw solid white;
 
         &:after {
@@ -205,18 +213,18 @@ body#gameplay2{
             background-color: #D72600;
             border: 0.5cqw solid #c8ac22;
             border-radius: 25% 25% 25% 0;
-            }
         }
+    }
 
-   #player3{
+    #player3 {
 
         border: 0.8cqw solid #c8ac22;
         background-color: rgba(149, 145, 4, 0.5);
     }
 }
 
-body#gameplay3{
-    #player2{
+body#gameplay3 {
+    #player2 {
         border: 0.2cqw solid white;
 
         &:after {
@@ -232,29 +240,33 @@ body#gameplay3{
             border-radius: 25% 25% 25% 0;
         }
     }
-    #own-avatar{
+
+    #own-avatar {
         border: 0.8cqw solid #c8ac22;
         background-color: rgba(149, 145, 4, 0.5);
     }
-    .card.normal{
-        *:hover{
+
+    .card.normal {
+        *:hover {
             cursor: grab;
         }
-        *:active{
+
+        *:active {
             cursor: grabbing;
         }
 
     }
-    #UYES{
+
+    #UYES {
         pointer-events: initial;
         background-color: #ECD407;
         border: solid 0.5cqh white;
     }
 }
 
-body#gameplay4{
+body#gameplay4 {
 
-    #winner{
+    #winner {
         position: absolute;
         z-index: 101;
         border-radius: 10%;
@@ -269,7 +281,7 @@ body#gameplay4{
         background-image: url("../images/dragonavatar.png");
         background-size: contain;
 
-        &:after{
+        &:after {
             content: " has won the game!";
             color: white;
             -webkit-text-stroke: 0.25cqw black;
@@ -280,15 +292,17 @@ body#gameplay4{
 
         }
     }
-    #milchglas2{
+
+    #milchglas2 {
         position: fixed;
         background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);  /* erzeugt den "Milchglas"-Effekt */
+        backdrop-filter: blur(10px); /* erzeugt den "Milchglas"-Effekt */
         z-index: 100;
         width: 100%;
         height: 100%;
     }
-    #ending-buttons{
+
+    #ending-buttons {
         position: absolute;
         z-index: 101;
         display: flex;
@@ -298,7 +312,7 @@ body#gameplay4{
         align-items: center;
         bottom: 0;
 
-        .ending{
+        .ending {
             flex-grow: 0;
 
 
@@ -306,7 +320,7 @@ body#gameplay4{
             width: 20%;
 
             background-color: #ECD407;
-            border: solid 0.5cqh white;       /* ❗️cqh = container-height unit – bitte check Kompatibilität */
+            border: solid 0.5cqh white; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
             border-radius: 15%;
             font-weight: 800;
             font-size: 4cqw;
