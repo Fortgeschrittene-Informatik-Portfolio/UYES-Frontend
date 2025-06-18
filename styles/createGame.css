@@ -4,9 +4,9 @@
     cursor: pointer;
 }
 
-#gamestart {
+#createGame {
 
-    #mainwrapper {
+    #mainWrapper {
         grid-column: 1/-1;
         display: flex;
         flex-direction: column;
@@ -172,13 +172,13 @@ input .amount {
     border: 0.1em solid black;
 }
 
-div#menu-GameStart {
+div#menu-createGame {
     overflow: hidden;
     text-align: center;
     grid-column: 1 / -1;
     grid-row: 3;
 
-    section.menu-GameStart {
+    section.menu-createGame {
         font-size: 100%;
         width: 100%;
         height: 100%;
@@ -197,7 +197,7 @@ div#menu-GameStart {
     }
 }
 
-#help-GameStart {
+#help-createGame {
     position: absolute;
     aspect-ratio: 2.6/1;
     width: 10%;
@@ -210,7 +210,7 @@ div#menu-GameStart {
 }
 
 @media only screen and (max-width: 600px) {
-    #gamestart {
+    #createGame {
         #start-settings {
             width: 80%;
 
@@ -221,8 +221,8 @@ div#menu-GameStart {
         }
     }
 
-    div#menu-GameStart {
-        section.menu-GameStart {
+    div#menu-createGame {
+        section.menu-createGame {
             height: 140%;
             /* alles in voller Breite/Höhe der Grid-Zelle */
         }
@@ -233,7 +233,7 @@ div#menu-GameStart {
         }
     }
 
-    #help-GameStart {
+    #help-createGame {
         position: absolute;
         width: 30%;
         font-size: 5cqw;
