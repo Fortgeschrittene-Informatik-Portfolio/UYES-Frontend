@@ -1,4 +1,3 @@
-@import url("intro.css");
 
 .checkmark {
     cursor: pointer;
@@ -56,10 +55,15 @@
         }
 
         button.amount {
-            margin: 0;
-            padding: 0;
+            padding: initial;
+            box-shadow: initial;
+            background-color: white;
+            border: black;
+            font-weight: 800;
+            margin: initial;
             aspect-ratio: 1/1;
-            width: 2cqw;
+            text-align: center;
+            width: 7%;
         }
 
         input[type="range"] {
@@ -177,37 +181,20 @@ div#menu-createGame {
     text-align: center;
     grid-column: 1 / -1;
     grid-row: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    section.menu-createGame {
-        font-size: 100%;
-        width: 100%;
-        height: 100%;
-        /* alles in voller Breite/Höhe der Grid-Zelle */
-    }
 
-    button {
-        aspect-ratio: 2.9/1;
-        width: 20%;
-        background-color: var(--primary-yellow) ;
-        border: solid 0.5cqh white;
-        border-radius: 15%;
-        font-weight: 800;
-        font-size: 2.5cqw;
-        margin: 1em;
+
+    #continue-createGame {
+        aspect-ratio: 2.6/1;
+        width: 25%;
+        font-size: 5cqw;
     }
 }
 
-#help-createGame {
-    position: absolute;
-    aspect-ratio: 2.6/1;
-    width: 10%;
-    background-color: var(--primary-yellow) ;
-    border: solid 0.5cqh white;
-    border-radius: 15%;
-    font-weight: 800;
-    font-size: 2.5cqw;
-    margin: 1em;
-}
+
 
 @media only screen and (max-width: 600px) {
     #createGame {

@@ -1,6 +1,6 @@
-@import url("IntroStartSite.css");
-@import url("IntroCreateGame.css");
-@import url("IntrochooseLobby.css");
+@import url("introStartSite.css");
+@import url("introCreateGame.css");
+@import url("introChooseLobby.css");
 
 
 /*Generelles Css für Intro*/
@@ -80,12 +80,16 @@ body:has(dialog[open]) {
 }
 
 /* Positionierung des Buttons auf dem dialogfeld */
-button.introduction {
+button.introduction, .button.introduction {
     background: var(--secondary-yellow);
     aspect-ratio: 5/2.5;
     border-radius: 1em;
     border: 0.25em solid black;
     box-shadow: none;
+
+    font-weight: 800;
+    font-size: 2.5cqw;
+    margin: initial;
 
     &:hover {
         cursor: pointer;

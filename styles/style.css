@@ -1,4 +1,5 @@
-@import url("GeneralStyles.css");
+@import url("generalStyles.css");
+@import url("intro.css");
 
 @import url("startSite.css");
 
@@ -8,9 +9,9 @@
 
 
 @import url("createGame.css");
-@import url("Gameplay.css");
+@import url("gameplay.css");
 
 @import url("sampleCard.css");
 
 @import url("helpPage.css");
-@import url("AboutPage.css");
+@import url("aboutPage.css");

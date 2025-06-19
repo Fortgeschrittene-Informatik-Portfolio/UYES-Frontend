@@ -13,12 +13,13 @@
         <p id="credits">by Andrii, Bilal, Daria , Simon, Srisharanya</p>
     </section>
 </div>
-<button id="help-chooseLobby">BACK</button>
+<a href="./chooseLobby.html" class="button backButtonTop" role="button">BACK</a>
 <a id="eichberg2" href="chooseLobby.html">
 </a>
 
 <main>
-    <form action="action_page.php" method="post">
+    <form  method="post">
+        <label for="gameCodeInput"></label>
         <input id="gameCodeInput" type="text" placeholder="Enter game-code" name="game-code" required>
         <button class="joinForm" id="joinGame" type="submit">JOIN</button>
         <button class="joinForm" id="cancelJoin" type="button">CANCEL</button>
