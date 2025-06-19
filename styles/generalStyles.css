@@ -19,6 +19,12 @@
     cursor: default;
 }
 
+a{
+    text-align: center;
+    color: black;
+    text-decoration: none;
+}
+
 button, .button {
     box-shadow: 0 0.25em 0 #808080;
 }
@@ -68,6 +74,8 @@ div#header {
     border: none;
     background-image: url("../images/UnoEichberg.png");
     background-size: contain;
+
+    box-shadow: initial;
 
     &:hover {
         cursor: pointer;
