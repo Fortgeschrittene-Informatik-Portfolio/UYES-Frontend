@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createGame</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="icon" href="/images/logo.png" type="image.png">
+
+</head>
+<body id="createGame">
+<a href="./chooseLobbyNoIntro.html" class="button backButtonTop" role="button">BACK</a>
+
+
+
+<div id="header">
+    <section>
+        <h1 id="gameTitle">UYES!</h1>
+        <p id="credits">by Andrii, Bilal, Daria , Simon, Srisharanya</p>
+    </section>
+</div>
+<div id="mainWrapper">
+    <h2>Settings</h2>
+    <div id="start-settings">
+        <div id="starting-players">
+            <h3 class="amount">Starting Players:</h3>
+
+            <button class="subtract amount">-</button>
+
+            <input type="range" min="-2" max="2" step="1.0" value="0">
+
+            <button class="add amount">+</button>
+
+        </div>
+        <div id="starting-cards">
+            <h3 class="amount">Starting Cards:</h3>
+            <button class="subtract amount">-</button>
+            <input type="range" min="-5" max="5" step="1.0" value="0">
+            <button class="add amount">+</button>
+
+        </div>
+        <div id>
+            <h3>Special Cards:</h3>
+            <div id="special-cards">
+                <label class="container">
+                    Draw Two!
+                    <input id="draw2" type="checkbox" checked>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                    Reverse!
+                    <input id="reverse" type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                    Skip!
+                    <input id="skip" type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                    Wild!
+                    <input id="wild" type="checkbox" checked>
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                    Wild Draw Four!
+                    <input id="wild+4" type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                    Select All!
+                    <input id="check-all" type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="menu-createGame">
+        <a href="./lobby.html" class="button" role="button" id="continue-createGame">CONTINUE</a>
+
+
+</div>
+<a href="./createGame.html" class="button" role="button" id="eichberg2"></a>
+
+
+
+
+</body>
+</html>
