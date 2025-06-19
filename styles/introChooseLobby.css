@@ -20,17 +20,7 @@ button.introduction.chooseLobby{
     font-size: 1.5cqw;
 }
 
-#help-chooseLobby{
-    position: absolute;
-    aspect-ratio: 2.6/1;
-    width: 10%;
-    background-color: var(--primary-yellow) ;
-    border: solid 0.5cqh white;
-    border-radius: 15%;
-    font-weight: 800;
-    font-size: 2.5cqw;
-    margin: 1em;
-}
+
 
 body:not(:has(#intro1[open])) {
     &:has(#intro2[open]) #create {

@@ -42,7 +42,6 @@ div#menu {
         flex-grow: 0;
         aspect-ratio: 2.5/1;
         width: 15%;
-        align-content: center;
         background-color: var(--primary-yellow);
         border: solid 0.5cqh white; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
         border-radius: 15%;
