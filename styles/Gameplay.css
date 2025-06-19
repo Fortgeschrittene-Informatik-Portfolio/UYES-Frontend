@@ -32,7 +32,7 @@
     text-align: center;
     font-size: 2cqw;
     font-weight: 900;
-    color: #ECD407;
+    color: var(--primary-yellow);
     -webkit-text-stroke: 0.07cqw white;
     text-shadow: -0.18cqw 0.2cqw black;
 
@@ -166,7 +166,7 @@
 }
 
 #player2 {
-    border: 0.8cqw solid #c8ac22;
+    border: 0.8cqw solid var(--primary-yellow);
     background-color: rgba(149, 145, 4, 0.5);
 
     background-image: url("../images/dragonavatar.png");
@@ -210,15 +210,15 @@ body#gameplay2 {
             font-size: 3cqw;
             color: white;
             -webkit-text-stroke: 0.07cqw black;
-            background-color: #D72600;
-            border: 0.5cqw solid #c8ac22;
+            background-color: var(--primary-red);
+            border: 0.5cqw solid var(--primary-yellow);
             border-radius: 25% 25% 25% 0;
         }
     }
 
     #player3 {
 
-        border: 0.8cqw solid #c8ac22;
+        border: 0.8cqw solid var(--primary-yellow);
         background-color: rgba(149, 145, 4, 0.5);
     }
 }
@@ -235,15 +235,16 @@ body#gameplay3 {
             font-size: 3cqw;
             color: white;
             -webkit-text-stroke: 0.07cqw black;
-            background-color: #D72600;
-            border: 0.5cqw solid #c8ac22;
+            background-color: var(--primary-red);
+            border: 0.5cqw solid var(--primary-yellow);
             border-radius: 25% 25% 25% 0;
         }
     }
 
     #own-avatar {
-        border: 0.8cqw solid #c8ac22;
-        background-color: rgba(149, 145, 4, 0.5);
+        border: 0.8cqw solid var(--primary-yellow);
+        background-color: var(--secondary-yellow);
+        opacity: 0.5;
     }
 
     .card.normal {
@@ -259,7 +260,7 @@ body#gameplay3 {
 
     #UYES {
         pointer-events: initial;
-        background-color: #ECD407;
+        background-color: var(--primary-yellow) ;
         border: solid 0.5cqh white;
     }
 }
@@ -275,8 +276,9 @@ body#gameplay4 {
         top: 20%;
         left: 20%;
 
-        border: 0.8cqw solid #c8ac22;
-        background-color: rgba(149, 145, 4, 0.5);
+        border: 0.8cqw solid var(--primary-yellow);
+        background-color: var(--secondary-yellow);
+        opacity: 0.5;
 
         background-image: url("../images/dragonavatar.png");
         background-size: contain;
@@ -295,7 +297,8 @@ body#gameplay4 {
 
     #milchglas2 {
         position: fixed;
-        background: rgba(255, 255, 255, 0.2);
+        background: grey;
+        opacity: 0.5;
         backdrop-filter: blur(10px); /* erzeugt den "Milchglas"-Effekt */
         z-index: 100;
         width: 100%;
@@ -319,7 +322,7 @@ body#gameplay4 {
             aspect-ratio: 2.5/1;
             width: 20%;
 
-            background-color: #ECD407;
+            background-color: var(--primary-yellow);
             border: solid 0.5cqh white; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
             border-radius: 15%;
             font-weight: 800;

@@ -40,7 +40,7 @@ div#menu {
         aspect-ratio: 2.5/1;
         width: 20%;
 
-        background-color: #ECD407;
+        background-color: var(--primary-yellow);
         border: solid 0.5cqh white; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
         border-radius: 15%;
         font-weight: 800;

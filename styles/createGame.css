@@ -4,9 +4,9 @@
     cursor: pointer;
 }
 
-#gamestart {
+#createGame {
 
-    #mainwrapper {
+    #mainWrapper {
         grid-column: 1/-1;
         display: flex;
         flex-direction: column;
@@ -50,8 +50,8 @@
                 padding-right: 0.25em;
                 margin-left: 0.25em;
                 content: "4";
-                border: 0.1em solid #6c6c6c;
-                background-color: rgba(159, 155, 155, 0.5);
+                border: 0.1em solid dimgrey;
+                background-color: grey;
             }
         }
 
@@ -66,7 +66,7 @@
             margin: 0;
             width: 65%;
             -webkit-appearance: none;
-            background: #ECD407;
+            background: var(--primary-yellow) ;
             height: 0.5em;
             border-radius: 4em;
             border: 0.08em solid black;
@@ -75,7 +75,7 @@
                 -webkit-appearance: none;
                 height: 2em;
                 width: 2em;
-                background: #ECD407;
+                background: var(--primary-yellow) ;
                 border-radius: 50%;
                 border: 0.1em solid black;
                 cursor: grab;
@@ -142,7 +142,7 @@
 
     .container input:checked ~ .checkmark {
         /*background-color: #2196F3;*/
-        background-color: #ECD407;
+        background-color: var(--primary-yellow) ;
     }
 
     .checkmark:after {
@@ -172,13 +172,13 @@ input .amount {
     border: 0.1em solid black;
 }
 
-div#menu-GameStart {
+div#menu-createGame {
     overflow: hidden;
     text-align: center;
     grid-column: 1 / -1;
     grid-row: 3;
 
-    section.menu-GameStart {
+    section.menu-createGame {
         font-size: 100%;
         width: 100%;
         height: 100%;
@@ -188,7 +188,7 @@ div#menu-GameStart {
     button {
         aspect-ratio: 2.9/1;
         width: 20%;
-        background-color: #ECD407;
+        background-color: var(--primary-yellow) ;
         border: solid 0.5cqh white;
         border-radius: 15%;
         font-weight: 800;
@@ -197,11 +197,11 @@ div#menu-GameStart {
     }
 }
 
-#help-GameStart {
+#help-createGame {
     position: absolute;
     aspect-ratio: 2.6/1;
     width: 10%;
-    background-color: #ECD407;
+    background-color: var(--primary-yellow) ;
     border: solid 0.5cqh white;
     border-radius: 15%;
     font-weight: 800;
@@ -210,7 +210,7 @@ div#menu-GameStart {
 }
 
 @media only screen and (max-width: 600px) {
-    #gamestart {
+    #createGame {
         #start-settings {
             width: 80%;
 
@@ -221,8 +221,8 @@ div#menu-GameStart {
         }
     }
 
-    div#menu-GameStart {
-        section.menu-GameStart {
+    div#menu-createGame {
+        section.menu-createGame {
             height: 140%;
             /* alles in voller Breite/Höhe der Grid-Zelle */
         }
@@ -233,7 +233,7 @@ div#menu-GameStart {
         }
     }
 
-    #help-GameStart {
+    #help-createGame {
         position: absolute;
         width: 30%;
         font-size: 5cqw;

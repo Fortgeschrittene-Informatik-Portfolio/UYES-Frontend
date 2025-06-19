@@ -10,7 +10,8 @@ body.help-page-body {
 }
 
 .help-rules-container {
-    background-color: #ECD407;
+    background-color: var(--primary-yellow)
+;
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     max-width: 450px;
@@ -24,7 +25,9 @@ body.help-page-body {
     color: #333;
     line-height: 1.6;
     transform: translateY(50px);
-    scrollbar-color: #1c812e #ECD407;
+    scrollbar-color: var(--primary-blue)
+    var(--primary-yellow)
+;
     align-self: center;
     justify-self: center;
 }
@@ -120,13 +123,13 @@ body.help-page-body {
 }
 
 #help-volume button:hover {
-    background-color: #45a049;
+    background-color: var(--secondary-yellow);
 }
 
 .help-go-back-button {
     aspect-ratio: 2.9/1;
     width: 55%;
-    background-color: #ECD407;
+    background-color: var(--primary-yellow) ;
     border: solid 0.5cqh white;
     border-radius: 15%;
     font-weight: 800;
@@ -142,7 +145,7 @@ body.help-page-body {
 }
 
 #help-language-dropdown {
-    background-color: #ECD407;
+    background-color: var(--primary-yellow) ;
     border-radius: 10px;
 
 }

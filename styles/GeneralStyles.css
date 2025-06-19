@@ -1,3 +1,12 @@
+:root {
+    --primary-yellow: #ECD407;
+    --secondary-yellow: #988504;
+    --primary-blue: #0956BF;
+    --primary-red: #D72600;
+    --primary-green: #379711;
+
+}
+
 /* Allgemeine Schriftart + Grundlayout */
 * {
     font-family: 'Cabin', sans-serif;
@@ -30,7 +39,7 @@ div#header {
     text-align: center;
     overflow: hidden; /* verhindert, dass Text überläuft */
     grid-column: 1 / -1; /* über alle 3 Spalten */
-    color: #ECD407;
+    color: var(--primary-yellow);
     font-size: 5em;
 
     #gameTitle {
