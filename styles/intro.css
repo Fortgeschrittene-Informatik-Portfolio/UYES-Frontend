@@ -79,14 +79,20 @@ body:has(dialog[open]) {
     transform: rotate(180deg);
 }
 
+
+
+
 /* Positionierung des Buttons auf dem dialogfeld */
 button.introduction, .button.introduction {
+    all: unset;
+    text-align: center;
+    align-content: center;
     background: var(--secondary-yellow);
     aspect-ratio: 5/2.5;
     border-radius: 1em;
     border: 0.25em solid black;
     box-shadow: none;
-
+    padding: 0;
     font-weight: 800;
     font-size: 2.5cqw;
     margin: initial;
