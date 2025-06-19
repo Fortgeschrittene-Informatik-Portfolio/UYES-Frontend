@@ -19,16 +19,16 @@
     cursor: default;
 }
 
-button {
+button, .button {
     box-shadow: 0 0.25em 0 #808080;
 }
 
 /* Ausnahme für Buttons: Zeiger-Cursor beim Hover */
-button:hover {
+button:hover, .button:hover {
     cursor: pointer;
 }
 
-button:active {
+button:active, .button:active {
     box-shadow: none;
     transform: translateY(0.25em);
     transition: all .1s;
