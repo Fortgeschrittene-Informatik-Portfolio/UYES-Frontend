@@ -297,8 +297,8 @@ body#gameplay4 {
 
     #milchglas2 {
         position: fixed;
-        background: grey;
-        opacity: 0.5;
+        background: dimgrey;
+        opacity: 0.9;
         backdrop-filter: blur(10px); /* erzeugt den "Milchglas"-Effekt */
         z-index: 100;
         width: 100%;
