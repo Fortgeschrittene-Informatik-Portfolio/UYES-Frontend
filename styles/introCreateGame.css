@@ -79,29 +79,31 @@ body:not(:has(#intro4[open])) {
     }
 }
 
+
+
 body:not(:has(#intro5[open])) {
-    &:has(#intro6[open]) #back-createGame {
+    &:has(#intro6[open]) #NameInput {
         z-index: 102;
         pointer-events: none;
         position: relative;
     }
 }
+
+
 
 body:not(:has(#intro6[open])) {
     &:has(#intro7[open]) #continue-createGame {
         z-index: 102;
         pointer-events: none;
-        position: relative;
     }
 }
 
 body:not(:has(#intro7[open])) {
-    &:has(#intro8[open]) #help-createGame {
+    &:has(#intro8[open]) .backButtonTop {
         z-index: 102;
         pointer-events: none;
     }
 }
-
 
 @media only screen and (max-width: 600px) {
     #eichberg.createGame {
