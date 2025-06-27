@@ -77,8 +77,8 @@
     <div id="intro6wrap" class="createGame intro">
         <dialog open="open" class="speech-bubble createGame" id="intro6">
             <p class="speech createGame">
-                Nice! Of course this button will again bring
-                you back to the previous page.
+                Nice! Here you can enter your Name!
+                If you dont you'll get a random one.
             </p>
             <form method="dialog">
                 <button class="introduction createGame">Next</button>
@@ -99,9 +99,8 @@
     <div id="intro8wrap" class="createGame intro">
         <dialog open="open" class="speech-bubble createGame" id="intro8">
             <p class="speech createGame">
-                But remember: Wanna see rules, end the game,
-                change settings?
-                Just look for <i>HELP!</i>
+                And of course this button will again bring
+                you back to the previous page.
             </p>
             <form method="dialog">
                 <button class="introduction createGame">Next</button>
@@ -198,6 +197,10 @@
     </div>
 </div>
 <div id="menu-createGame">
+    <form action="post" >
+        <label for="NameInput"></label>
+        <input id="NameInput" type="text" placeholder="Enter your name here" name="playerName" required>
+    </form>
         <a href="lobbyHost.html" class="button" role="button" id="continue-createGame">CONTINUE</a>
 
 

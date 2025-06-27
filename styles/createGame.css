@@ -177,6 +177,16 @@ input .amount {
 }
 
 div#menu-createGame {
+
+    input{
+       font-size: 3.5cqw;
+
+        &:hover{
+            cursor: text;
+        }
+    }
+
+
     overflow: hidden;
     text-align: center;
     grid-column: 1 / -1;
@@ -209,10 +219,8 @@ div#menu-createGame {
     }
 
     div#menu-createGame {
-        section.menu-createGame {
-            height: 140%;
-            /* alles in voller Breite/Höhe der Grid-Zelle */
-        }
+
+
 
         button {
             width: 40%;
