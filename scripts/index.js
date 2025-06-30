@@ -2,6 +2,8 @@ import { initStartSite } from './startSite.js';
 import { initAboutPage } from './aboutPage.js';
 import { initHelpPage } from './helpPage.js';
 import { initChooseLobby } from './chooseLobby.js';
+import { initCreateGame } from './createGame.js';
+
 
 
 
@@ -20,4 +22,7 @@ else if(pageId === 'help-page-body'){
 }
 else if(pageId === 'chooseLobby'){
     initChooseLobby();
+}
+else if(pageId === 'createGame'){
+    initCreateGame();
 }

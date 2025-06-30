@@ -5,8 +5,8 @@ export function initChooseLobby() {
 
 
     handleIntro({
-        flagName: "introSeenStart",
-        lastStepId: "intro6wrap",
+        flagName: "introSeenChooseLobby",
+        lastStepId: "intro4wrap",
         resetBtnId: "eichberg2"
     });
 
