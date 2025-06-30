@@ -37,17 +37,19 @@ router.get('/lobby', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/lobbyHost.html'));
 });
 
+router.get("/api/lobbyData", (req, res) => {
+    if (!req.session) {
+        return res.status(400).json({ error: "Keine Session aktiv" });
+    }
 
-// router.post("/api/createGame", (req, res) => {
-//     const gameData = req.body;
-//
-//     // Beispiel: speichern in einer Session oder In-Memory-Datenbank
-//     req.session = req.session || {};
-//     req.session.gameConfig = gameData;
-//
-//     // Weiterleiten auf Lobbypage
-//     res.redirect("/lobby");
-// });
+    res.json({
+        code: req.session.gameId,
+        name: req.session.playerName,
+        players: req.session.settings?.players || 5, // fallback
+        role: req.session.role
+    });
+});
+
 
 
 router.post("/api/createGame", (req, res) => {

@@ -3,6 +3,7 @@ import { initAboutPage } from './aboutPage.js';
 import { initHelpPage } from './helpPage.js';
 import { initChooseLobby } from './chooseLobby.js';
 import { initCreateGame } from './createGame.js';
+import { initLobbyHost } from "./lobby.js";
 
 
 
@@ -26,6 +27,6 @@ else if(pageId === 'chooseLobby'){
 else if(pageId === 'createGame'){
     initCreateGame();
 }
-else if (pageId === "lobbyHost") {
+if (pageId === "lobbyHost") {
     initLobbyHost();
 }

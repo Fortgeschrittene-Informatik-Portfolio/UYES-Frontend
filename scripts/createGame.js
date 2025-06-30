@@ -85,6 +85,9 @@ export function initCreateGame() {
             role: "host" // 💡 Das ist wichtig – Host-Flag direkt mitgeben
         };
 
+        sessionStorage.setItem("gameData", JSON.stringify(data));
+
+
         const response = await fetch("/api/createGame", {
             method: "POST",
             headers: { "Content-Type": "application/json" },

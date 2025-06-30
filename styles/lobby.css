@@ -58,9 +58,9 @@
 
 
 .player-lobby-fields{
-    position: relative;
+    /*position: relative;*/
     width: 100%;
-    height: 10%;
+    /*height: 10%;*/
     flex-grow: 1;
     border: 0.05em solid dimgrey;
     align-content: center;
@@ -121,6 +121,7 @@
 
     }
 }
+
 
 #startGameplay{
     width: 25%;
