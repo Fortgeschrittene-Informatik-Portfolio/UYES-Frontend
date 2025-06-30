@@ -1,14 +1,8 @@
 export function initStartSite() {
     console.log("StartSite geladen");
 
-    // ✅ Früh checken!
-    if (localStorage.getItem("introSeen") === "true") {
-        document.querySelectorAll(".intro").forEach(el => el.remove());
-        document.getElementById("milch-glas-layer").style.display = "none";
-        return;
-    }
 
-    // 🧠 erst danach Listener setzen!
+
     document.getElementById("about")?.addEventListener("click", () => {
         window.location.href = "/about";
     });
@@ -21,12 +15,18 @@ export function initStartSite() {
         window.location.href = "/start/game";
     });
 
+    if (localStorage.getItem("introSeen") === "true") {
+        document.querySelectorAll(".intro").forEach(el => el.remove());
+        document.getElementById("milch-glas-layer").style.display = "none";
+        return;
+    }
+
     document.querySelector("#intro6wrap button")?.addEventListener("click", () => {
         localStorage.setItem("introSeen", "true");
     });
 
     document.getElementById("NO")?.addEventListener("click", () => {
         localStorage.setItem("introSeen", "true");
-        window.location.reload(); 
+        window.location.reload();
     });
 }
