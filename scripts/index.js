@@ -1,5 +1,7 @@
 import { initStartSite } from './startSite.js';
 import { initAboutPage } from './aboutPage.js';
+import { initHelpPage } from './helpPage.js';
+
 
 import { registerIntroResetButton } from './utils/intros.js';
 
@@ -12,4 +14,7 @@ if (pageId === 'startsite') {
 }
 else if(pageId === 'about'){
     initAboutPage();
+}
+else if(pageId === 'help-page-body'){
+    initHelpPage();
 }
