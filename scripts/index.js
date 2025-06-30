@@ -26,3 +26,6 @@ else if(pageId === 'chooseLobby'){
 else if(pageId === 'createGame'){
     initCreateGame();
 }
+else if (pageId === "lobbyHost") {
+    initLobbyHost();
+}

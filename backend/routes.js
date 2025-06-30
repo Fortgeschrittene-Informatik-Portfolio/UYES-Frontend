@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createLobby } from './logic/lobbyHandling.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,14 +38,28 @@ router.get('/lobby', (req, res) => {
 });
 
 
+// router.post("/api/createGame", (req, res) => {
+//     const gameData = req.body;
+//
+//     // Beispiel: speichern in einer Session oder In-Memory-Datenbank
+//     req.session = req.session || {};
+//     req.session.gameConfig = gameData;
+//
+//     // Weiterleiten auf Lobbypage
+//     res.redirect("/lobby");
+// });
+
+
 router.post("/api/createGame", (req, res) => {
-    const gameData = req.body;
+    const lobby = createLobby(req.body); // erstellt neue Lobby mit Host
 
-    // Beispiel: speichern in einer Session oder In-Memory-Datenbank
-    req.session = req.session || {};
-    req.session.gameConfig = gameData;
+    req.session = {
+        gameId: lobby.gameId,
+        playerName: lobby.playerName,
+        role: "host",
+        settings: lobby.settings
+    };
 
-    // Weiterleiten auf Lobbypage
     res.redirect("/lobby");
 });
 
