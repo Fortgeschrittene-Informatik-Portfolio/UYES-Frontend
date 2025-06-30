@@ -43,15 +43,14 @@
             color: white;
             font-weight: 800;
             -webkit-text-stroke: 0.05em black;
-
-            &.amount::after {
+            span{
                 padding-left: 0.25em;
                 padding-right: 0.25em;
                 margin-left: 0.25em;
-                content: "4";
                 border: 0.1em solid dimgrey;
                 background-color: grey;
             }
+
         }
 
         button.amount {

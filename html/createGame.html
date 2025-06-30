@@ -144,19 +144,19 @@
     <h2>Settings</h2>
     <div id="start-settings">
         <div id="starting-players">
-            <h3 class="amount">Starting Players:</h3>
+            <h3 class="amount">Starting Players:  <span id="playerCount">4</span></h3>
 
             <button class="subtract amount">-</button>
 
-            <input type="range" min="-2" max="2" step="1.0" value="0">
+            <input id="playerSlider" type="range" min="2" max="5" step="1.0" value="4">
 
             <button class="add amount">+</button>
 
         </div>
         <div id="starting-cards">
-            <h3 class="amount">Starting Cards:</h3>
+            <h3 class="amount">Starting Cards:<span id="cardCount">4</span></h3>
             <button class="subtract amount">-</button>
-            <input type="range" min="-5" max="5" step="1.0" value="0">
+            <input id="cardSlider" type="range" min="4" max="30" step="1.0" value="7">
             <button class="add amount">+</button>
 
         </div>
@@ -205,7 +205,7 @@
         <label for="NameInput"></label>
         <input id="NameInput" type="text" placeholder="Enter your name here..." name="playerName" required>
     </form>
-        <a href="lobbyHost.html" class="button" role="button" id="continue-createGame">CONTINUE</a>
+    <button id="continue-createGame">CONTINUE</button>
 
 
 </div>

@@ -32,6 +32,22 @@ router.get('/start/game/join', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/joinLobby.html'));
 });
 
+router.get('/lobby', (req, res) => {
+    res.sendFile(path.join(__dirname, '../html/lobbyHost.html'));
+});
+
+
+router.post("/api/createGame", (req, res) => {
+    const gameData = req.body;
+
+    // Beispiel: speichern in einer Session oder In-Memory-Datenbank
+    req.session = req.session || {};
+    req.session.gameConfig = gameData;
+
+    // Weiterleiten auf Lobbypage
+    res.redirect("/lobby");
+});
+
 export default router;
 
 
