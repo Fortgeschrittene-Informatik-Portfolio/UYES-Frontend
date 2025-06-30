@@ -10,6 +10,17 @@ export function initChooseLobby() {
         resetBtnId: "eichberg2"
     });
 
+    document.getElementById("backBtnChooseLobby")?.addEventListener("click", () => {
+        window.location.href = "/start";
+    });
+
+    document.getElementById("create")?.addEventListener("click", () => {
+        window.location.href = "/start/game/create";
+    });
+    document.getElementById("join")?.addEventListener("click", () => {
+        window.location.href = "/start/game/join";
+    });
+
 
 
 }

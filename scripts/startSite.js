@@ -3,7 +3,12 @@ import { handleIntro } from './utils/intros.js';
 export function initStartSite() {
     console.log("StartSite geladen");
 
-
+    handleIntro({
+        flagName: "introSeenStart",
+        lastStepId: "intro6wrap",
+        resetBtnId: "eichberg2",
+        skipBtnId: "NO"
+    });
 
     document.getElementById("about")?.addEventListener("click", () => {
         window.location.href = "/about";
@@ -17,10 +22,5 @@ export function initStartSite() {
         window.location.href = "/start/game";
     });
 
-    handleIntro({
-        flagName: "introSeenStart",
-        lastStepId: "intro6wrap",
-        resetBtnId: "eichberg2",
-        skipBtnId: "NO"
-    });
+
 }

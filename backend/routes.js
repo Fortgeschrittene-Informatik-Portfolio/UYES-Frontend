@@ -23,7 +23,8 @@ router.get('/start/game', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/chooseLobby.html'));
 });
 
-router.get('/create', (req, res) => {
+
+router.get('/start/game/create', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/createGame.html'));
 });
 
@@ -32,3 +33,6 @@ router.get('/start/game/join', (req, res) => {
 });
 
 export default router;
+
+
+
