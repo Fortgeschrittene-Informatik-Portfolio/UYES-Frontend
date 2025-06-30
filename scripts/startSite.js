@@ -1,3 +1,5 @@
+import { handleIntro } from './utils/intros.js';
+
 export function initStartSite() {
     console.log("StartSite geladen");
 
@@ -15,18 +17,10 @@ export function initStartSite() {
         window.location.href = "/start/game";
     });
 
-    if (localStorage.getItem("introSeen") === "true") {
-        document.querySelectorAll(".intro").forEach(el => el.remove());
-        document.getElementById("milch-glas-layer").style.display = "none";
-        return;
-    }
-
-    document.querySelector("#intro6wrap button")?.addEventListener("click", () => {
-        localStorage.setItem("introSeen", "true");
-    });
-
-    document.getElementById("NO")?.addEventListener("click", () => {
-        localStorage.setItem("introSeen", "true");
-        window.location.reload();
+    handleIntro({
+        flagName: "introSeenStart",
+        lastStepId: "intro6wrap",
+        resetBtnId: "eichberg2",
+        skipBtnId: "NO"
     });
 }
