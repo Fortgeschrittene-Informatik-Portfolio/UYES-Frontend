@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>chooseLobby</title>
 
-    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="/styles/style.css">
     <link rel="icon" href="/images/logo.png" type="image.png">
 
     <script src="/scripts/index.js" type="module" defer></script>
@@ -12,10 +12,13 @@
 
 </head>
 <body id="chooseLobby">
-<a href="./startSite.html" class="button backButtonTop" role="button">BACK</a>
 
+<button class="button backButtonTop" id="backBtnChooseLobby">BACK</button>
 
-<a href="./chooseLobby.html" class="button" role="button" id="eichberg2"></a>
+<!--<a href="./startSite.html" class="button backButtonTop" role="button">BACK</a>-->
+
+<button id="eichberg2"></button>
+<!--<a href="./chooseLobby.html" class="button" role="button" id="eichberg2"></a>-->
 
 
 <div id="milch-glas-layer">
@@ -81,8 +84,10 @@
 <div id="gameOnMain">
     <h2>Game On!</h2>
     <div id="lobbyButtons">
-        <a href="./createGame.html" class="button lobby" role="button" id="create">CREATE</a>
-        <a href="./joinLobby.html" class="button lobby" role="button" id="join">JOIN</a>
+        <button class="button lobby" id="create">CREATE</button>
+        <button class="button lobby" id="join">JOIN</button>
+<!--        <a href="./createGame.html" class="button lobby" role="button" id="create">CREATE</a>-->
+<!--        <a href="./joinLobby.html" class="button lobby" role="button" id="join">JOIN</a>-->
     </div>
 </div>
 
