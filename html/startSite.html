@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../styles/style.css">
     <link rel="icon" href="/images/logo.png" type="image.png">
 
+    <script src="/scripts/index.js" type="module" defer></script>
 
 </head>
 <body id="startsite">
@@ -36,8 +37,7 @@
             <form method="dialog">
 
                 <button class="introduction startsite">Yes</button>
-                <a href="./startSiteNoIntro.html" class="button introduction startsite" role="button" id="NO" >No</a>
-<!--                <button class="introduction startsite" id="NO">No</button>-->
+                <button type="button" class="introduction startsite" id="NO">No</button>
             </form>
         </dialog>
     </div>
@@ -115,13 +115,17 @@
 </div>
 <div id="menu">
     <section class="menu">
-        <a href="./aboutPage.html" class="button" role="button" id="about" >ABOUT</a>
-        <a href="./chooseLobby.html" class="button" role="button" id="start" >START</a>
-        <a href="./helpPage.html" class="button" role="button" id="help" >HELP</a>
+<!--        <a href="./aboutPage.html" class="button" role="button" id="about" >ABOUT</a>-->
+        <button id="about">ABOUT</button>
+<!--        -->
+<!--        <a href="./chooseLobby.html" class="button" role="button" id="start" >START</a>-->
+        <button id="start">START</button>
+<!--        <a href="./helpPage.html" class="button" role="button" id="help" >HELP</a>-->
+        <button id="help">HELP</button>
     </section>
 </div>
 
-<a href="./startSite.html" class="button" role="button" id="eichberg2"></a>
+<button id="eichberg2"></button>
 
 
 </body>
