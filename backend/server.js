@@ -19,7 +19,11 @@ app.use(
     })
 );
 
-app.use(express.static(path.join(__dirname, '../')));
+// Serve only the public directories to avoid exposing server-side code
+app.use(express.static(path.join(__dirname, '../html')));
+app.use(express.static(path.join(__dirname, '../scripts')));
+app.use(express.static(path.join(__dirname, '../styles')));
+app.use(express.static(path.join(__dirname, '../images')));
 
 app.use("/", routes);
 
