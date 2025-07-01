@@ -44,15 +44,21 @@ export async function initLobbyHost() {
 
 
     // Spielerplätze rendern
-    for (let i = 0; i < gameData.players; i++) {
+    const maxPlayers = gameData.settings?.players || gameData.players.length;
+    for (let i = 0; i < maxPlayers; i++) {
         const playerDiv = document.createElement("div");
         playerDiv.className = "player-lobby-fields";
 
-        if (i === 0) {
-            // Host selbst
+        const player = gameData.players[i];
+
+        if (player) {
+            const hostTag = player.role === "host" ? `<p id="hostTag">host:</p>` : "";
+            const you = player.name === gameData.name ? " (you)" : "";
+            const removeBtn = player.role !== "host" ? `<button class="removePlayerButton">Remove</button>` : "";
             playerDiv.innerHTML = `
-                <p id="hostTag">host:</p>
-                <p class="takenSlot">${gameData.name} (you)</p>
+                ${hostTag}
+                <p class="takenSlot">${player.name}${you}</p>
+                ${removeBtn}
             `;
         } else {
             // Offene Plätze
