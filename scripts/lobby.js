@@ -1,11 +1,14 @@
 // scripts/lobbyHost.js
-export function initLobbyHost() {
+export async function initLobbyHost() {
     console.log("Lobby als Host gestartet");
 
-    // Hole aus sessionStorage alles, was beim Erstellen übergeben wurde:
-    const gameData = JSON.parse(sessionStorage.getItem("gameData"));
-
-    if (!gameData) {
+    // Lobby-Daten aus der aktiven Session abrufen
+    let gameData;
+    try {
+        const res = await fetch("/api/lobbyData");
+        if (!res.ok) throw new Error();
+        gameData = await res.json();
+    } catch {
         alert("Fehler: Keine Game-Daten gefunden.");
         return;
     }
@@ -13,7 +16,7 @@ export function initLobbyHost() {
     const container = document.getElementById("player-lobby-container");
 
     // Game-Code anzeigen (bestehendes Element füllen)
-    const codeElement = document.querySelector(".gameCode h2");
+    const codeElement = document.getElementById("game-code");
     codeElement.textContent = `Game-Code: #${gameData.code || "000000"}`;
 
 
