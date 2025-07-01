@@ -74,14 +74,16 @@ export function initCreateGame() {
         e.preventDefault();
 
         const data = {
-            players: document.getElementById("playerSlider").value,
-            cards: document.getElementById("cardSlider").value,
             name: document.getElementById("NameInput").value || "", // leer = Zufallsname
-            draw2: document.getElementById("draw2").checked,
-            reverse: document.getElementById("reverse").checked,
-            skip: document.getElementById("skip").checked,
-            wild: document.getElementById("wild").checked,
-            wild4: document.getElementById("wild+4").checked,
+            settings: {
+                players: document.getElementById("playerSlider").value,
+                cards: document.getElementById("cardSlider").value,
+                draw2: document.getElementById("draw2").checked,
+                reverse: document.getElementById("reverse").checked,
+                skip: document.getElementById("skip").checked,
+                wild: document.getElementById("wild").checked,
+                wild4: document.getElementById("wild+4").checked
+            },
             role: "host" // 💡 Das ist wichtig – Host-Flag direkt mitgeben
         };
 
