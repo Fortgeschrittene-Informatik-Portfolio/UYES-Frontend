@@ -1,12 +1,13 @@
 // scripts/lobbyHost.js
 
-import { generateGameCode } from '../backend/logic/lobbyHandling.js';
+import { generateGameCode } from './utils/gameCode.js';
 
 
 export async function initLobbyHost() {
     console.log("Lobby als Host gestartet");
 
-    document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
+    const refreshBtn = document.getElementById("refresh-code-button");
+    refreshBtn?.addEventListener("click", async () => {
         const newCode = generateGameCode();
 
         try {
@@ -42,8 +43,11 @@ export async function initLobbyHost() {
     const codeElement = document.getElementById("game-code");
     codeElement.textContent = `Game-Code: #${gameData.code || "000000"}`;
 
+    // Darstellung je nach Rolle
+    if (gameData.role === "joiner") {
+        refreshBtn?.style.setProperty("display", "none");
+        document.getElementById("startGameplay")?.style.setProperty("display", "none");
 
-    // Spielerplätze rendern
     const maxPlayers = gameData.settings?.players || gameData.players.length;
     for (let i = 0; i < maxPlayers; i++) {
         const playerDiv = document.createElement("div");
@@ -61,15 +65,39 @@ export async function initLobbyHost() {
                 ${removeBtn}
             `;
         } else {
-            // Offene Plätze
             playerDiv.innerHTML = `
                 <p class="openSlot">Player${i + 1}...</p>
-                <button class="removePlayerButton">Remove</button>
             `;
         }
 
         container.appendChild(playerDiv);
     }
 
+                <p class="openSlot">Player${i + 1}...</p>
+            `;
+            container.appendChild(openDiv);
+        }
+    } else {
+        // Host selbst und freie Plätze
+        for (let i = 0; i < gameData.players; i++) {
+            const playerDiv = document.createElement("div");
+            playerDiv.className = "player-lobby-fields";
+
+            if (i === 0) {
+                playerDiv.innerHTML = `
+                    <p id="hostTag">host:</p>
+                    <p class="takenSlot">${gameData.name} (you)</p>
+                `;
+            } else {
+                playerDiv.innerHTML = `
+                    <p class="openSlot">Player${i + 1}...</p>
+                    <button class="removePlayerButton">Remove</button>
+                `;
+            }
+            container.appendChild(playerDiv);
+        }
+    }
+
     // Start-Button etc. bleibt wie gehabt
 }
+
