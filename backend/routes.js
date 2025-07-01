@@ -55,12 +55,10 @@ router.get("/api/lobbyData", (req, res) => {
 router.post("/api/createGame", (req, res) => {
     const lobby = createLobby(req.body); // erstellt neue Lobby mit Host
 
-    req.session = {
-        gameId: lobby.gameId,
-        playerName: lobby.playerName,
-        role: "host",
-        settings: lobby.settings
-    };
+    req.session.gameId = lobby.gameId;
+    req.session.playerName = lobby.playerName;
+    req.session.role = "host";
+    req.session.settings = lobby.settings;
 
     res.redirect("/lobby");
 });
