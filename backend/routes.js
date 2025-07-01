@@ -74,11 +74,9 @@ router.post("/api/joinGame", (req, res) => {
     const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
     const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
 
-    req.session = {
-        gameId: code,
-        playerName: name || getRandomName(),
-        role: "joiner",
-    };
+    req.session.gameId = code;
+    req.session.playerName = name || getRandomName();
+    req.session.role = "joiner";
 
     res.redirect("/lobby");
 });
