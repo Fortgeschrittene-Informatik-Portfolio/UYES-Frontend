@@ -6,8 +6,21 @@ import { generateGameCode } from '../backend/logic/lobbyHandling.js';
 export async function initLobbyHost() {
     console.log("Lobby als Host gestartet");
 
-    document.getElementById("refresh-code-button")?.addEventListener("click", () => {
+    document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
         const newCode = generateGameCode();
+
+        try {
+            const res = await fetch("/api/gameCode", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ code: newCode })
+            });
+            if (!res.ok) throw new Error();
+        } catch {
+            console.error("Fehler beim Aktualisieren des Game-Codes");
+            return;
+        }
+
         const codeElement = document.getElementById("game-code");
         codeElement.textContent = `Game-Code: #${newCode}`;
     });

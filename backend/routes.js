@@ -83,6 +83,22 @@ router.post("/api/joinGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+router.put("/api/gameCode", (req, res) => {
+    if (!req.session) {
+        return res.status(400).json({ error: "Keine Session aktiv" });
+    }
+
+    const code = String(req.body.code || "").trim();
+
+    if (!/^[0-9]{9}$/.test(code)) {
+        return res.status(400).json({ error: "Ungültiger Game-Code" });
+    }
+
+    req.session.gameId = code;
+
+    res.json({ success: true });
+});
+
 export default router;
 
 
