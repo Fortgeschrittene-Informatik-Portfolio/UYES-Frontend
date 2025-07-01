@@ -1,6 +1,16 @@
 // scripts/lobbyHost.js
+
+import { generateGameCode } from '../backend/logic/lobbyHandling.js';
+
+
 export async function initLobbyHost() {
     console.log("Lobby als Host gestartet");
+
+    document.getElementById("refresh-code-button")?.addEventListener("click", () => {
+        const newCode = generateGameCode();
+        const codeElement = document.getElementById("game-code");
+        codeElement.textContent = `Game-Code: #${newCode}`;
+    });
 
     // Lobby-Daten aus der aktiven Session abrufen
     let gameData;
