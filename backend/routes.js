@@ -65,6 +65,26 @@ router.post("/api/createGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+router.post("/api/joinGame", (req, res) => {
+    const code = String(req.body.code || "").trim();
+    const name = (req.body.name || "").trim();
+
+    if (!/^[0-9]{9}$/.test(code)) {
+        return res.status(400).json({ error: "Ungültiger Game-Code" });
+    }
+
+    const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
+    const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
+
+    req.session = {
+        gameId: code,
+        playerName: name || getRandomName(),
+        role: "joiner",
+    };
+
+    res.redirect("/lobby");
+});
+
 export default router;
 
 
