@@ -72,11 +72,6 @@ export async function initLobbyHost() {
 
         container.appendChild(playerDiv);
     }
-
-                <p class="openSlot">Player${i + 1}...</p>
-            `;
-            container.appendChild(openDiv);
-        }
     } else {
         // Host selbst und freie Plätze
         for (let i = 0; i < gameData.players; i++) {
