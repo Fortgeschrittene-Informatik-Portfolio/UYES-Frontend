@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "UYES is a round-based web game that takes inspiration from the famous card game UNO!",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
