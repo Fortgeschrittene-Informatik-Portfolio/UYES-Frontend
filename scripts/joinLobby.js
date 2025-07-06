@@ -4,7 +4,7 @@ console.log("joinLobby script loaded");
 document.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("NameInput");
     const codeInput = document.getElementById("gameCodeInput");
-    const joinForm = document.getElementById("join-form");
+    const joinForm = codeInput?.closest("form");
 
     joinForm?.addEventListener("submit", async (e) => {
         e.preventDefault();
