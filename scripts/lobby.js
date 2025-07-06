@@ -1,6 +1,6 @@
 // scripts/lobbyHost.js
 
-import { generateGameCode } from './utils/gameCode.js';
+import { generateGameCode } from '../backend/logic/lobbyHandling.js';
 
 
 export async function initLobbyHost() {
