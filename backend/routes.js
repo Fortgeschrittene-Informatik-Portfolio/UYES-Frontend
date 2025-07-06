@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createLobby, getLobby, addPlayer } from './logic/lobbies.js';
+import { createLobby } from './logic/lobbyHandling.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,28 +42,23 @@ router.get("/api/lobbyData", (req, res) => {
         return res.status(400).json({ error: "Keine Session aktiv" });
     }
 
-    const lobby = getLobby(req.session.gameId);
-    if (!lobby) {
-        return res.status(400).json({ error: "Lobby nicht gefunden" });
-    }
-
     res.json({
-        code: lobby.gameId,
+        code: req.session.gameId,
         name: req.session.playerName,
-        role: req.session.role,
-        players: lobby.players,
-        settings: lobby.settings
+        players: req.session.settings?.players || 5, // fallback
+        role: req.session.role
     });
 });
 
 
 
 router.post("/api/createGame", (req, res) => {
-    const lobby = createLobby(req.body);
+    const lobby = createLobby(req.body); // erstellt neue Lobby mit Host
 
     req.session.gameId = lobby.gameId;
-    req.session.playerName = lobby.players[0].name;
+    req.session.playerName = lobby.playerName;
     req.session.role = "host";
+    req.session.settings = lobby.settings;
 
     res.redirect("/lobby");
 });
@@ -76,14 +71,12 @@ router.post("/api/joinGame", (req, res) => {
         return res.status(400).json({ error: "Ungültiger Game-Code" });
     }
 
-    const player = addPlayer(code, name);
-    if (!player) {
-        return res.status(404).json({ error: "Lobby nicht gefunden" });
-    }
+    const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
+    const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
 
     req.session.gameId = code;
-    req.session.playerName = player.name;
-    req.session.role = player.role;
+    req.session.playerName = name || getRandomName();
+    req.session.role = "joiner";
 
     res.redirect("/lobby");
 });
