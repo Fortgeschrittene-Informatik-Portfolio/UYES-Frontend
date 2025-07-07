@@ -78,8 +78,9 @@ router.post("/api/joinGame", (req, res) => {
     const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
 
     // ❗️Hier: KEINE komplette Überschreibung der Session!
+
     req.session.gameId = code;
-    req.session.playerName = name || getRandomName();
+    req.session.playerName = name?.trim() !== "" ? name : getRandomName();
     req.session.role = "joiner";
 
     res.redirect("/lobby");

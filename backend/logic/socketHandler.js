@@ -35,6 +35,32 @@ export function setupSocket(io) {
                 }
             }
         });
+        socket.on("leave-lobby", (gameCode, playerName) => {
+            console.log(`🚪 ${playerName} verlässt Lobby ${gameCode}`);
+
+            if (!lobbies[gameCode]) return;
+
+            // Spieler aus der Lobby entfernen
+            lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerName);
+
+            // Raum verlassen
+            socket.leave(gameCode);
+
+            // Wenn leer, löschen
+            if (lobbies[gameCode].players.length === 0) {
+                delete lobbies[gameCode];
+                return;
+            }
+
+            // An alle: aktualisierte Spieler
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+        });
+
+
+        socket.on("disconnect", () => {
+            console.log(`🛑 Socket getrennt: ${socket.id}`);
+            // Optional: du kannst hier aus der Lobby per socket-to-player Map löschen
+        });
     });
 }
 

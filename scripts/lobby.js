@@ -31,6 +31,7 @@ export async function initLobbyHost() {
         checkIfLobbyFull(players, maxPlayers);
     });
 
+
     // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
         const newCode = Math.floor(100000000 + Math.random() * 900000000).toString();
@@ -52,7 +53,16 @@ export async function initLobbyHost() {
         alert("Du wurdest aus der Lobby entfernt.");
         window.location.href = "/start/game";
     });
+
+    helpFunctionality(gameCode, playerName);
 }
+
+
+
+
+
+
+
 
 function renderLobby(gameData, playerList) {
     const container = document.getElementById("player-lobby-container");
@@ -100,3 +110,52 @@ function checkIfLobbyFull(currentPlayers, maxPlayers) {
         }
     }
 }
+
+function helpFunctionality(gameCode, playerName) {
+    const helpBtn = document.getElementById("helpBtnLobby");
+    const helpDiv = document.getElementById("helpButtonClicked");
+    const closeHelpBtn = document.getElementById("closeHelpBtn");
+    const aboutBtn = document.getElementById("AboutBtn");
+    const settingBtn = document.getElementById("SettingsBtn");
+    const exitBtn = document.getElementById("ExitGameBtn");
+
+    const exitDiv = document.getElementById("submitLeaving");
+    const stopLeaving = document.getElementById("stopLeaving");
+    const leave = document.getElementById("leave");
+
+
+    if (helpBtn) {
+        helpBtn.addEventListener("click", () => {
+            helpDiv.classList.add("helpOpen");
+        });
+    }
+
+    if (closeHelpBtn) {
+        closeHelpBtn.addEventListener("click", () => {
+            helpDiv.classList.remove("helpOpen");
+        });
+    }
+
+    if(exitBtn){
+        exitBtn.addEventListener("click", () => {
+            exitDiv.classList.add("exitOpen");
+        });
+    }
+    if(stopLeaving){
+        stopLeaving.addEventListener("click", () => {
+            exitDiv.classList.remove("exitOpen");
+        });
+    }
+    if (leave) {
+        leave.addEventListener("click", () => {
+            console.log("🚪 Spieler klickt auf Exit – leave wird ausgeführt");
+            socket.emit("leave-lobby", gameCode, playerName);
+            window.location.href = "/start/game";
+        });
+    }
+
+}
+
+
+
+

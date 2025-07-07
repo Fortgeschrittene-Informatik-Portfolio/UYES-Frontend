@@ -11,7 +11,7 @@
     <script type="module" src="/scripts/index.js" defer></script>
 
 </head>
-<body id="lobby">
+<body id="lobbyHost">
 <div id="header">
     <section>
         <h1 id="gameTitle">UYES!</h1>
@@ -19,9 +19,25 @@
     </section>
 </div>
 
+<div id="helpButtonClicked">
+    <button id="closeHelpBtn" >Help</button>
+    <button id="SettingsBtn" >Settings</button>
+    <button id="ExitGameBtn">Exit Game</button>
+    <button id="AboutBtn" >About</button>
+
+</div>
+
+<div id="submitLeaving" >
+    <h2>Are You Sure?</h2>
+    <div>
+        <button id="stopLeaving">No</button>
+        <button id="leave">Exit</button>
+    </div>
+
+</div>
 
 
-<button  class="button backButtonTop" >HELP</button>
+<button  id="helpBtnLobby" class="button backButtonTop" >HELP</button>
 
 
 
