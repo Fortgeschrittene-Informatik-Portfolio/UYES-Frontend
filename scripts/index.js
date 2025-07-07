@@ -4,6 +4,8 @@ import { initHelpPage } from './helpPage.js';
 import { initChooseLobby } from './chooseLobby.js';
 import { initCreateGame } from './createGame.js';
 import { initLobbyHost } from "./lobby.js";
+import { initJoinLobby } from "./joinLobby.js";
+
 
 
 
@@ -27,6 +29,9 @@ else if(pageId === 'chooseLobby'){
 else if(pageId === 'createGame'){
     initCreateGame();
 }
-if (pageId === "lobbyHost") {
+else if (pageId === "lobbyHost") {
     initLobbyHost();
+}
+else if (pageId === "joinLobby") {
+    initJoinLobby();
 }

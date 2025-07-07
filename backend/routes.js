@@ -2,6 +2,10 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createLobby } from './logic/lobbyHandling.js';
+import { getLobbyMeta } from './logic/socketHandler.js';
+
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +28,6 @@ router.get('/start/game', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/chooseLobby.html'));
 });
 
-
 router.get('/start/game/create', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/createGame.html'));
 });
@@ -34,7 +37,7 @@ router.get('/start/game/join', (req, res) => {
 });
 
 router.get('/lobby', (req, res) => {
-    res.sendFile(path.join(__dirname, '../html/lobbyHost.html'));
+    res.sendFile(path.join(__dirname, '../html/lobby.html'));
 });
 
 router.get("/api/lobbyData", (req, res) => {
@@ -42,15 +45,15 @@ router.get("/api/lobbyData", (req, res) => {
         return res.status(400).json({ error: "Keine Session aktiv" });
     }
 
+    const lobbyMeta = getLobbyMeta(req.session.gameId);
+
     res.json({
         code: req.session.gameId,
         name: req.session.playerName,
-        players: req.session.settings?.players || 5, // fallback
+        players: lobbyMeta?.maxPlayers || req.session.settings?.players || 5,
         role: req.session.role
     });
 });
-
-
 
 router.post("/api/createGame", (req, res) => {
     const lobby = createLobby(req.body); // erstellt neue Lobby mit Host
@@ -65,7 +68,7 @@ router.post("/api/createGame", (req, res) => {
 
 router.post("/api/joinGame", (req, res) => {
     const code = String(req.body.code || "").trim();
-    const name = (req.body.name || "").trim();
+    const name = (req.body.playerName || "").trim(); // ⚠️ Hier angepasst: "playerName" statt "name"
 
     if (!/^[0-9]{9}$/.test(code)) {
         return res.status(400).json({ error: "Ungültiger Game-Code" });
@@ -74,11 +77,10 @@ router.post("/api/joinGame", (req, res) => {
     const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
     const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
 
-    req.session = {
-        gameId: code,
-        playerName: name || getRandomName(),
-        role: "joiner",
-    };
+    // ❗️Hier: KEINE komplette Überschreibung der Session!
+    req.session.gameId = code;
+    req.session.playerName = name || getRandomName();
+    req.session.role = "joiner";
 
     res.redirect("/lobby");
 });
@@ -100,6 +102,3 @@ router.put("/api/gameCode", (req, res) => {
 });
 
 export default router;
-
-
-

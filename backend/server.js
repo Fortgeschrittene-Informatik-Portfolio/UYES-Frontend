@@ -1,8 +1,12 @@
 import express from 'express';
-import routes from './routes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import session from 'express-session';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+
+import routes from './routes.js';
+import { setupSocket } from './logic/socketHandler.js'; // gleich erstellen
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -10,19 +14,25 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
     session({
         secret: 'your-secret',
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
     })
 );
 
 app.use(express.static(path.join(__dirname, '../')));
+app.use('/', routes);
 
-app.use("/", routes);
+const server = createServer(app);
+const io = new Server(server);
 
-app.listen(5000, () => {
-    console.log("Server läuft auf: http://localhost:5000");
+// 🧠 Socket-Handler starten
+setupSocket(io);
+
+server.listen(5000, () => {
+    console.log('🟢 Server läuft auf http://localhost:5000');
 });

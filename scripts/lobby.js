@@ -1,13 +1,39 @@
-// scripts/lobbyHost.js
-
-import { generateGameCode } from '../backend/logic/lobbyHandling.js';
-
+import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+const socket = io(); // Standardverbindung
 
 export async function initLobbyHost() {
-    console.log("Lobby als Host gestartet");
+    const res = await fetch("/api/lobbyData");
+    const gameData = await res.json();
 
+    const gameCode = gameData.code;
+    const playerName = gameData.name;
+    const maxPlayers = gameData.players;
+    const role = gameData.role;
+
+    // Spieler in WebSocket-Raum eintragen
+    socket.emit("join-lobby", gameCode, playerName, maxPlayers);
+
+    // Game-Code anzeigen
+    const codeElement = document.getElementById("game-code");
+    codeElement.textContent = `Game-Code: #${gameCode || "000000"}`;
+
+    // BODY-Klasse setzen (nur Joiner)
+    if (role === "joiner") {
+        document.body.classList.add("Joiner");
+    }
+
+    // Lobby initial rendern
+    renderLobby(gameData, [playerName]); // Host kennt nur sich selbst – Joiner sieht später Liste
+
+    // Wenn neue Spieler beitreten oder Server Lobby-Update schickt
+    socket.on("update-lobby", (players) => {
+        renderLobby(gameData, players);
+        checkIfLobbyFull(players, maxPlayers);
+    });
+
+    // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
-        const newCode = generateGameCode();
+        const newCode = Math.floor(100000000 + Math.random() * 900000000).toString();
 
         try {
             const res = await fetch("/api/gameCode", {
@@ -16,54 +42,61 @@ export async function initLobbyHost() {
                 body: JSON.stringify({ code: newCode })
             });
             if (!res.ok) throw new Error();
+            codeElement.textContent = `Game-Code: #${newCode}`;
         } catch {
-            console.error("Fehler beim Aktualisieren des Game-Codes");
-            return;
+            console.error("❌ Fehler beim Aktualisieren des Codes");
         }
-
-        const codeElement = document.getElementById("game-code");
-        codeElement.textContent = `Game-Code: #${newCode}`;
     });
 
-    // Lobby-Daten aus der aktiven Session abrufen
-    let gameData;
-    try {
-        const res = await fetch("/api/lobbyData");
-        if (!res.ok) throw new Error();
-        gameData = await res.json();
-    } catch {
-        alert("Fehler: Keine Game-Daten gefunden.");
-        return;
-    }
+    socket.on("kicked", () => {
+        alert("Du wurdest aus der Lobby entfernt.");
+        window.location.href = "/start/game";
+    });
+}
 
+function renderLobby(gameData, playerList) {
     const container = document.getElementById("player-lobby-container");
+    container.innerHTML = "";
+    const lobbyTag = document.createElement("h2");
+    lobbyTag.innerHTML = "Lobby";
+    container.appendChild(lobbyTag);
 
-    // Game-Code anzeigen (bestehendes Element füllen)
-    const codeElement = document.getElementById("game-code");
-    codeElement.textContent = `Game-Code: #${gameData.code || "000000"}`;
-
-
-    // Spielerplätze rendern
     for (let i = 0; i < gameData.players; i++) {
         const playerDiv = document.createElement("div");
         playerDiv.className = "player-lobby-fields";
 
-        if (i === 0) {
-            // Host selbst
+        if (playerList[i]) {
+            const isCurrent = playerList[i] === gameData.name;
+            const label = i === 0 ? "host:" : "";
             playerDiv.innerHTML = `
-                <p id="hostTag">host:</p>
-                <p class="takenSlot">${gameData.name} (you)</p>
+                ${label ? `<p id="hostTag">${label}</p>` : ""}
+                <p class="takenSlot">${playerList[i]}${isCurrent ? " (you)" : ""}</p>
+                ${isCurrent ? "" : `<button class="removePlayerButton" data-player="${playerList[i]}">Kick</button>`}
             `;
         } else {
-            // Offene Plätze
             playerDiv.innerHTML = `
-                <p class="openSlot">Player${i + 1}...</p>
-                <button class="removePlayerButton">Remove</button>
-            `;
+                <p class="openSlot">Player${i + 1}...</p>`;
         }
 
         container.appendChild(playerDiv);
     }
 
-    // Start-Button etc. bleibt wie gehabt
+    // 🔴 Kick-Buttons aktivieren
+    document.querySelectorAll(".removePlayerButton[data-player]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const playerToKick = btn.getAttribute("data-player");
+            socket.emit("kick-player", gameData.code, playerToKick);
+        });
+    });
+}
+
+function checkIfLobbyFull(currentPlayers, maxPlayers) {
+    const startBtn = document.getElementById("startGameplay");
+    if (startBtn) {
+        if (currentPlayers.length >= maxPlayers) {
+            startBtn.classList.remove("notFull");
+        } else {
+            startBtn.classList.add("notFull");
+        }
+    }
 }

@@ -1,39 +1,38 @@
-// Handle join lobby form submission
-console.log("joinLobby script loaded");
+// scripts/joinLobby.js
 
-document.addEventListener("DOMContentLoaded", () => {
-    const nameInput = document.getElementById("NameInput");
-    const codeInput = document.getElementById("gameCodeInput");
-    const joinForm = codeInput?.closest("form");
+export function initJoinLobby() {
+    console.log("🔓 Join Lobby geladen");
 
-    joinForm?.addEventListener("submit", async (e) => {
+    document.getElementById("joinBackBtn")?.addEventListener("click", () => {
+        window.location.href = "/start/game";
+    });
+
+    const form = document.getElementById("join-lobby-form");
+    form?.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const payload = {
-            name: nameInput?.value.trim() || "",
-            code: codeInput?.value.trim() || "",
-        };
+        const codeInput = document.getElementById("lobby-code");
+        const nameInput = document.getElementById("player-name");
 
-        try {
-            const res = await fetch("/api/joinGame", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
+        const code = codeInput.value.trim();
+        const name = nameInput.value.trim();
 
-            if (res.redirected) {
-                window.location.href = res.url;
-                return;
-            }
+        if (!/^\d{9}$/.test(code)) {
+            alert("❌ Bitte gib einen gültigen 9-stelligen Game-Code ein");
+            return;
+        }
 
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                alert(data.error || "Failed to join game.");
-            }
-        } catch (err) {
-            console.error(err);
-            alert("Failed to join game.");
+        // An Server senden → Session wird dort gesetzt
+        const res = await fetch("/api/joinGame", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code, name }),
+        });
+
+        if (res.redirected) {
+            window.location.href = res.url; // Leitet zu /lobby weiter
+        } else {
+            alert("❌ Lobby nicht gefunden");
         }
     });
-});
-
+}

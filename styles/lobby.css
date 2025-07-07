@@ -65,6 +65,9 @@
     flex-grow: 1;
     border: 0.05em solid dimgrey;
     align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     p{
         &#hostTag{
             color: var(--primary-yellow);
@@ -72,7 +75,7 @@
             font-weight: 800;
             position: absolute;
             left: 30%;
-            height: 25%;
+            /*height: 25%;*/
             font-size: 1.5cqw;
             +p{
                 text-decoration: underline;
@@ -94,22 +97,19 @@
                 border: 0.25cqw solid dimgrey;
                 font-weight: 800;
                 margin: initial;
-                /*aspect-ratio: 1/2;*/
-                /*text-align: center;*/
-                /*align-content: center;*/
-                /*height: 80%;*/
-                overflow: hidden;
+
+                justify-self: flex-end;
                 text-overflow: ellipsis;
-                /*width: 4cqh;*/
-                position: absolute;
+
+                transform: translateX(600%);
+
                 z-index: 5;
-                left: 70%;
                 top: 0.1cqw;
                 font-size: 1cqw;
 
                 &:active{
-                    transform: initial;
-                    transform: scale(1.2);
+                    transform: translateX(600%) scale(1.2);
+                    /*transform: initial;*/
 
                 }
 
@@ -126,9 +126,15 @@
 
 #startGameplay{
     width: 25%;
+
+    &.notFull{
+        pointer-events: none;
+        background-color: darkgrey;
+        border: solid 0.5cqh dimgrey;
+    }
 }
 
-#Joiner{
+.Joiner{
     .removePlayerButton, #refresh-code-button, #startGameplay{
         display: none;
     }

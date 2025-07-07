@@ -4,6 +4,7 @@ main{
     display: flex;
     text-align: center;
     align-items: center;
+    justify-content: center;
     width: 100%;
     flex-direction: column;
     *{
@@ -21,8 +22,12 @@ main{
     &::placeholder{
         font-size: 1.8cqw;
     }
+    border: 0.5cqw solid black;
+    margin: 10%;
 }
-
+#NameInput{
+    border: 0.25cqw solid black;
+}
 
 .joinForm{
     border-radius: 10%;
@@ -52,6 +57,10 @@ main{
 
     }
 
+}
+
+#joinGame{
+    width: 35%;
 }
 
 
