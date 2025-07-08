@@ -39,14 +39,21 @@ export function setupSocket(io) {
                 }
             }
 
+            const lobby = lobbies[gameCode];
+
+            if (lobby.players.length >= lobby.maxPlayers && !lobby.players.includes(playerName)) {
+                socket.emit("lobby-full");
+                return;
+            }
+
             socket.join(gameCode);
             socket.data.playerName = playerName; // 🔑 wichtig!
 
-            if (!lobbies[gameCode].players.includes(playerName)) {
-                lobbies[gameCode].players.push(playerName);
+            if (!lobby.players.includes(playerName)) {
+                lobby.players.push(playerName);
             }
 
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+            io.to(gameCode).emit("update-lobby", lobby.players, lobby.maxPlayers);
 
         });
         socket.on("kick-player", (gameCode, playerNameToKick) => {
