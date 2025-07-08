@@ -249,7 +249,7 @@ function showWinner(winner) {
 }
 
 function setupAvatarSlots(total) {
-    const container = document.getElementById('player-avatars');
+    const container = document.getElementById('player-avatars2');
     if (!container) return;
     container.innerHTML = '';
     avatarSlots = [];
