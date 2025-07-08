@@ -62,9 +62,16 @@ export async function initGameplay() {
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
     socket.on('game-started', resetGameUI);
-    socket.on('player-left', ({ players, counts }) => {
+    socket.on('player-left', ({ players, counts, player }) => {
+        if (player && player !== playerName) {
+            alert(`${player} left the game.`);
+        }
         playerList = players.slice();
         updateHandCounts(counts);
+    });
+    socket.on('kicked', () => {
+        alert('Du wurdest aus der Lobby entfernt.');
+        window.location.href = '/start/game';
     });
 
     socket.emit('join-lobby', gameCode, playerName);

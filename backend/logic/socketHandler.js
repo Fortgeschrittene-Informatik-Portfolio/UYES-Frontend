@@ -245,6 +245,9 @@ export function setupSocket(io) {
                 current: 0,
                 uyesPressed: {}
             };
+
+            io.to(gameCode).emit('game-started');
+
             dealInitialCards(game);
             // Zufällig bestimmen, welcher Spieler beginnt
             game.current = Math.floor(Math.random() * game.turnOrder.length);
@@ -261,8 +264,6 @@ export function setupSocket(io) {
             }
 
             broadcastHandCounts(io, gameCode, game);
-
-            io.to(gameCode).emit('game-started');
 
             io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
         });
@@ -389,13 +390,22 @@ export function setupSocket(io) {
                 }
 
                 const counts = game.turnOrder.map(n => ({ name: n, count: game.hands[n]?.length || 0 }));
-                io.to(gameCode).emit('player-left', { players: lobby.players, counts });
+                io.to(gameCode).emit('player-left', { players: lobby.players, counts, player: name });
                 io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
             }
 
             socket.leave(gameCode);
 
             if (lobby.players.length === 0) {
+                delete lobbies[gameCode];
+            } else if (lobby.players.length === 1) {
+                const last = lobby.players[0];
+                for (const [_id, s] of io.sockets.sockets) {
+                    if (s.data.playerName === last && s.rooms.has(gameCode)) {
+                        s.emit('kicked');
+                        s.leave(gameCode);
+                    }
+                }
                 delete lobbies[gameCode];
             }
         });
