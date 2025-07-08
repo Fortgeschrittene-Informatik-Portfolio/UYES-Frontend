@@ -9,6 +9,12 @@ let playerList = [];
 let maxPlayers;
 let avatarSlots = [];
 
+// Track the current top card on the discard pile
+let topDiscard = null;
+
+// Whether it's currently this client's turn
+let myTurn = false;
+
 
 export async function initGameplay() {
     let data;
@@ -102,13 +108,18 @@ function renderHand(cards) {
         span.dataset.color = card.color;
         span.dataset.value = card.value;
         span.innerHTML = `<span><span>${card.value}</span></span>`;
-        span.draggable = true;
-        span.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('application/json', JSON.stringify(card));
-        });
-        span.addEventListener('click', () => {
-            socket.emit('play-card', gameCode, { color: card.color, value: card.value });
-        });
+        const playable = myTurn && isCardPlayable(card);
+        span.draggable = playable;
+        if (playable) {
+            span.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('application/json', JSON.stringify(card));
+            });
+            span.addEventListener('click', () => {
+                socket.emit('play-card', gameCode, { color: card.color, value: card.value });
+            });
+        } else {
+            span.classList.add('unplayable');
+        }
 
         span.addEventListener('mouseenter', () => {
             span.classList.add('hovered');
@@ -130,6 +141,8 @@ function renderHand(cards) {
 }
 
 function highlightTurn(name) {
+    // remember whether it is our turn
+    myTurn = name === playerName;
     const avatars = document.querySelectorAll('.avatar, #own-avatar');
     avatars.forEach(a => {
         const match = a.dataset.player === name || a.dataset.playerName === name;
@@ -168,6 +181,15 @@ function updateDiscard({ player, card }) {
         pile.className = `card big ${card.color}`;
         pile.innerHTML = `<span><span>${card.value}</span></span>`;
     }
+    topDiscard = card;
+}
+
+function isCardPlayable(card) {
+    if (!topDiscard) return true;
+    return card.color === 'wild' ||
+        card.color === topDiscard.color ||
+        card.value === topDiscard.value ||
+        topDiscard.color === 'wild';
 }
 
 function showWinner(winner) {
