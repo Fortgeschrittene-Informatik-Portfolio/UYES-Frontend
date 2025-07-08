@@ -1,7 +1,19 @@
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const avatarFiles = fs.readdirSync(path.join(__dirname, '../../images'))
+    .filter(f => /avatar/i.test(f));
+
 import { getSession } from '../jwtSession.js';
 
+
 const lobbies = {};
-// Format: { [gameCode]: { players: [], maxPlayers: 5, game?: GameState } }
+// Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, game?: GameState } }
 
 function createDeck(settings = {}) {
     const colors = ['red', 'yellow', 'green', 'blue'];
@@ -76,8 +88,10 @@ export function setupSocket(io) {
                 if (maxPlayersFromHost) {
                     lobbies[gameCode] = {
                         players: [],
-                        maxPlayers: maxPlayersFromHost || 5,
-                        settings: socket.data.session?.settings || {}
+
+                        avatars: {},
+                        maxPlayers: maxPlayersFromHost || 5
+
                     };
                 } else {
                     socket.emit("lobby-not-found");
@@ -95,25 +109,25 @@ export function setupSocket(io) {
             socket.join(gameCode);
             socket.data.playerName = playerName; // 🔑 wichtig!
 
-            if (!lobby.players.includes(playerName)) {
-                lobby.players.push(playerName);
+
+            if (!lobbies[gameCode].players.includes(playerName)) {
+                lobbies[gameCode].players.push(playerName);
+                const avatars = lobbies[gameCode].avatars;
+                if (!avatars[playerName]) {
+                    avatars[playerName] = avatarFiles[Math.floor(Math.random() * avatarFiles.length)];
+                }
             }
 
-            io.to(gameCode).emit("update-lobby", lobby.players, lobby.maxPlayers);
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
 
-            if (lobbies[gameCode].game) {
-                const game = lobbies[gameCode].game;
-                const hand = game.hands[playerName] || [];
-                socket.emit('deal-cards', hand);
-                socket.emit('update-hand-counts', game.turnOrder.map(n => ({ name: n, count: game.hands[n]?.length || 0 })));
-            }
 
         });
         socket.on("kick-player", (gameCode, playerNameToKick) => {
             if (!lobbies[gameCode]) return;
 
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerNameToKick);
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players);
+            delete lobbies[gameCode].avatars[playerNameToKick];
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
 
             // Dem gekickten Spieler Bescheid geben & rausschmeißen
             for (const [id, s] of io.sockets.sockets) {
@@ -145,6 +159,7 @@ export function setupSocket(io) {
 
             // Spieler aus der Lobby entfernen
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerName);
+            delete lobbies[gameCode].avatars[playerName];
 
             // Raum verlassen
             socket.leave(gameCode);
@@ -156,7 +171,7 @@ export function setupSocket(io) {
             }
 
             // An alle: aktualisierte Spieler
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
         });
 
         socket.on('start-game', (gameCode) => {
