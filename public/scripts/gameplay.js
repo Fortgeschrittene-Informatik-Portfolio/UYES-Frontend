@@ -1,4 +1,5 @@
 import { io } from "/socket.io/socket.io.esm.min.js";
+import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
 let gameCode;
 let playerName;
@@ -139,6 +140,9 @@ export async function initGameplay() {
         socket.emit('leave-game', gameCode, playerName);
         window.location.href = '/start/game';
     });
+
+    helpFunctionality(socket, () => gameCode, playerName);
+
 }
 
 function displayValue(value) {
