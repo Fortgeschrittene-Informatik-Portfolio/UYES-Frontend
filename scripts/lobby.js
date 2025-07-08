@@ -83,6 +83,7 @@ export async function initLobbyHost() {
         });
     });
 
+
     const startBtn = document.getElementById("startGameplay");
     if (startBtn) {
         startBtn.addEventListener("click", () => {
@@ -98,6 +99,7 @@ export async function initLobbyHost() {
 
     socket.on("game-started", redirectToGame);
     socket.on("player-turn", redirectToGame);
+
 
     helpFunctionality(() => currentGameCode, playerName);
 }
