@@ -153,6 +153,10 @@
 
 }
 
+.avatar.inactive {
+    opacity: 0.3;
+}
+
 #player1, #player2 {
     .cardHands {
         left: 105%;
