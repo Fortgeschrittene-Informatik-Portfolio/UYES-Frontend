@@ -279,7 +279,12 @@ function isCardPlayable(card) {
 function showWinner(winner) {
     const win = document.getElementById('winner');
     if (win) {
-        win.textContent = winner;
+        const nameEl = win.querySelector('.player-name');
+        if (nameEl) {
+            nameEl.textContent = winner;
+        } else {
+            win.textContent = winner;
+        }
         const file = playerAvatars[winner];
         if (file) {
             win.style.backgroundImage = `url('/images/avatars/${file}')`;
@@ -396,7 +401,13 @@ function resetGameUI() {
 
     renderHand([]);
 
-    document.getElementById('winner')?.classList.add('hidden');
+    const winnerEl = document.getElementById('winner');
+    if (winnerEl) {
+        winnerEl.classList.add('hidden');
+        const nameEl = winnerEl.querySelector('.player-name');
+        if (nameEl) nameEl.textContent = '';
+        else winnerEl.textContent = '';
+    }
     document.getElementById('milchglas2')?.classList.add('hidden');
     const endButtons = document.getElementById('ending-buttons');
     if (endButtons) {
