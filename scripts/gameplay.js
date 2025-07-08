@@ -280,10 +280,22 @@ function setupAvatarSlots(total) {
 
 function updateHandCounts(list) {
     if (!avatarSlots.length) setupAvatarSlots(list.length);
-    // Reihenfolge der Spieler entsprechend der vom Server gesendeten Liste
-    // aktualisieren. Diese Liste ist bereits in Spielreihenfolge sortiert.
-    playerList = list.map(p => p.name);
-    const others = list.filter(p => p.name !== playerName);
+    // Dreh die vom Server gesendete Spielreihenfolge so, dass sie aus Sicht
+    // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
+    // Spielern überein.
+
+    const names = list.map(p => p.name);
+    const myIndex = names.indexOf(playerName);
+    const rotated = list
+        .slice(myIndex + 1)
+        .concat(list.slice(0, myIndex + 1));
+
+    // komplette Reihenfolge (inkl. eigenem Namen) für Turn-Berechnungen
+    playerList = rotated.map(p => p.name);
+
+    // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
+    const others = rotated.filter(p => p.name !== playerName);
+
     for (let i = 0; i < avatarSlots.length; i++) {
         const slot = avatarSlots[i];
         const data = others[i];
