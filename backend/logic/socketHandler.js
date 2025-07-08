@@ -4,15 +4,20 @@ const lobbies = {};
 export function setupSocket(io) {
     io.on("connection", (socket) => {
         socket.on("join-lobby", (gameCode, playerName, maxPlayersFromHost) => {
+            if (!lobbies[gameCode]) {
+                if (maxPlayersFromHost) {
+                    lobbies[gameCode] = {
+                        players: [],
+                        maxPlayers: maxPlayersFromHost || 5
+                    };
+                } else {
+                    socket.emit("lobby-not-found");
+                    return;
+                }
+            }
+
             socket.join(gameCode);
             socket.data.playerName = playerName; // 🔑 wichtig!
-
-            if (!lobbies[gameCode]) {
-                lobbies[gameCode] = {
-                    players: [],
-                    maxPlayers: maxPlayersFromHost || 5
-                };
-            }
 
             if (!lobbies[gameCode].players.includes(playerName)) {
                 lobbies[gameCode].players.push(playerName);
