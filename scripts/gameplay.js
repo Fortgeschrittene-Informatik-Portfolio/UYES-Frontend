@@ -1,4 +1,4 @@
-import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+import { io } from "socket.io-client";
 const socket = io();
 let gameCode;
 let playerName;
@@ -11,8 +11,18 @@ let avatarSlots = [];
 
 
 export async function initGameplay() {
-    const res = await fetch('/api/lobbyData');
-    const data = await res.json();
+    let data;
+    try {
+        const res = await fetch('/api/lobbyData');
+        if (!res.ok) throw new Error('Request failed');
+        data = await res.json();
+    } catch (err) {
+        alert('❌ Fehler beim Laden der Lobby-Daten');
+        console.error(err);
+        window.location.href = '/start/game';
+        return;
+    }
+
     gameCode = data.code;
     playerName = data.name;
     playerAvatars = data.avatars || {};
@@ -43,6 +53,21 @@ export async function initGameplay() {
     document.getElementById('draw-pile')?.addEventListener('click', () => {
         socket.emit('draw-card', gameCode);
     });
+
+    const discard = document.getElementById('discard-pile');
+    discard?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+    discard?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('application/json');
+        if (data) {
+            try {
+                const card = JSON.parse(data);
+                socket.emit('play-card', gameCode, card);
+            } catch { /* ignore invalid data */ }
+        }
+    });
 }
 
 function renderHand(cards) {
@@ -54,8 +79,28 @@ function renderHand(cards) {
         span.dataset.color = card.color;
         span.dataset.value = card.value;
         span.innerHTML = `<span><span>${card.value}</span></span>`;
+        span.draggable = true;
+        span.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('application/json', JSON.stringify(card));
+        });
         span.addEventListener('click', () => {
             socket.emit('play-card', gameCode, { color: card.color, value: card.value });
+        });
+
+        span.addEventListener('mouseenter', () => {
+            span.classList.add('hovered');
+            const prev = span.previousElementSibling;
+            if (prev && prev.classList.contains('card')) {
+                prev.classList.add('prev-hovered');
+            }
+        });
+
+        span.addEventListener('mouseleave', () => {
+            span.classList.remove('hovered');
+            const prev = span.previousElementSibling;
+            if (prev && prev.classList.contains('card')) {
+                prev.classList.remove('prev-hovered');
+            }
         });
         container.appendChild(span);
     }
@@ -63,12 +108,10 @@ function renderHand(cards) {
 
 function highlightTurn(name) {
     const avatars = document.querySelectorAll('.avatar, #own-avatar');
-    avatars.forEach(a => a.classList.remove('active'));
-
-    const el = document.querySelector(`.avatar[data-player="${name}"]`) ||
-              document.querySelector(`#own-avatar[data-player="${name}"]`);
-
-    el?.classList.add('active');
+    avatars.forEach(a => {
+        const match = a.dataset.player === name || a.dataset.playerName === name;
+        a.classList.toggle('active', !!match);
+    });
 }
 
 function setAvatarImages() {

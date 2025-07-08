@@ -1,0 +1,5 @@
+{
+  "imports": {
+    "socket.io-client": "/socket.io/socket.io.esm.min.js"
+  }
+}
