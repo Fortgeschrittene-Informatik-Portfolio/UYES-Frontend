@@ -246,21 +246,14 @@
 
 }
 
-body#gameplay2 {
+body#gameplay {
     #player2 {
         border: 0.2cqw solid white;
     }
 
     #player3 {
-
         border: 0.8cqw solid var(--primary-yellow);
         background-color: rgba(149, 145, 4, 0.5);
-    }
-}
-
-body#gameplay {
-    #player2 {
-        border: 0.2cqw solid white;
     }
 
     #own-avatar {
