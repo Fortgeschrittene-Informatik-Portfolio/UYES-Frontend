@@ -102,6 +102,7 @@ router.put("/api/gameCode", (req, res) => {
     }
 
     req.session.gameId = code;
+    setSession(res, req.session);
 
     res.json({ success: true });
 });

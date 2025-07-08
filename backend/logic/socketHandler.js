@@ -35,6 +35,21 @@ export function setupSocket(io) {
                 }
             }
         });
+        socket.on("change-code", (oldCode, newCode) => {
+            if (!lobbies[oldCode]) return;
+
+            lobbies[newCode] = lobbies[oldCode];
+            delete lobbies[oldCode];
+
+            for (const [_id, s] of io.sockets.sockets) {
+                if (s.rooms.has(oldCode)) {
+                    s.join(newCode);
+                    s.leave(oldCode);
+                }
+            }
+
+            io.to(newCode).emit("update-code", newCode);
+        });
         socket.on("leave-lobby", (gameCode, playerName) => {
             console.log(`🚪 ${playerName} verlässt Lobby ${gameCode}`);
 
