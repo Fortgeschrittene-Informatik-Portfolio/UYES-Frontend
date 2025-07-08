@@ -8,6 +8,12 @@ export async function initGameplay() {
     const data = await res.json();
     gameCode = data.code;
     playerName = data.name;
+    const role = data.role;
+    if (role !== 'host') {
+        document.body.classList.add('Joiner');
+    } else {
+        document.body.classList.remove('Joiner');
+    }
 
     socket.emit('join-lobby', gameCode, playerName);
 
