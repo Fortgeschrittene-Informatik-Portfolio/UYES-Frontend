@@ -42,6 +42,11 @@ export async function initLobbyHost() {
         window.location.href = "/start/game";
     });
 
+    socket.on("lobby-full", () => {
+        alert("❌ Lobby ist voll");
+        window.location.href = "/start/game";
+    });
+
 
     // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
