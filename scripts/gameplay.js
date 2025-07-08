@@ -37,9 +37,10 @@ export async function initGameplay() {
         document.body.classList.remove('Joiner');
     }
 
+    // Hide the end-of-game buttons until a winner is announced
     const buttons = document.getElementById('ending-buttons');
-    if (role === 'host' && buttons) {
-        buttons.style.display = '';
+    if (buttons) {
+        buttons.style.display = 'none';
     }
 
     maxPlayers = data.players;
@@ -55,8 +56,25 @@ export async function initGameplay() {
 
     setupAvatarSlots(maxPlayers);
 
-    document.getElementById('draw-pile')?.addEventListener('click', () => {
+    const drawPile = document.getElementById('draw-pile');
+    drawPile?.addEventListener('click', () => {
         socket.emit('draw-card', gameCode);
+    });
+    drawPile?.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('text/plain', 'draw');
+    });
+
+    const handContainer = document.getElementById('player-hand-container');
+    handContainer?.addEventListener('dragover', (e) => {
+        if (e.dataTransfer.getData('text/plain') === 'draw') {
+            e.preventDefault();
+        }
+    });
+    handContainer?.addEventListener('drop', (e) => {
+        if (e.dataTransfer.getData('text/plain') === 'draw') {
+            e.preventDefault();
+            socket.emit('draw-card', gameCode);
+        }
     });
 
     const discard = document.getElementById('discard-pile');
@@ -158,7 +176,11 @@ function showWinner(winner) {
         win.classList.remove('hidden');
     }
     document.getElementById('milchglas2')?.classList.remove('hidden');
-    document.getElementById('ending-buttons')?.classList.remove('hidden');
+    const endButtons = document.getElementById('ending-buttons');
+    if (endButtons) {
+        endButtons.classList.remove('hidden');
+        endButtons.style.display = '';
+    }
 }
 
 function setupAvatarSlots(total) {

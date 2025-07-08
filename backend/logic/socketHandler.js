@@ -93,8 +93,7 @@ export function setupSocket(io) {
                         players: [],
                         avatars: {},
                         maxPlayers: maxPlayersFromHost || 5,
-                        settings: socket.data.session?.settings || {},
-                        host: playerName
+                        settings: socket.data.session?.settings || {}
                     };
                 } else {
                     socket.emit("lobby-not-found");
