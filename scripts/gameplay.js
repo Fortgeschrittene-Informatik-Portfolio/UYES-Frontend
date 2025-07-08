@@ -202,7 +202,7 @@ function setAvatarImages() {
             el.dataset.player = n;
             const file = playerAvatars[n];
             if (file) {
-                el.style.backgroundImage = `url('/images/${file}')`;
+                el.style.backgroundImage = `url('/images/avatars/${file}')`;
             }
         }
         index++;
@@ -212,7 +212,7 @@ function setAvatarImages() {
         own.dataset.player = playerName;
         const file = playerAvatars[playerName];
         if (file) {
-            own.style.backgroundImage = `url('/images/${file}')`;
+            own.style.backgroundImage = `url('/images/avatars/${file}')`;
         }
     }
 }
