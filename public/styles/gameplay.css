@@ -201,6 +201,12 @@
     border: 0.5cqw solid var(--primary-yellow);
     border-radius: 25% 25% 25% 0;
     pointer-events: none;
+    display: none;
+    z-index: 1;
+}
+
+.uyes-bubble.active {
+    display: block;
 }
 
 .avatar.left-hand .cardHands {
