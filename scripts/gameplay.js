@@ -36,8 +36,6 @@ export async function initGameplay() {
     playerAvatars = data.avatars || {};
     playerList = data.playerList || [];
 
-    setAvatarImages();
-
     const role = data.role;
     if (role !== 'host') {
         document.body.classList.add('Joiner');
@@ -53,16 +51,20 @@ export async function initGameplay() {
 
     maxPlayers = data.players;
 
+    setupAvatarSlots(maxPlayers);
+    setAvatarImages();
 
     socket.emit('join-lobby', gameCode, playerName);
+
+    if (role === 'host') {
+        socket.emit('start-game', gameCode);
+    }
 
     socket.on('deal-cards', renderHand);
     socket.on('player-turn', highlightTurn);
     socket.on('card-played', updateDiscard);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
-
-    setupAvatarSlots(maxPlayers);
 
     const drawPile = document.getElementById('draw-pile');
     drawPile?.addEventListener('click', () => {
@@ -282,4 +284,5 @@ function updateHandCounts(list) {
             slot.classList.add('inactive');
         }
     }
+    setAvatarImages();
 }
