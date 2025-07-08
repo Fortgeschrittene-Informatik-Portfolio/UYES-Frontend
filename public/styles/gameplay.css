@@ -289,7 +289,7 @@ body#gameplay {
 
         .player-name {
             position: absolute;
-            top: -1.2em;
+            top: -2em;
             left: 50%;
             transform: translateX(-50%);
             width: max-content;
@@ -298,6 +298,7 @@ body#gameplay {
             font-weight: 600;
             pointer-events: none;
             text-shadow: 0 0.05em 0.1em black;
+            font-size: 4cqw;
         }
 
         &:after {
