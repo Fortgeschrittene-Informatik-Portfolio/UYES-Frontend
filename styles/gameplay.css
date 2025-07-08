@@ -101,7 +101,7 @@
 
 
 #player-avatars {
-    z-index: -1;
+    z-index: 1;
     align-self: center;
     position: relative;
     width: 90%;
@@ -360,6 +360,14 @@ body#gameplay {
 }
 
 .my-turn #draw-pile span.card:active {
+    cursor: grabbing;
+}
+
+.my-turn #player-hand-container span.card:not(.unplayable):hover {
+    cursor: grab;
+}
+
+.my-turn #player-hand-container span.card:not(.unplayable):active {
     cursor: grabbing;
 }
 
