@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createLobby } from './logic/lobbyHandling.js';
 import { getLobbyMeta } from './logic/socketHandler.js';
+import { setSession } from './jwtSession.js';
 
 
 
@@ -62,6 +63,7 @@ router.post("/api/createGame", (req, res) => {
     req.session.playerName = lobby.playerName;
     req.session.role = "host";
     req.session.settings = lobby.settings;
+    setSession(res, req.session);
 
     res.redirect("/lobby");
 });
@@ -80,8 +82,10 @@ router.post("/api/joinGame", (req, res) => {
     // ❗️Hier: KEINE komplette Überschreibung der Session!
 
     req.session.gameId = code;
+    setSession(res, req.session);
     req.session.playerName = name?.trim() !== "" ? name : getRandomName();
     req.session.role = "joiner";
+    setSession(res, req.session);
 
     res.redirect("/lobby");
 });
