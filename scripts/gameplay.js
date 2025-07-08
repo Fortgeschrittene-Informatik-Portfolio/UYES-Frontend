@@ -63,12 +63,10 @@ function renderHand(cards) {
 
 function highlightTurn(name) {
     const avatars = document.querySelectorAll('.avatar, #own-avatar');
-    avatars.forEach(a => a.classList.remove('active'));
-
-    const el = document.querySelector(`.avatar[data-player="${name}"]`) ||
-              document.querySelector(`#own-avatar[data-player="${name}"]`);
-
-    el?.classList.add('active');
+    avatars.forEach(a => {
+        const match = a.dataset.player === name || a.dataset.playerName === name;
+        a.classList.toggle('active', !!match);
+    });
 }
 
 function setAvatarImages() {
