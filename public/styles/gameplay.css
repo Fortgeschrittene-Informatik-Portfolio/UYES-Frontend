@@ -100,7 +100,7 @@
 }
 
 #player-avatars1{
-    z-index: 0;
+    z-index: -1;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -192,8 +192,8 @@
 
 .uyes-bubble {
     position: absolute;
-    top: -8%;
-    left: 13%;
+    bottom: 110%;
+    left: 110%;
     font-size: 3cqw;
     color: white;
     -webkit-text-stroke: 0.07cqw black;
