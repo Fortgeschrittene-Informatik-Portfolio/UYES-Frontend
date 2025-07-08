@@ -171,6 +171,18 @@ function renderHand(cards) {
 function highlightTurn(name) {
     // remember whether it is our turn
     myTurn = name === playerName;
+
+    // Spielerreihenfolge rotieren, sodass der übergebene Spieler an erster
+    // Stelle steht. Damit lässt sich leicht berechnen, wie viele Züge es bis zu
+    // unserem eigenen Zug sind.
+    while (playerList.length && playerList[0] !== name) {
+        playerList.push(playerList.shift());
+    }
+
+    const turnsUntil = Math.max(0, playerList.indexOf(playerName));
+    const counter = document.getElementById('roundCountTurn');
+    if (counter) counter.textContent = String(turnsUntil);
+
     const avatars = document.querySelectorAll('.avatar, #own-avatar');
     avatars.forEach(a => {
         const match = a.dataset.player === name || a.dataset.playerName === name;
@@ -268,6 +280,9 @@ function setupAvatarSlots(total) {
 
 function updateHandCounts(list) {
     if (!avatarSlots.length) setupAvatarSlots(list.length);
+    // Reihenfolge der Spieler entsprechend der vom Server gesendeten Liste
+    // aktualisieren. Diese Liste ist bereits in Spielreihenfolge sortiert.
+    playerList = list.map(p => p.name);
     const others = list.filter(p => p.name !== playerName);
     for (let i = 0; i < avatarSlots.length; i++) {
         const slot = avatarSlots[i];

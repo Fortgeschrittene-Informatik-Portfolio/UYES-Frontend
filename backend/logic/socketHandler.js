@@ -128,6 +128,19 @@ export function setupSocket(io) {
                 lobbies[gameCode].host
             );
 
+            // Wenn das Spiel bereits läuft, neuen/verbindenden Spielern den aktuellen
+            // Spielzustand senden, damit sie ihre Hand, den Ablagestapel und
+            // die anstehende Runde sehen können.
+            const runningGame = lobbies[gameCode].game;
+            if (runningGame) {
+                const hand = runningGame.hands[playerName] || [];
+                socket.emit('deal-cards', hand);
+                const topCard = runningGame.discard[runningGame.discard.length - 1];
+                socket.emit('card-played', { player: null, card: topCard });
+                broadcastHandCounts(io, gameCode, runningGame);
+                socket.emit('player-turn', runningGame.turnOrder[runningGame.current]);
+            }
+
 
         });
         socket.on("kick-player", (gameCode, playerNameToKick) => {
@@ -208,6 +221,8 @@ export function setupSocket(io) {
                 current: 0
             };
             dealInitialCards(game);
+            // Zufällig bestimmen, welcher Spieler beginnt
+            game.current = Math.floor(Math.random() * game.turnOrder.length);
             lobby.game = game;
 
             const topCard = game.discard[game.discard.length - 1];
