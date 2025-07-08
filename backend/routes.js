@@ -56,7 +56,9 @@ router.get("/api/lobbyData", (req, res) => {
         code: req.session.gameId,
         name: req.session.playerName,
         players: lobbyMeta?.maxPlayers || req.session.settings?.players || 5,
-        role: req.session.role
+        role: req.session.role,
+        playerList: lobbyMeta?.players || [],
+        avatars: lobbyMeta?.avatars || {}
     });
 });
 

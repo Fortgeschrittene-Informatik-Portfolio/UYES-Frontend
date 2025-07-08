@@ -2,12 +2,18 @@ import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
 const socket = io();
 let gameCode;
 let playerName;
+let playerAvatars = {};
+let playerList = [];
 
 export async function initGameplay() {
     const res = await fetch('/api/lobbyData');
     const data = await res.json();
     gameCode = data.code;
     playerName = data.name;
+    playerAvatars = data.avatars || {};
+    playerList = data.playerList || [];
+
+    setAvatarImages();
 
     socket.emit('join-lobby', gameCode, playerName);
 
@@ -38,10 +44,35 @@ function renderHand(cards) {
 }
 
 function highlightTurn(name) {
-    const avatars = document.querySelectorAll('.avatar');
+    const avatars = document.querySelectorAll('.avatar, #own-avatar');
     avatars.forEach(a => a.classList.remove('active'));
-    const el = Array.from(avatars).find(a => a.textContent.includes(name));
+    const el = document.querySelector(`.avatar[data-player="${name}"]`) ||
+              document.querySelector(`#own-avatar[data-player="${name}"]`);
     el?.classList.add('active');
+}
+
+function setAvatarImages() {
+    let index = 1;
+    for (const n of playerList) {
+        if (n === playerName) continue;
+        const el = document.getElementById(`player${index}`);
+        if (el) {
+            el.dataset.player = n;
+            const file = playerAvatars[n];
+            if (file) {
+                el.style.backgroundImage = `url('/images/${file}')`;
+            }
+        }
+        index++;
+    }
+    const own = document.getElementById('own-avatar');
+    if (own) {
+        own.dataset.player = playerName;
+        const file = playerAvatars[playerName];
+        if (file) {
+            own.style.backgroundImage = `url('/images/${file}')`;
+        }
+    }
 }
 
 function updateDiscard({ player, card }) {
