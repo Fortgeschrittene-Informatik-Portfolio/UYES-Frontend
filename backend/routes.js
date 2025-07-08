@@ -76,6 +76,11 @@ router.post("/api/joinGame", (req, res) => {
         return res.status(400).json({ error: "Ungültiger Game-Code" });
     }
 
+    const lobbyMeta = getLobbyMeta(code);
+    if (!lobbyMeta) {
+        return res.status(404).json({ error: "Lobby nicht gefunden" });
+    }
+
     const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
     const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
 

@@ -32,6 +32,11 @@ export async function initLobbyHost() {
         checkIfLobbyFull(players, maxPlayers);
     });
 
+    socket.on("lobby-not-found", () => {
+        alert("❌ Lobby nicht gefunden");
+        window.location.href = "/start/game";
+    });
+
 
     // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
