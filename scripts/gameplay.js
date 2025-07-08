@@ -54,17 +54,17 @@ export async function initGameplay() {
     setupAvatarSlots(maxPlayers);
     setAvatarImages();
 
-    socket.emit('join-lobby', gameCode, playerName);
-
-    if (role === 'host') {
-        socket.emit('start-game', gameCode);
-    }
-
     socket.on('deal-cards', renderHand);
     socket.on('player-turn', highlightTurn);
     socket.on('card-played', updateDiscard);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
+
+    socket.emit('join-lobby', gameCode, playerName);
+
+    if (role === 'host') {
+        socket.emit('start-game', gameCode);
+    }
 
     const drawPile = document.getElementById('draw-pile');
     drawPile?.addEventListener('click', () => {
