@@ -135,6 +135,7 @@ function highlightTurn(name) {
         const match = a.dataset.player === name || a.dataset.playerName === name;
         a.classList.toggle('active', !!match);
     });
+    document.body.classList.toggle('my-turn', name === playerName);
 }
 
 function setAvatarImages() {
