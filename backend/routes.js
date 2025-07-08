@@ -41,6 +41,10 @@ router.get('/lobby', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/lobby.html'));
 });
 
+router.get('/gameplay', (req, res) => {
+    res.sendFile(path.join(__dirname, '../html/gameplay.html'));
+});
+
 router.get("/api/lobbyData", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });

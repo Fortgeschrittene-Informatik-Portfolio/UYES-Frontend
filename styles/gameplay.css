@@ -223,7 +223,7 @@ body#gameplay2 {
     }
 }
 
-body#gameplay3 {
+body#gameplay {
     #player2 {
         border: 0.2cqw solid white;
 
@@ -265,7 +265,7 @@ body#gameplay3 {
     }
 }
 
-body#gameplay4 {
+body#gameplay {
 
     #winner {
         position: absolute;

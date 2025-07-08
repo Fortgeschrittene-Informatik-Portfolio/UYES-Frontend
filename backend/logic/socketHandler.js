@@ -1,5 +1,28 @@
 const lobbies = {};
-// Format: { [gameCode]: { players: [], maxPlayers: 5 } }
+// Format: { [gameCode]: { players: [], maxPlayers: 5, game?: GameState } }
+
+function createDeck() {
+    const colors = ['red', 'yellow', 'green', 'blue'];
+    const deck = [];
+    for (const color of colors) {
+        for (let i = 1; i <= 9; i++) {
+            deck.push({ color, value: i });
+        }
+    }
+    return deck.sort(() => Math.random() - 0.5);
+}
+
+function dealInitialCards(game) {
+    for (const player of game.turnOrder) {
+        game.hands[player] = game.deck.splice(0, 5);
+    }
+    game.discard.push(game.deck.pop());
+}
+
+function nextTurn(game) {
+    game.current = (game.current + 1) % game.turnOrder.length;
+    return game.turnOrder[game.current];
+}
 
 export function setupSocket(io) {
     io.on("connection", (socket) => {
@@ -74,6 +97,76 @@ export function setupSocket(io) {
 
             // An alle: aktualisierte Spieler
             io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+        });
+
+        socket.on('start-game', (gameCode) => {
+            const lobby = lobbies[gameCode];
+            if (!lobby) return;
+            if (lobby.game) return; // already running
+
+            const game = {
+                deck: createDeck(),
+                discard: [],
+                hands: {},
+                turnOrder: [...lobby.players],
+                current: 0
+            };
+            dealInitialCards(game);
+            lobby.game = game;
+
+            for (const [id, s] of io.sockets.sockets) {
+                if (s.rooms.has(gameCode)) {
+                    const hand = game.hands[s.data.playerName] || [];
+                    s.emit('deal-cards', hand);
+                }
+            }
+
+            io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
+        });
+
+        socket.on('play-card', (gameCode, card) => {
+            const lobby = lobbies[gameCode];
+            const game = lobby?.game;
+            if (!game) return;
+            const player = socket.data.playerName;
+            if (game.turnOrder[game.current] !== player) return;
+
+            const hand = game.hands[player];
+            const idx = hand.findIndex(c => c.color === card.color && c.value === card.value);
+            if (idx === -1) return;
+            const played = hand.splice(idx, 1)[0];
+            game.discard.push(played);
+
+            io.to(gameCode).emit('card-played', { player, card: played });
+
+            if (hand.length === 0) {
+                io.to(gameCode).emit('game-end', player);
+                delete lobby.game;
+                return;
+            }
+
+            const next = nextTurn(game);
+            io.to(gameCode).emit('player-turn', next);
+        });
+
+        socket.on('draw-card', (gameCode) => {
+            const lobby = lobbies[gameCode];
+            const game = lobby?.game;
+            if (!game) return;
+            const player = socket.data.playerName;
+            if (game.turnOrder[game.current] !== player) return;
+
+            if (game.deck.length === 0) {
+                const top = game.discard.pop();
+                game.deck = game.discard.sort(() => Math.random() - 0.5);
+                game.discard = [top];
+            }
+            const card = game.deck.pop();
+            game.hands[player].push(card);
+            socket.emit('deal-cards', game.hands[player]);
+
+            const next = nextTurn(game);
+            io.to(gameCode).emit('player-turn', next);
         });
 
 
