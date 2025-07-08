@@ -222,6 +222,12 @@ function setAvatarImages() {
         if (file) {
             own.style.backgroundImage = `url('/images/avatars/${file}')`;
         }
+        if (!own.querySelector('.uyes-bubble')) {
+            const bubble = document.createElement('div');
+            bubble.className = 'uyes-bubble';
+            bubble.textContent = 'UYES!';
+            own.appendChild(bubble);
+        }
     }
 }
 
@@ -280,6 +286,10 @@ function setupAvatarSlots(total) {
                     <span class="card small back"><span><span></span></span></span>
                 </div>
             </div>`;
+        const bubble = document.createElement('div');
+        bubble.className = 'uyes-bubble';
+        bubble.textContent = 'UYES!';
+        avatar.appendChild(bubble);
         avatarSlots.push(avatar);
         if (i < 2) {
             avatar.classList.add('left-hand');
@@ -336,15 +346,8 @@ function getAvatarElement(name) {
 function toggleUyesBubble({ player, active }) {
     const avatar = getAvatarElement(player);
     if (!avatar) return;
-    let bubble = avatar.querySelector('.uyes-bubble');
-    if (active) {
-        if (!bubble) {
-            bubble = document.createElement('div');
-            bubble.className = 'uyes-bubble';
-            bubble.textContent = 'UYES!';
-            avatar.appendChild(bubble);
-        }
-    } else if (bubble) {
-        bubble.remove();
+    const bubble = avatar.querySelector('.uyes-bubble');
+    if (bubble) {
+        bubble.classList.toggle('active', active);
     }
 }

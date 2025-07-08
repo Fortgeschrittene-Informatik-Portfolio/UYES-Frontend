@@ -84,12 +84,18 @@ function broadcastHandCounts(io, gameCode, game) {
 }
 
 function handleUyesEnd(io, gameCode, game, player) {
-    if (!game.uyesPressed[player]) return;
+    const pressed = !!game.uyesPressed[player];
     delete game.uyesPressed[player];
-    if (game.hands[player]?.length === 1) {
+
+    const hasOne = game.hands[player]?.length === 1;
+
+    if (pressed && hasOne) {
         io.to(gameCode).emit('player-uyes', { player, active: true });
-    } else {
-        io.to(gameCode).emit('player-uyes', { player, active: false });
+        return;
+    }
+
+    io.to(gameCode).emit('player-uyes', { player, active: false });
+    if (pressed || hasOne) {
         drawCards(game, player, 1);
         for (const [_id, s] of io.sockets.sockets) {
             if (s.data.playerName === player && s.rooms.has(gameCode)) {
