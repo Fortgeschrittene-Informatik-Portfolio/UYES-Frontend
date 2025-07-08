@@ -364,5 +364,4 @@ export function setupSocket(io) {
     });
 }
 
-export function getLobbyMeta(code) {
-    return lobbies[code] || null;}
+export function getLobbyMeta(code) {    return lobbies[code] || null;}
