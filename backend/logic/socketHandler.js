@@ -261,6 +261,8 @@ export function setupSocket(io) {
             const played = hand.splice(idx, 1)[0];
             game.discard.push(played);
 
+            socket.emit('deal-cards', hand);
+
             io.to(gameCode).emit('card-played', { player, card: played });
             broadcastHandCounts(io, gameCode, game);
 
