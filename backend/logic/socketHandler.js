@@ -59,6 +59,13 @@ function getSessionFromSocket(socket) {
         cookies[key] = decodeURIComponent(val.join('='));
     }
     return getSession({ cookies });
+
+function broadcastHandCounts(io, gameCode, game) {
+    const g = game || lobbies[gameCode]?.game;
+    if (!g) return;
+    const counts = g.turnOrder.map(name => ({ name, count: g.hands[name]?.length || 0 }));
+    io.to(gameCode).emit('update-hand-counts', counts);
+
 }
 
 export function setupSocket(io) {
@@ -86,6 +93,13 @@ export function setupSocket(io) {
             }
 
             io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+
+            if (lobbies[gameCode].game) {
+                const game = lobbies[gameCode].game;
+                const hand = game.hands[playerName] || [];
+                socket.emit('deal-cards', hand);
+                socket.emit('update-hand-counts', game.turnOrder.map(n => ({ name: n, count: game.hands[n]?.length || 0 })));
+            }
 
         });
         socket.on("kick-player", (gameCode, playerNameToKick) => {
@@ -160,6 +174,8 @@ export function setupSocket(io) {
                 }
             }
 
+            broadcastHandCounts(io, gameCode, game);
+
             io.to(gameCode).emit('game-started');
 
             io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
@@ -185,6 +201,7 @@ export function setupSocket(io) {
             game.discard.push(played);
 
             io.to(gameCode).emit('card-played', { player, card: played });
+            broadcastHandCounts(io, gameCode, game);
 
             if (played.value === 'reverse') {
                 game.turnOrder.reverse();
@@ -240,6 +257,7 @@ export function setupSocket(io) {
 
             drawCards(game, player, 1);
             socket.emit('deal-cards', game.hands[player]);
+            broadcastHandCounts(io, gameCode, game);
 
             const next = nextTurn(game);
             io.to(gameCode).emit('player-turn', next);
