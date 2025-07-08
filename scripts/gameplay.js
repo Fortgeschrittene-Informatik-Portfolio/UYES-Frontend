@@ -11,8 +11,18 @@ let avatarSlots = [];
 
 
 export async function initGameplay() {
-    const res = await fetch('/api/lobbyData');
-    const data = await res.json();
+    let data;
+    try {
+        const res = await fetch('/api/lobbyData');
+        if (!res.ok) throw new Error('Request failed');
+        data = await res.json();
+    } catch (err) {
+        alert('❌ Fehler beim Laden der Lobby-Daten');
+        console.error(err);
+        window.location.href = '/start/game';
+        return;
+    }
+
     gameCode = data.code;
     playerName = data.name;
     playerAvatars = data.avatars || {};
