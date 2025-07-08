@@ -179,6 +179,19 @@
     box-shadow: 0 0 1cqw var(--primary-yellow);
 }
 
+.uyes-bubble {
+    position: absolute;
+    top: -8%;
+    left: 13%;
+    font-size: 3cqw;
+    color: white;
+    -webkit-text-stroke: 0.07cqw black;
+    background-color: var(--primary-red);
+    border: 0.5cqw solid var(--primary-yellow);
+    border-radius: 25% 25% 25% 0;
+    pointer-events: none;
+}
+
 #player1, #player2 {
     .cardHands {
         left: 105%;
@@ -223,19 +236,6 @@
 body#gameplay2 {
     #player2 {
         border: 0.2cqw solid white;
-
-        &:after {
-            content: "UYES!";
-            position: absolute;
-            top: -8%;
-            left: 13%;
-            font-size: 3cqw;
-            color: white;
-            -webkit-text-stroke: 0.07cqw black;
-            background-color: var(--primary-red);
-            border: 0.5cqw solid var(--primary-yellow);
-            border-radius: 25% 25% 25% 0;
-        }
     }
 
     #player3 {
@@ -248,19 +248,6 @@ body#gameplay2 {
 body#gameplay {
     #player2 {
         border: 0.2cqw solid white;
-
-        &:after {
-            content: "UYES!";
-            position: absolute;
-            top: -8%;
-            left: 13%;
-            font-size: 3cqw;
-            color: white;
-            -webkit-text-stroke: 0.07cqw black;
-            background-color: var(--primary-red);
-            border: 0.5cqw solid var(--primary-yellow);
-            border-radius: 25% 25% 25% 0;
-        }
     }
 
     #own-avatar {
