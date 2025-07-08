@@ -13,7 +13,7 @@ import { getSession } from '../jwtSession.js';
 
 
 const lobbies = {};
-// Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, game?: GameState } }
+// Format: { [gameCode]: { host: string, players: [], avatars: {}, maxPlayers: 5, settings: {}, game?: GameState } }
 
 function createDeck(settings = {}) {
     const colors = ['red', 'yellow', 'green', 'blue'];
@@ -88,6 +88,7 @@ export function setupSocket(io) {
             if (!lobbies[gameCode]) {
                 if (maxPlayersFromHost) {
                     lobbies[gameCode] = {
+                        host: playerName,
                         players: [],
                         avatars: {},
                         maxPlayers: maxPlayersFromHost || 5,
@@ -177,6 +178,7 @@ export function setupSocket(io) {
         socket.on('start-game', (gameCode) => {
             const lobby = lobbies[gameCode];
             if (!lobby) return;
+            if (lobby.host && socket.data.playerName !== lobby.host) return;
             if (lobby.game) return; // already running
 
             const game = {

@@ -157,6 +157,12 @@
     opacity: 0.3;
 }
 
+.avatar.active,
+#own-avatar.active {
+    border: 0.8cqw solid var(--primary-yellow);
+    box-shadow: 0 0 1cqw var(--primary-yellow);
+}
+
 #player1, #player2 {
     .cardHands {
         left: 105%;
