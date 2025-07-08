@@ -101,7 +101,7 @@
 
 
 #player-avatars {
-    z-index: 1;
+    z-index: 5;
     align-self: center;
     position: relative;
     width: 90%;
