@@ -251,14 +251,23 @@ function isCardPlayable(card) {
 function showWinner(winner) {
     const win = document.getElementById('winner');
     if (win) {
-        win.textContent = `${winner} won!`;
+        win.textContent = winner;
+        const file = playerAvatars[winner];
+        if (file) {
+            win.style.backgroundImage = `url('/images/avatars/${file}')`;
+        }
         win.classList.remove('hidden');
     }
     document.getElementById('milchglas2')?.classList.remove('hidden');
     const endButtons = document.getElementById('ending-buttons');
+    const waitText = document.getElementById('wait-for-host');
+    const isHost = !document.body.classList.contains('Joiner');
     if (endButtons) {
         endButtons.classList.remove('hidden');
-        endButtons.style.display = '';
+        endButtons.style.display = isHost ? '' : 'none';
+    }
+    if (waitText) {
+        waitText.classList.toggle('hidden', isHost);
     }
 }
 
