@@ -197,6 +197,7 @@ function setupAvatarSlots(total) {
         avatar.id = `player${i + 1}`;
         avatar.dataset.playerName = '';
         avatar.innerHTML = `
+            <div class="player-name"></div>
             <div class="cardHands">
                 <div class="avatar-row">
                     <h2 class="cardsleft"></h2>
@@ -221,10 +222,12 @@ function updateHandCounts(list) {
         if (data) {
             slot.querySelector('.cardsleft').textContent = `${data.count}x`;
             slot.dataset.playerName = data.name;
+            slot.querySelector('.player-name').textContent = data.name;
             slot.classList.remove('inactive');
         } else {
             slot.querySelector('.cardsleft').textContent = '';
             slot.dataset.playerName = '';
+            slot.querySelector('.player-name').textContent = '';
             slot.classList.add('inactive');
         }
     }
