@@ -71,6 +71,7 @@ function getSessionFromSocket(socket) {
         cookies[key] = decodeURIComponent(val.join('='));
     }
     return getSession({ cookies });
+}
 
 function broadcastHandCounts(io, gameCode, game) {
     const g = game || lobbies[gameCode]?.game;
@@ -88,10 +89,9 @@ export function setupSocket(io) {
                 if (maxPlayersFromHost) {
                     lobbies[gameCode] = {
                         players: [],
-
                         avatars: {},
-                        maxPlayers: maxPlayersFromHost || 5
-
+                        maxPlayers: maxPlayersFromHost || 5,
+                        settings: socket.data.session?.settings || {}
                     };
                 } else {
                     socket.emit("lobby-not-found");
@@ -188,6 +188,9 @@ export function setupSocket(io) {
             };
             dealInitialCards(game);
             lobby.game = game;
+
+            const topCard = game.discard[game.discard.length - 1];
+            io.to(gameCode).emit('card-played', { player: null, card: topCard });
 
             for (const [id, s] of io.sockets.sockets) {
                 if (s.rooms.has(gameCode)) {
