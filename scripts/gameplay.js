@@ -59,6 +59,7 @@ export async function initGameplay() {
     socket.on('card-played', updateDiscard);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
+    socket.on('player-uyes', toggleUyesBubble);
 
     socket.emit('join-lobby', gameCode, playerName);
 
@@ -105,6 +106,13 @@ export async function initGameplay() {
                 const card = JSON.parse(data);
                 socket.emit('play-card', gameCode, card);
             } catch { /* ignore invalid data */ }
+        }
+    });
+
+    const uyesBtn = document.getElementById('UYES');
+    uyesBtn?.addEventListener('click', () => {
+        if (myTurn) {
+            socket.emit('uyes', gameCode);
         }
     });
 }
@@ -312,4 +320,25 @@ function updateHandCounts(list) {
         }
     }
     setAvatarImages();
+}
+
+function getAvatarElement(name) {
+    return document.querySelector(`#own-avatar[data-player="${name}"]`) ||
+        document.querySelector(`.avatar[data-player-name="${name}"]`);
+}
+
+function toggleUyesBubble({ player, active }) {
+    const avatar = getAvatarElement(player);
+    if (!avatar) return;
+    let bubble = avatar.querySelector('.uyes-bubble');
+    if (active) {
+        if (!bubble) {
+            bubble = document.createElement('div');
+            bubble.className = 'uyes-bubble';
+            bubble.textContent = 'UYES!';
+            avatar.appendChild(bubble);
+        }
+    } else if (bubble) {
+        bubble.remove();
+    }
 }

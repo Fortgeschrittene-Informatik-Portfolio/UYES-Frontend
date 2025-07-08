@@ -82,6 +82,23 @@ function broadcastHandCounts(io, gameCode, game) {
 
 }
 
+function handleUyesEnd(io, gameCode, game, player) {
+    if (!game.uyesPressed[player]) return;
+    delete game.uyesPressed[player];
+    if (game.hands[player]?.length === 1) {
+        io.to(gameCode).emit('player-uyes', { player, active: true });
+    } else {
+        io.to(gameCode).emit('player-uyes', { player, active: false });
+        drawCards(game, player, 1);
+        for (const [_id, s] of io.sockets.sockets) {
+            if (s.data.playerName === player && s.rooms.has(gameCode)) {
+                s.emit('deal-cards', game.hands[player]);
+            }
+        }
+        broadcastHandCounts(io, gameCode, game);
+    }
+}
+
 export function setupSocket(io) {
     io.on("connection", (socket) => {
         socket.data.session = getSessionFromSocket(socket);
@@ -218,7 +235,8 @@ export function setupSocket(io) {
                 discard: [],
                 hands: {},
                 turnOrder: [...lobby.players],
-                current: 0
+                current: 0,
+                uyesPressed: {}
             };
             dealInitialCards(game);
             // Zufällig bestimmen, welcher Spieler beginnt
@@ -308,6 +326,8 @@ export function setupSocket(io) {
                 return;
             }
 
+            handleUyesEnd(io, gameCode, game, player);
+
             io.to(gameCode).emit('player-turn', next);
         });
 
@@ -323,7 +343,17 @@ export function setupSocket(io) {
             broadcastHandCounts(io, gameCode, game);
 
             const next = nextTurn(game);
+            handleUyesEnd(io, gameCode, game, player);
             io.to(gameCode).emit('player-turn', next);
+        });
+
+        socket.on('uyes', (gameCode) => {
+            const lobby = lobbies[gameCode];
+            const game = lobby?.game;
+            if (!game) return;
+            const player = socket.data.playerName;
+            if (game.turnOrder[game.current] !== player) return;
+            game.uyesPressed[player] = true;
         });
 
 
@@ -335,5 +365,4 @@ export function setupSocket(io) {
 }
 
 export function getLobbyMeta(code) {
-    return lobbies[code] || null;
-}
+    return lobbies[code] || null;}
