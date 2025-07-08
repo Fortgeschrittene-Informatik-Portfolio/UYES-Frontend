@@ -26,7 +26,7 @@ export function initJoinLobby() {
         const res = await fetch("/api/joinGame", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, name }),
+            body: JSON.stringify({ code, playerName: name }),
         });
 
         if (res.redirected) {
