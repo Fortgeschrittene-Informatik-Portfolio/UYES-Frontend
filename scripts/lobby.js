@@ -1,21 +1,22 @@
 import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
 const socket = io(); // Standardverbindung
+let currentGameCode;
 
 export async function initLobbyHost() {
     const res = await fetch("/api/lobbyData");
     const gameData = await res.json();
 
-    const gameCode = gameData.code;
+    currentGameCode = gameData.code;
     const playerName = gameData.name;
     const maxPlayers = gameData.players;
     const role = gameData.role;
 
     // Spieler in WebSocket-Raum eintragen
-    socket.emit("join-lobby", gameCode, playerName, maxPlayers);
+    socket.emit("join-lobby", currentGameCode, playerName, maxPlayers);
 
     // Game-Code anzeigen
     const codeElement = document.getElementById("game-code");
-    codeElement.textContent = `Game-Code: #${gameCode || "000000"}`;
+    codeElement.textContent = `Game-Code: #${currentGameCode || "000000"}`;
 
     // BODY-Klasse setzen (nur Joiner)
     if (role === "joiner") {
@@ -35,6 +36,7 @@ export async function initLobbyHost() {
     // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
         const newCode = Math.floor(100000000 + Math.random() * 900000000).toString();
+        const oldCode = currentGameCode;
 
         try {
             const res = await fetch("/api/gameCode", {
@@ -43,6 +45,8 @@ export async function initLobbyHost() {
                 body: JSON.stringify({ code: newCode })
             });
             if (!res.ok) throw new Error();
+            socket.emit("change-code", oldCode, newCode);
+            currentGameCode = newCode;
             codeElement.textContent = `Game-Code: #${newCode}`;
         } catch {
             console.error("❌ Fehler beim Aktualisieren des Codes");
@@ -54,7 +58,17 @@ export async function initLobbyHost() {
         window.location.href = "/start/game";
     });
 
-    helpFunctionality(gameCode, playerName);
+    socket.on("update-code", async (newCode) => {
+        currentGameCode = newCode;
+        codeElement.textContent = `Game-Code: #${newCode}`;
+        await fetch("/api/gameCode", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ code: newCode })
+        });
+    });
+
+    helpFunctionality(() => currentGameCode, playerName);
 }
 
 
@@ -95,7 +109,7 @@ function renderLobby(gameData, playerList) {
     document.querySelectorAll(".removePlayerButton[data-player]").forEach(btn => {
         btn.addEventListener("click", () => {
             const playerToKick = btn.getAttribute("data-player");
-            socket.emit("kick-player", gameData.code, playerToKick);
+            socket.emit("kick-player", currentGameCode, playerToKick);
         });
     });
 }
@@ -111,7 +125,7 @@ function checkIfLobbyFull(currentPlayers, maxPlayers) {
     }
 }
 
-function helpFunctionality(gameCode, playerName) {
+function helpFunctionality(getGameCode, playerName) {
     const helpBtn = document.getElementById("helpBtnLobby");
     const helpDiv = document.getElementById("helpButtonClicked");
     const closeHelpBtn = document.getElementById("closeHelpBtn");
@@ -149,7 +163,7 @@ function helpFunctionality(gameCode, playerName) {
     if (leave) {
         leave.addEventListener("click", () => {
             console.log("🚪 Spieler klickt auf Exit – leave wird ausgeführt");
-            socket.emit("leave-lobby", gameCode, playerName);
+            socket.emit("leave-lobby", getGameCode(), playerName);
             window.location.href = "/start/game";
         });
     }
