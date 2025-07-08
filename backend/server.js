@@ -1,7 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import session from 'express-session';
+import cookieParser from 'cookie-parser';
+import { jwtSessionMiddleware } from './jwtSession.js';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
@@ -16,13 +17,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-    session({
-        secret: 'your-secret',
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+app.use(cookieParser());
+app.use(jwtSessionMiddleware);
 
 app.use(express.static(path.join(__dirname, '../')));
 app.use('/', routes);
