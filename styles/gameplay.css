@@ -153,6 +153,10 @@
 
 }
 
+.avatar.inactive {
+    opacity: 0.3;
+}
+
 #player1, #player2 {
     .cardHands {
         left: 105%;
@@ -327,6 +331,9 @@ body#gameplay {
 
 }
 
+.Joiner #ending-buttons {
+    display: none;
+}
 
 @media only screen and (max-width: 600px) {
 
