@@ -129,9 +129,23 @@
     border-radius: 10%;
     aspect-ratio: 1/1;
     width: 10%;
+    position: relative;
     background-color: rgba(169, 169, 169, 0.5); /* Grauton mit 50% Transparenz */
     flex-grow: 0;
     /*display: flex;*/
+
+    .player-name {
+        position: absolute;
+        top: -1.2em;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        color: white;
+        -webkit-text-stroke: 0.05cqw black;
+        font-weight: 600;
+        pointer-events: none;
+        text-shadow: 0 0.05em 0.1em black;
+    }
 
     .cardHands {
         position: relative;
