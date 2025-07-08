@@ -10,6 +10,7 @@ export async function initLobbyHost() {
     const playerName = gameData.name;
     const maxPlayers = gameData.players;
     const role = gameData.role;
+    let hostName = gameData.host || (role === "host" ? playerName : null);
 
     // Spieler in WebSocket-Raum eintragen
     socket.emit("join-lobby", currentGameCode, playerName, maxPlayers);
@@ -24,13 +25,14 @@ export async function initLobbyHost() {
     }
 
     // Lobby initial rendern
-    renderLobby(gameData, [playerName]); // Host kennt nur sich selbst – Joiner sieht später Liste
+    renderLobby(gameData, [playerName], hostName); // Host kennt nur sich selbst – Joiner sieht später Liste
 
     // Wenn neue Spieler beitreten oder Server Lobby-Update schickt
-    socket.on("update-lobby", (players) => {
-        renderLobby(gameData, players);
+    socket.on("update-lobby", (players, _maxPlayers, _avatars, newHost) => {
+        hostName = newHost;
+        renderLobby(gameData, players, hostName);
         checkIfLobbyFull(players, maxPlayers);
-        if (players[0] === playerName) {
+        if (playerName === hostName) {
             document.body.classList.remove("Joiner");
         } else {
             document.body.classList.add("Joiner");
@@ -111,7 +113,7 @@ export async function initLobbyHost() {
 
 
 
-function renderLobby(gameData, playerList) {
+function renderLobby(gameData, playerList, hostName) {
     const container = document.getElementById("player-lobby-container");
     container.innerHTML = "";
     const lobbyTag = document.createElement("h2");
@@ -124,7 +126,7 @@ function renderLobby(gameData, playerList) {
 
         if (playerList[i]) {
             const isCurrent = playerList[i] === gameData.name;
-            const label = i === 0 ? "host:" : "";
+            const label = playerList[i] === hostName ? "host:" : "";
             playerDiv.innerHTML = `
                 ${label ? `<p id="hostTag">${label}</p>` : ""}
                 <p class="takenSlot">${playerList[i]}${isCurrent ? " (you)" : ""}</p>

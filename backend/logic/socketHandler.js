@@ -13,7 +13,8 @@ import { getSession } from '../jwtSession.js';
 
 
 const lobbies = {};
-// Format: { [gameCode]: { host: string, players: [], avatars: {}, maxPlayers: 5, settings: {}, game?: GameState } }
+// Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, host: string, game?: GameState } }
+
 
 function createDeck(settings = {}) {
     const colors = ['red', 'yellow', 'green', 'blue'];
@@ -92,7 +93,8 @@ export function setupSocket(io) {
                         players: [],
                         avatars: {},
                         maxPlayers: maxPlayersFromHost || 5,
-                        settings: socket.data.session?.settings || {}
+                        settings: socket.data.session?.settings || {},
+                        host: playerName
                     };
                 } else {
                     socket.emit("lobby-not-found");
@@ -119,7 +121,13 @@ export function setupSocket(io) {
                 }
             }
 
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
+            io.to(gameCode).emit(
+                "update-lobby",
+                lobbies[gameCode].players,
+                lobbies[gameCode].maxPlayers,
+                lobbies[gameCode].avatars,
+                lobbies[gameCode].host
+            );
 
 
         });
@@ -128,7 +136,13 @@ export function setupSocket(io) {
 
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerNameToKick);
             delete lobbies[gameCode].avatars[playerNameToKick];
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
+            io.to(gameCode).emit(
+                "update-lobby",
+                lobbies[gameCode].players,
+                lobbies[gameCode].maxPlayers,
+                lobbies[gameCode].avatars,
+                lobbies[gameCode].host
+            );
 
             // Dem gekickten Spieler Bescheid geben & rausschmeißen
             for (const [id, s] of io.sockets.sockets) {
@@ -172,7 +186,13 @@ export function setupSocket(io) {
             }
 
             // An alle: aktualisierte Spieler
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
+            io.to(gameCode).emit(
+                "update-lobby",
+                lobbies[gameCode].players,
+                lobbies[gameCode].maxPlayers,
+                lobbies[gameCode].avatars,
+                lobbies[gameCode].host
+            );
         });
 
         socket.on('start-game', (gameCode) => {
