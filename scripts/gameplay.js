@@ -57,6 +57,22 @@ function renderHand(cards) {
         span.addEventListener('click', () => {
             socket.emit('play-card', gameCode, { color: card.color, value: card.value });
         });
+
+        span.addEventListener('mouseenter', () => {
+            span.classList.add('hovered');
+            const prev = span.previousElementSibling;
+            if (prev && prev.classList.contains('card')) {
+                prev.classList.add('prev-hovered');
+            }
+        });
+
+        span.addEventListener('mouseleave', () => {
+            span.classList.remove('hovered');
+            const prev = span.previousElementSibling;
+            if (prev && prev.classList.contains('card')) {
+                prev.classList.remove('prev-hovered');
+            }
+        });
         container.appendChild(span);
     }
 }

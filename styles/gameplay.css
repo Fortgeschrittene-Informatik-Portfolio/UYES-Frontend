@@ -53,21 +53,20 @@
 .card.normal {
     margin-left: -2em;
     flex-shrink: 0;
-    transition: all 0.5s;
+    transition: transform 0.5s;
+}
 
-    &:hover {
-        transform: translateY(-1.6em);
-        z-index: 999;
+.card.normal.hovered {
+    transform: translateY(-1.6em);
+    z-index: 999;
+}
 
-        + .card {
-            transform: translatex(0.5em);
-        }
-    }
+.card.normal.hovered + .card {
+    transform: translateX(0.5em);
+}
 
-    &:has(+.card:hover) {
-        transform: translatex(-0.5em);
-    }
-
+.card.normal.prev-hovered {
+    transform: translateX(-0.5em);
 }
 
 #piles {
