@@ -252,16 +252,6 @@ body#gameplay {
         opacity: 0.5;
     }
 
-    .card.normal {
-        *:hover {
-            cursor: grab;
-        }
-
-        *:active {
-            cursor: grabbing;
-        }
-
-    }
 
     #UYES {
         pointer-events: initial;
@@ -334,6 +324,14 @@ body#gameplay {
         }
     }
 
+}
+
+.my-turn #draw-pile span.card:hover {
+    cursor: grab;
+}
+
+.my-turn #draw-pile span.card:active {
+    cursor: grabbing;
 }
 
 .Joiner #ending-buttons {
