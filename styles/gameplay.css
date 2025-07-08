@@ -247,7 +247,6 @@ body#gameplay {
     }
 
     #own-avatar {
-        border: 0.8cqw solid var(--primary-yellow);
         background-color: var(--secondary-yellow);
         opacity: 0.5;
     }
