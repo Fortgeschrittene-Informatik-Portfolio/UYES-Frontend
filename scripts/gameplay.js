@@ -27,6 +27,11 @@ export async function initGameplay() {
         document.body.classList.remove('Joiner');
     }
 
+    const buttons = document.getElementById('ending-buttons');
+    if (role === 'host' && buttons) {
+        buttons.style.display = '';
+    }
+
     maxPlayers = data.players;
 
 
