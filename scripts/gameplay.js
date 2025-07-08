@@ -11,6 +11,8 @@ let avatarSlots = [];
 
 // Track the current top card on the discard pile
 let topDiscard = null;
+// Store current hand to re-render when turn state changes
+let myHand = [];
 
 // Whether it's currently this client's turn
 let myTurn = false;
@@ -64,20 +66,26 @@ export async function initGameplay() {
 
     const drawPile = document.getElementById('draw-pile');
     drawPile?.addEventListener('click', () => {
-        socket.emit('draw-card', gameCode);
+        if (myTurn) {
+            socket.emit('draw-card', gameCode);
+        }
     });
     drawPile?.addEventListener('dragstart', (e) => {
+        if (!myTurn) {
+            e.preventDefault();
+            return;
+        }
         e.dataTransfer.setData('text/plain', 'draw');
     });
 
     const handContainer = document.getElementById('player-hand-container');
     handContainer?.addEventListener('dragover', (e) => {
-        if (e.dataTransfer.getData('text/plain') === 'draw') {
+        if (myTurn && e.dataTransfer.getData('text/plain') === 'draw') {
             e.preventDefault();
         }
     });
     handContainer?.addEventListener('drop', (e) => {
-        if (e.dataTransfer.getData('text/plain') === 'draw') {
+        if (myTurn && e.dataTransfer.getData('text/plain') === 'draw') {
             e.preventDefault();
             socket.emit('draw-card', gameCode);
         }
@@ -99,7 +107,25 @@ export async function initGameplay() {
     });
 }
 
+function displayValue(value) {
+    switch (value) {
+        case 'draw2':
+            return '2+';
+        case 'wild4':
+            return '4+';
+        case 'reverse':
+            return '⤾';
+        case 'skip':
+            return 'Ø';
+        case 'wild':
+            return 'W';
+        default:
+            return value;
+    }
+}
+
 function renderHand(cards) {
+    myHand = cards.slice();
     const container = document.getElementById('player-hand-container');
     container.innerHTML = '';
     for (const card of cards) {
@@ -107,7 +133,7 @@ function renderHand(cards) {
         span.className = `card normal ${card.color}`;
         span.dataset.color = card.color;
         span.dataset.value = card.value;
-        span.innerHTML = `<span><span>${card.value}</span></span>`;
+        span.innerHTML = `<span><span>${displayValue(card.value)}</span></span>`;
         const playable = myTurn && isCardPlayable(card);
         span.draggable = playable;
         if (playable) {
@@ -149,6 +175,8 @@ function highlightTurn(name) {
         a.classList.toggle('active', !!match);
     });
     document.body.classList.toggle('my-turn', name === playerName);
+    // re-render hand so playable state updates
+    renderHand(myHand);
 }
 
 function setAvatarImages() {
@@ -179,7 +207,7 @@ function updateDiscard({ player, card }) {
     const pile = document.querySelector('#discard-pile span.card');
     if (pile) {
         pile.className = `card big ${card.color}`;
-        pile.innerHTML = `<span><span>${card.value}</span></span>`;
+        pile.innerHTML = `<span><span>${displayValue(card.value)}</span></span>`;
     }
     topDiscard = card;
 }

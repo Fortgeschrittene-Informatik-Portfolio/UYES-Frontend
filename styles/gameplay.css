@@ -5,12 +5,11 @@
     pointer-events: none;
     top: 85%;
     left: 70%;
-    background-color: #676767;
-    border: solid 0.5cqh #3a3a3a; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
+    background-color: dimgrey;
+    border: solid 0.5cqh darkgrey; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
     border-radius: 15%;
     font-weight: 800;
     font-size: 2cqw;
-
 }
 
 #player-hand-container {
@@ -273,11 +272,12 @@ body#gameplay {
     }
 
 
-    #UYES {
-        pointer-events: initial;
-        background-color: var(--primary-yellow) ;
-        border: solid 0.5cqh white;
-    }
+}
+
+.my-turn #UYES {
+    pointer-events: initial;
+    background-color: var(--primary-yellow);
+    border: solid 0.5cqh white;
 }
 
 body#gameplay {
@@ -344,6 +344,15 @@ body#gameplay {
         }
     }
 
+}
+
+#draw-pile {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.my-turn #draw-pile {
+    pointer-events: auto;
 }
 
 .my-turn #draw-pile span.card:hover {

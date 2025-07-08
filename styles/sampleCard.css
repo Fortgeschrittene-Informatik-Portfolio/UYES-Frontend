@@ -94,4 +94,12 @@ the inner one contains the shown card value as a normal content*/
     background-color: var(--primary-green);
 }
 
+.wild > span {
+    background: linear-gradient(45deg,
+        var(--primary-red),
+        var(--primary-yellow),
+        var(--primary-green),
+        var(--primary-blue));
+}
+
 
