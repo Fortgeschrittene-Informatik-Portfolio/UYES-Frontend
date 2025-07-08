@@ -203,16 +203,12 @@
     pointer-events: none;
 }
 
-#player1, #player2 {
-    .cardHands {
-        left: 105%;
-    }
+.avatar.left-hand .cardHands {
+    left: 105%;
 }
 
-#player3, #player4 {
-    .cardHands {
-        right: 105%;
-    }
+.avatar.right-hand .cardHands {
+    right: 105%;
 }
 
 #player2 {

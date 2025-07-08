@@ -281,7 +281,13 @@ function setupAvatarSlots(total) {
                 </div>
             </div>`;
         avatarSlots.push(avatar);
-        if (i < 2) rows[0].appendChild(avatar); else rows[1].appendChild(avatar);
+        if (i < 2) {
+            avatar.classList.add('left-hand');
+            rows[0].appendChild(avatar);
+        } else {
+            avatar.classList.add('right-hand');
+            rows[1].appendChild(avatar);
+        }
     }
     rows.forEach(r => container.appendChild(r));
 }
