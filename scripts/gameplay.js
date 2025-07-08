@@ -53,6 +53,21 @@ export async function initGameplay() {
     document.getElementById('draw-pile')?.addEventListener('click', () => {
         socket.emit('draw-card', gameCode);
     });
+
+    const discard = document.getElementById('discard-pile');
+    discard?.addEventListener('dragover', (e) => {
+        e.preventDefault();
+    });
+    discard?.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('application/json');
+        if (data) {
+            try {
+                const card = JSON.parse(data);
+                socket.emit('play-card', gameCode, card);
+            } catch { /* ignore invalid data */ }
+        }
+    });
 }
 
 function renderHand(cards) {
@@ -64,6 +79,10 @@ function renderHand(cards) {
         span.dataset.color = card.color;
         span.dataset.value = card.value;
         span.innerHTML = `<span><span>${card.value}</span></span>`;
+        span.draggable = true;
+        span.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('application/json', JSON.stringify(card));
+        });
         span.addEventListener('click', () => {
             socket.emit('play-card', gameCode, { color: card.color, value: card.value });
         });
