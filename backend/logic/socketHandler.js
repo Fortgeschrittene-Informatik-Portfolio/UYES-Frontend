@@ -364,6 +364,42 @@ export function setupSocket(io) {
             io.to(gameCode).emit('player-uyes', { player, active: true });
         });
 
+        socket.on('leave-game', (gameCode, playerName) => {
+            const lobby = lobbies[gameCode];
+            const game = lobby?.game;
+            const name = playerName || socket.data.playerName;
+            if (!lobby) return;
+
+            // remove from lobby
+            lobby.players = lobby.players.filter(p => p !== name);
+            delete lobby.avatars[name];
+
+            // remove from game state
+            if (game) {
+                const idx = game.turnOrder.indexOf(name);
+                if (idx !== -1) {
+                    game.turnOrder.splice(idx, 1);
+                    delete game.hands[name];
+                    delete game.uyesPressed[name];
+                    if (idx < game.current) {
+                        game.current--;
+                    } else if (idx === game.current && game.current >= game.turnOrder.length) {
+                        game.current = 0;
+                    }
+                }
+
+                const counts = game.turnOrder.map(n => ({ name: n, count: game.hands[n]?.length || 0 }));
+                io.to(gameCode).emit('player-left', { players: lobby.players, counts });
+                io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
+            }
+
+            socket.leave(gameCode);
+
+            if (lobby.players.length === 0) {
+                delete lobbies[gameCode];
+            }
+        });
+
 
         socket.on("disconnect", () => {
             console.log(`🛑 Socket getrennt: ${socket.id}`);

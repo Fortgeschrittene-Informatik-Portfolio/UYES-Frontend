@@ -62,6 +62,10 @@ export async function initGameplay() {
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
     socket.on('game-started', resetGameUI);
+    socket.on('player-left', ({ players, counts }) => {
+        playerList = players.slice();
+        updateHandCounts(counts);
+    });
 
     socket.emit('join-lobby', gameCode, playerName);
 
@@ -125,7 +129,20 @@ export async function initGameplay() {
         }
     });
 
+    const exitBtn = document.getElementById('ExitGameBtn');
+    const exitDiv = document.getElementById('submitLeaving');
+    const stopLeaving = document.getElementById('stopLeaving');
+    const leave = document.getElementById('leave');
+
+    exitBtn?.addEventListener('click', () => exitDiv?.classList.add('exitOpen'));
+    stopLeaving?.addEventListener('click', () => exitDiv?.classList.remove('exitOpen'));
+    leave?.addEventListener('click', () => {
+        socket.emit('leave-game', gameCode, playerName);
+        window.location.href = '/start/game';
+    });
+
     helpFunctionality(socket, () => gameCode, playerName);
+
 }
 
 function displayValue(value) {
