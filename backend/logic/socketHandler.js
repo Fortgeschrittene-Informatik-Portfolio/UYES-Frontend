@@ -361,6 +361,7 @@ export function setupSocket(io) {
             const player = socket.data.playerName;
             if (game.turnOrder[game.current] !== player) return;
             game.uyesPressed[player] = true;
+            io.to(gameCode).emit('player-uyes', { player, active: true });
         });
 
 
