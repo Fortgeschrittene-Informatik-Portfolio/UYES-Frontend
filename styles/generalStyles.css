@@ -19,6 +19,11 @@
     cursor: default;
 }
 
+/* Utility class to hide elements */
+.hidden {
+    display: none;
+}
+
 a{
     text-align: center;
     color: black;

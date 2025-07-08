@@ -41,6 +41,10 @@ router.get('/lobby', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/lobby.html'));
 });
 
+router.get('/gameplay', (req, res) => {
+    res.sendFile(path.join(__dirname, '../html/gameplay.html'));
+});
+
 router.get("/api/lobbyData", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });
@@ -52,7 +56,9 @@ router.get("/api/lobbyData", (req, res) => {
         code: req.session.gameId,
         name: req.session.playerName,
         players: lobbyMeta?.maxPlayers || req.session.settings?.players || 5,
-        role: req.session.role
+        role: req.session.role,
+        playerList: lobbyMeta?.players || [],
+        avatars: lobbyMeta?.avatars || {}
     });
 });
 
@@ -74,6 +80,11 @@ router.post("/api/joinGame", (req, res) => {
 
     if (!/^[0-9]{9}$/.test(code)) {
         return res.status(400).json({ error: "Ungültiger Game-Code" });
+    }
+
+    const lobbyMeta = getLobbyMeta(code);
+    if (!lobbyMeta) {
+        return res.status(404).json({ error: "Lobby nicht gefunden" });
     }
 
     const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];

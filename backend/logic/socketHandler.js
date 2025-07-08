@@ -1,31 +1,133 @@
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const avatarFiles = fs.readdirSync(path.join(__dirname, '../../images'))
+    .filter(f => /avatar/i.test(f));
+
+import { getSession } from '../jwtSession.js';
+
+
 const lobbies = {};
-// Format: { [gameCode]: { players: [], maxPlayers: 5 } }
+// Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, game?: GameState } }
+
+function createDeck(settings = {}) {
+    const colors = ['red', 'yellow', 'green', 'blue'];
+    const deck = [];
+    for (const color of colors) {
+        for (let i = 1; i <= 9; i++) {
+            deck.push({ color, value: i });
+        }
+        if (settings.draw2) deck.push({ color, value: 'draw2' });
+        if (settings.reverse) deck.push({ color, value: 'reverse' });
+        if (settings.skip) deck.push({ color, value: 'skip' });
+    }
+    if (settings.wild) {
+        for (let i = 0; i < 4; i++) deck.push({ color: 'wild', value: 'wild' });
+    }
+    if (settings.wild4) {
+        for (let i = 0; i < 4; i++) deck.push({ color: 'wild', value: 'wild4' });
+    }
+    return deck.sort(() => Math.random() - 0.5);
+}
+
+function dealInitialCards(game) {
+    for (const player of game.turnOrder) {
+        game.hands[player] = game.deck.splice(0, 5);
+    }
+    game.discard.push(game.deck.pop());
+}
+
+function nextTurn(game) {
+    game.current = (game.current + 1) % game.turnOrder.length;
+    return game.turnOrder[game.current];
+}
+
+function drawCards(game, player, count) {
+    const drawn = [];
+    for (let i = 0; i < count; i++) {
+        if (game.deck.length === 0) {
+            const top = game.discard.pop();
+            game.deck = game.discard.sort(() => Math.random() - 0.5);
+            game.discard = [top];
+        }
+        const card = game.deck.pop();
+        game.hands[player].push(card);
+        drawn.push(card);
+    }
+    return drawn;
+}
+
+function getSessionFromSocket(socket) {
+    const cookieStr = socket.handshake.headers.cookie || '';
+    const cookies = {};
+    for (const part of cookieStr.split(';')) {
+        const [key, ...val] = part.trim().split('=');
+        if (!key) continue;
+        cookies[key] = decodeURIComponent(val.join('='));
+    }
+    return getSession({ cookies });
+
+function broadcastHandCounts(io, gameCode, game) {
+    const g = game || lobbies[gameCode]?.game;
+    if (!g) return;
+    const counts = g.turnOrder.map(name => ({ name, count: g.hands[name]?.length || 0 }));
+    io.to(gameCode).emit('update-hand-counts', counts);
+
+}
 
 export function setupSocket(io) {
     io.on("connection", (socket) => {
+        socket.data.session = getSessionFromSocket(socket);
         socket.on("join-lobby", (gameCode, playerName, maxPlayersFromHost) => {
+            if (!lobbies[gameCode]) {
+                if (maxPlayersFromHost) {
+                    lobbies[gameCode] = {
+                        players: [],
+
+                        avatars: {},
+                        maxPlayers: maxPlayersFromHost || 5
+
+                    };
+                } else {
+                    socket.emit("lobby-not-found");
+                    return;
+                }
+            }
+
+            const lobby = lobbies[gameCode];
+
+            if (lobby.players.length >= lobby.maxPlayers && !lobby.players.includes(playerName)) {
+                socket.emit("lobby-full");
+                return;
+            }
+
             socket.join(gameCode);
             socket.data.playerName = playerName; // 🔑 wichtig!
 
-            if (!lobbies[gameCode]) {
-                lobbies[gameCode] = {
-                    players: [],
-                    maxPlayers: maxPlayersFromHost || 5
-                };
-            }
 
             if (!lobbies[gameCode].players.includes(playerName)) {
                 lobbies[gameCode].players.push(playerName);
+                const avatars = lobbies[gameCode].avatars;
+                if (!avatars[playerName]) {
+                    avatars[playerName] = avatarFiles[Math.floor(Math.random() * avatarFiles.length)];
+                }
             }
 
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
+
 
         });
         socket.on("kick-player", (gameCode, playerNameToKick) => {
             if (!lobbies[gameCode]) return;
 
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerNameToKick);
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players);
+            delete lobbies[gameCode].avatars[playerNameToKick];
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
 
             // Dem gekickten Spieler Bescheid geben & rausschmeißen
             for (const [id, s] of io.sockets.sockets) {
@@ -57,6 +159,7 @@ export function setupSocket(io) {
 
             // Spieler aus der Lobby entfernen
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerName);
+            delete lobbies[gameCode].avatars[playerName];
 
             // Raum verlassen
             socket.leave(gameCode);
@@ -68,7 +171,118 @@ export function setupSocket(io) {
             }
 
             // An alle: aktualisierte Spieler
-            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers);
+            io.to(gameCode).emit("update-lobby", lobbies[gameCode].players, lobbies[gameCode].maxPlayers, lobbies[gameCode].avatars);
+        });
+
+        socket.on('start-game', (gameCode) => {
+            const lobby = lobbies[gameCode];
+            if (!lobby) return;
+            if (lobby.game) return; // already running
+
+            const game = {
+                deck: createDeck(lobby.settings),
+                discard: [],
+                hands: {},
+                turnOrder: [...lobby.players],
+                current: 0
+            };
+            dealInitialCards(game);
+            lobby.game = game;
+
+            for (const [id, s] of io.sockets.sockets) {
+                if (s.rooms.has(gameCode)) {
+                    const hand = game.hands[s.data.playerName] || [];
+                    s.emit('deal-cards', hand);
+                }
+            }
+
+            broadcastHandCounts(io, gameCode, game);
+
+            io.to(gameCode).emit('game-started');
+
+            io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
+        });
+
+        socket.on('play-card', (gameCode, card) => {
+            const lobby = lobbies[gameCode];
+            const game = lobby?.game;
+            if (!game) return;
+            const player = socket.data.playerName;
+            if (game.turnOrder[game.current] !== player) return;
+
+            const hand = game.hands[player];
+            const idx = hand.findIndex(c => c.color === card.color && c.value === card.value);
+            if (idx === -1) return;
+
+            const candidate = hand[idx];
+            const top = game.discard[game.discard.length - 1];
+            const isValid = candidate.color === 'wild' || candidate.color === top.color || candidate.value === top.value || top.color === 'wild';
+            if (!isValid) return;
+
+            const played = hand.splice(idx, 1)[0];
+            game.discard.push(played);
+
+            io.to(gameCode).emit('card-played', { player, card: played });
+            broadcastHandCounts(io, gameCode, game);
+
+            if (played.value === 'reverse') {
+                game.turnOrder.reverse();
+                game.current = game.turnOrder.indexOf(player);
+                io.to(gameCode).emit('order-reversed', game.turnOrder);
+            }
+
+            let next = nextTurn(game);
+
+            if (played.value === 'skip') {
+                const skipped = next;
+                next = nextTurn(game);
+                io.to(gameCode).emit('player-skipped', skipped);
+            } else if (played.value === 'draw2') {
+                const affected = next;
+                drawCards(game, affected, 2);
+                for (const [_id, s] of io.sockets.sockets) {
+                    if (s.data.playerName === affected && s.rooms.has(gameCode)) {
+                        s.emit('deal-cards', game.hands[affected]);
+                    }
+                }
+                io.to(gameCode).emit('cards-drawn', { player: affected, count: 2 });
+                io.to(gameCode).emit('player-skipped', affected);
+                next = nextTurn(game);
+            } else if (played.value === 'wild4') {
+                const affected = next;
+                drawCards(game, affected, 4);
+                for (const [_id, s] of io.sockets.sockets) {
+                    if (s.data.playerName === affected && s.rooms.has(gameCode)) {
+                        s.emit('deal-cards', game.hands[affected]);
+                    }
+                }
+                io.to(gameCode).emit('cards-drawn', { player: affected, count: 4 });
+                io.to(gameCode).emit('player-skipped', affected);
+                next = nextTurn(game);
+            }
+
+            if (hand.length === 0) {
+                io.to(gameCode).emit('game-end', player);
+                delete lobby.game;
+                return;
+            }
+
+            io.to(gameCode).emit('player-turn', next);
+        });
+
+        socket.on('draw-card', (gameCode) => {
+            const lobby = lobbies[gameCode];
+            const game = lobby?.game;
+            if (!game) return;
+            const player = socket.data.playerName;
+            if (game.turnOrder[game.current] !== player) return;
+
+            drawCards(game, player, 1);
+            socket.emit('deal-cards', game.hands[player]);
+            broadcastHandCounts(io, gameCode, game);
+
+            const next = nextTurn(game);
+            io.to(gameCode).emit('player-turn', next);
         });
 
 

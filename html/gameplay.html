@@ -2,23 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Game</title>
+    <title>Gameplay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="icon" href="/images/logo.png" type="image.png">
+    <script src="/scripts/index.js" type="module" defer></script>
 </head>
-
-<body>
-<button  class="button backButtonTop" >HELP</button>
-
+<body id="gameplay">
+<button class="button backButtonTop">HELP</button>
 <button id="UYES">UYES</button>
+<div id="milchglas2" class="hidden"></div>
+<div id="winner" class="hidden"></div>
+<div id="ending-buttons" class="hidden">
+    <button class="ending">Change Settings</button>
+    <button class="ending">Play Again</button>
+    <button class="ending">Back To Menu</button>
+</div>
 <div id="header">
     <section>
         <h1 id="gameTitle">UYES!</h1>
         <p id="credits">by Andrii, Bilal, Daria , Simon, Srisharanya</p>
     </section>
 </div>
-
 <div id="piles">
     <div class="pile" id="draw-pile">
         <h2>Draw:</h2>
@@ -29,84 +34,12 @@
         <span class="card big red"><span><span>3</span></span></span>
     </div>
 </div>
-<div id="player-avatars">
-    <div class="row">
-        <div class="avatar" id="player2">
-            <div class="cardHands">
-                <div class="avatar-row">
-                    <h2 class="cardsleft">2x</h2>
-                </div>
-                <div class="avatar-row">
-                    <span class="card small back"><span><span></span></span></span>
-                    <span class="card small back"><span><span></span></span></span>
-                </div>
-            </div>
-        </div>
-        <div class="avatar" id="player3">
-            <div class="cardHands">
-                <div class="avatar-row">
-                    <h2 class="cardsleft">4x</h2>
-                </div>
-                <div class="avatar-row">
-                    <span class="card small back"><span><span></span></span></span>
-                    <span class="card small back"><span><span></span></span></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="avatar" id="player1">
-            <div class="cardHands">
-                <div class="avatar-row">
-                    <h2 class="cardsleft">3x</h2>
-                </div>
-                <div class="avatar-row">
-                    <span class="card small back"><span><span></span></span></span>
-                    <span class="card small back"><span><span></span></span></span>
-                </div>
-            </div>
-        </div>
-        <div class="avatar" id="player4">
-            <div class="cardHands">
-                <div class="avatar-row">
-                    <h2 class="cardsleft">0x</h2>
-                </div>
-                <div class="avatar-row">
-                    <span class="card small back"><span><span></span></span></span>
-                    <span class="card small back"><span><span></span></span></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+<div id="player-avatars"></div>
 <div id="own-avatar"></div>
-<div id="player-hand-container">
-    <span class="card normal red"><span><span>2</span></span></span>
-    <span class="card normal red"><span><span>3</span></span></span>
-    <span class="card normal blue"><span><span>4</span></span></span>
-    <span class="card normal green"><span><span>6</span></span></span>
-    <span class="card normal blue"><span><span>4</span></span></span>
-    <!--    <span class="card big green"><span><span>6</span></span></span>-->
-    <!--    <span class="card big red"><span><span>3</span></span></span>-->
-    <!--    <span class="card big blue"><span><span>4</span></span></span>-->
-    <!--    <span class="card big green"><span><span>6</span></span></span>-->
-    <!--    <span class="card big green"><span><span>6</span></span></span>-->
-    <!--    <span class="card big blue"><span><span>4</span></span></span>-->
-    <!--    <span class="card big red"><span><span>3</span></span></span>-->
-    <!--    <span class="card big green"><span><span>6</span></span></span>-->
-    <!--    <span class="card big blue"><span><span>4</span></span></span>-->
-    <!--    <span class="card big green"><span><span>6</span></span></span>-->
-
-
-</div>
+<div id="player-hand-container"></div>
 <div id="yourTurn">
     Your turn in:
-    <div id="roundCountTurn">
-        2
-    </div>
+    <div id="roundCountTurn">0</div>
 </div>
-
-
 </body>
 </html>

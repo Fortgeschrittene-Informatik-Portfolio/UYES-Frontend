@@ -7,12 +7,12 @@ export function initJoinLobby() {
         window.location.href = "/start/game";
     });
 
-    const form = document.getElementById("join-lobby-form");
+    const form = document.querySelector("form[action='/api/joinGame']");
     form?.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const codeInput = document.getElementById("lobby-code");
-        const nameInput = document.getElementById("player-name");
+        const codeInput = document.getElementById("gameCodeInput");
+        const nameInput = document.getElementById("NameInput");
 
         const code = codeInput.value.trim();
         const name = nameInput.value.trim();

@@ -30,6 +30,21 @@ export async function initLobbyHost() {
     socket.on("update-lobby", (players) => {
         renderLobby(gameData, players);
         checkIfLobbyFull(players, maxPlayers);
+        if (players[0] === playerName) {
+            document.body.classList.remove("Joiner");
+        } else {
+            document.body.classList.add("Joiner");
+        }
+    });
+
+    socket.on("lobby-not-found", () => {
+        alert("❌ Lobby nicht gefunden");
+        window.location.href = "/start/game";
+    });
+
+    socket.on("lobby-full", () => {
+        alert("❌ Lobby ist voll");
+        window.location.href = "/start/game";
     });
 
 
@@ -67,6 +82,24 @@ export async function initLobbyHost() {
             body: JSON.stringify({ code: newCode })
         });
     });
+
+
+    const startBtn = document.getElementById("startGameplay");
+    if (startBtn) {
+        startBtn.addEventListener("click", () => {
+            socket.emit("start-game", currentGameCode);
+        });
+    }
+
+    const redirectToGame = () => {
+        if (window.location.pathname !== "/gameplay") {
+            window.location.href = "/gameplay";
+        }
+    };
+
+    socket.on("game-started", redirectToGame);
+    socket.on("player-turn", redirectToGame);
+
 
     helpFunctionality(() => currentGameCode, playerName);
 }

@@ -153,6 +153,10 @@
 
 }
 
+.avatar.inactive {
+    opacity: 0.3;
+}
+
 #player1, #player2 {
     .cardHands {
         left: 105%;
@@ -169,18 +173,15 @@
     border: 0.8cqw solid var(--primary-yellow);
     background-color: rgba(149, 145, 4, 0.5);
 
-    background-image: url("../images/dragonavatar.png");
     background-size: contain;
 
 }
 
 #player1 {
-    background-image: url("../images/pirateavatar.png");
     background-size: contain;
 }
 
 #player3 {
-    background-image: url("../images/elfavatar.png");
     background-size: contain;
 }
 
@@ -191,7 +192,6 @@
     aspect-ratio: 1/1;
     width: 10%;
     position: fixed;
-    background-image: url("../images/boyavatar.png");
     background-size: contain;
     top: 78%;
     left: 19%;
@@ -223,7 +223,7 @@ body#gameplay2 {
     }
 }
 
-body#gameplay3 {
+body#gameplay {
     #player2 {
         border: 0.2cqw solid white;
 
@@ -265,7 +265,7 @@ body#gameplay3 {
     }
 }
 
-body#gameplay4 {
+body#gameplay {
 
     #winner {
         position: absolute;
@@ -280,7 +280,6 @@ body#gameplay4 {
         background-color: var(--secondary-yellow);
         opacity: 0.5;
 
-        background-image: url("../images/dragonavatar.png");
         background-size: contain;
 
         &:after {
@@ -332,6 +331,9 @@ body#gameplay4 {
 
 }
 
+.Joiner #ending-buttons {
+    display: none;
+}
 
 @media only screen and (max-width: 600px) {
 
