@@ -121,6 +121,8 @@ export function setupSocket(io) {
                 }
             }
 
+            io.to(gameCode).emit('game-started');
+
             io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
         });
 
