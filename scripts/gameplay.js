@@ -59,6 +59,7 @@ export async function initGameplay() {
     socket.on('card-played', updateDiscard);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
+    socket.on('player-uyes', toggleUyesBubble);
 
     socket.emit('join-lobby', gameCode, playerName);
 
@@ -105,6 +106,13 @@ export async function initGameplay() {
                 const card = JSON.parse(data);
                 socket.emit('play-card', gameCode, card);
             } catch { /* ignore invalid data */ }
+        }
+    });
+
+    const uyesBtn = document.getElementById('UYES');
+    uyesBtn?.addEventListener('click', () => {
+        if (myTurn) {
+            socket.emit('uyes', gameCode);
         }
     });
 }
@@ -202,7 +210,7 @@ function setAvatarImages() {
             el.dataset.player = n;
             const file = playerAvatars[n];
             if (file) {
-                el.style.backgroundImage = `url('/images/${file}')`;
+                el.style.backgroundImage = `url('/images/avatars/${file}')`;
             }
         }
         index++;
@@ -212,7 +220,7 @@ function setAvatarImages() {
         own.dataset.player = playerName;
         const file = playerAvatars[playerName];
         if (file) {
-            own.style.backgroundImage = `url('/images/${file}')`;
+            own.style.backgroundImage = `url('/images/avatars/${file}')`;
         }
     }
 }
@@ -280,10 +288,22 @@ function setupAvatarSlots(total) {
 
 function updateHandCounts(list) {
     if (!avatarSlots.length) setupAvatarSlots(list.length);
-    // Reihenfolge der Spieler entsprechend der vom Server gesendeten Liste
-    // aktualisieren. Diese Liste ist bereits in Spielreihenfolge sortiert.
-    playerList = list.map(p => p.name);
-    const others = list.filter(p => p.name !== playerName);
+    // Dreh die vom Server gesendete Spielreihenfolge so, dass sie aus Sicht
+    // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
+    // Spielern überein.
+
+    const names = list.map(p => p.name);
+    const myIndex = names.indexOf(playerName);
+    const rotated = list
+        .slice(myIndex + 1)
+        .concat(list.slice(0, myIndex + 1));
+
+    // komplette Reihenfolge (inkl. eigenem Namen) für Turn-Berechnungen
+    playerList = rotated.map(p => p.name);
+
+    // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
+    const others = rotated.filter(p => p.name !== playerName);
+
     for (let i = 0; i < avatarSlots.length; i++) {
         const slot = avatarSlots[i];
         const data = others[i];
@@ -300,4 +320,25 @@ function updateHandCounts(list) {
         }
     }
     setAvatarImages();
+}
+
+function getAvatarElement(name) {
+    return document.querySelector(`#own-avatar[data-player="${name}"]`) ||
+        document.querySelector(`.avatar[data-player-name="${name}"]`);
+}
+
+function toggleUyesBubble({ player, active }) {
+    const avatar = getAvatarElement(player);
+    if (!avatar) return;
+    let bubble = avatar.querySelector('.uyes-bubble');
+    if (active) {
+        if (!bubble) {
+            bubble = document.createElement('div');
+            bubble.className = 'uyes-bubble';
+            bubble.textContent = 'UYES!';
+            avatar.appendChild(bubble);
+        }
+    } else if (bubble) {
+        bubble.remove();
+    }
 }
