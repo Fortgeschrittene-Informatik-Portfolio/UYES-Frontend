@@ -60,6 +60,7 @@ export async function initGameplay() {
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
+    socket.on('game-started', resetGameUI);
 
     socket.emit('join-lobby', gameCode, playerName);
 
@@ -113,6 +114,13 @@ export async function initGameplay() {
     uyesBtn?.addEventListener('click', () => {
         if (myTurn) {
             socket.emit('uyes', gameCode);
+        }
+    });
+
+    const playAgainBtn = document.querySelector('#ending-buttons .ending:nth-child(2)');
+    playAgainBtn?.addEventListener('click', () => {
+        if (!document.body.classList.contains('Joiner')) {
+            socket.emit('start-game', gameCode);
         }
     });
 }
@@ -251,14 +259,23 @@ function isCardPlayable(card) {
 function showWinner(winner) {
     const win = document.getElementById('winner');
     if (win) {
-        win.textContent = `${winner} won!`;
+        win.textContent = winner;
+        const file = playerAvatars[winner];
+        if (file) {
+            win.style.backgroundImage = `url('/images/avatars/${file}')`;
+        }
         win.classList.remove('hidden');
     }
     document.getElementById('milchglas2')?.classList.remove('hidden');
     const endButtons = document.getElementById('ending-buttons');
+    const waitText = document.getElementById('wait-for-host');
+    const isHost = !document.body.classList.contains('Joiner');
     if (endButtons) {
         endButtons.classList.remove('hidden');
-        endButtons.style.display = '';
+        endButtons.style.display = isHost ? '' : 'none';
+    }
+    if (waitText) {
+        waitText.classList.toggle('hidden', isHost);
     }
 }
 
@@ -350,4 +367,21 @@ function toggleUyesBubble({ player, active }) {
     if (bubble) {
         bubble.classList.toggle('active', active);
     }
+}
+
+function resetGameUI() {
+    topDiscard = null;
+    myHand = [];
+    myTurn = false;
+
+    renderHand([]);
+
+    document.getElementById('winner')?.classList.add('hidden');
+    document.getElementById('milchglas2')?.classList.add('hidden');
+    const endButtons = document.getElementById('ending-buttons');
+    if (endButtons) {
+        endButtons.classList.add('hidden');
+        endButtons.style.display = 'none';
+    }
+    document.getElementById('wait-for-host')?.classList.add('hidden');
 }
