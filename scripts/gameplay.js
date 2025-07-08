@@ -1,4 +1,4 @@
-import { io } from "https://cdn.socket.io/4.7.2/socket.io.esm.min.js";
+import { io } from "socket.io-client";
 const socket = io();
 let gameCode;
 let playerName;
