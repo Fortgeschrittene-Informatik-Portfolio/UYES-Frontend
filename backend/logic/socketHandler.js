@@ -6,8 +6,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const avatarFiles = fs.readdirSync(path.join(__dirname, '../../images/avatars'))
-    .filter(f => /avatar/i.test(f));
+const avatarFiles = fs
+  .readdirSync(path.join(__dirname, "../../public/images/avatars"))
+  .filter(f => /avatar/i.test(f));
 
 import { getSession } from '../jwtSession.js';
 
