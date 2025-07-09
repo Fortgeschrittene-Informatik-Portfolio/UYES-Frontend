@@ -39,4 +39,16 @@ export function helpFunctionality(socket, getGameCode, playerName) {
             window.location.href = "/start/game";
         });
     }
+
+    if (aboutBtn) {
+        aboutBtn.addEventListener("click", () => {
+            window.open("/about", "_blank");
+        });
+    }
+
+    if (settingBtn) {
+        settingBtn.addEventListener("click", () => {
+            window.open("/start/game/create", "_blank");
+        });
+    }
 }
