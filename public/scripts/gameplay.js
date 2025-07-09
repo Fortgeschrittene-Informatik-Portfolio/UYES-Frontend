@@ -144,6 +144,13 @@ export async function initGameplay() {
         }
     });
 
+    const changeSettingsBtn = document.querySelector('#ending-buttons .ending:first-child');
+    changeSettingsBtn?.addEventListener('click', () => {
+        if (!document.body.classList.contains('Joiner')) {
+            window.location.href = '/change-settings';
+        }
+    });
+
     const playAgainBtn = document.querySelector('#ending-buttons .ending:nth-child(2)');
     playAgainBtn?.addEventListener('click', () => {
         if (!document.body.classList.contains('Joiner')) {

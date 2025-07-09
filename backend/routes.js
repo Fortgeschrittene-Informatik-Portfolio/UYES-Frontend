@@ -33,6 +33,10 @@ router.get('/start/game/create', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/createGame.html'));
 });
 
+router.get('/change-settings', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/html/changeSettings.html'));
+});
+
 router.get('/start/game/join', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/joinLobby.html'));
 });
@@ -59,8 +63,27 @@ router.get("/api/lobbyData", (req, res) => {
         role: req.session.role,
         playerList: lobbyMeta?.players || [],
         avatars: lobbyMeta?.avatars || {},
-        host: lobbyMeta?.host || null
+        host: lobbyMeta?.host || null,
+        settings: lobbyMeta?.settings || req.session.settings || {}
     });
+});
+
+router.post('/api/updateSettings', (req, res) => {
+    if (!req.session) {
+        return res.status(400).json({ error: 'Keine Session aktiv' });
+    }
+
+    const lobby = getLobbyMeta(req.session.gameId);
+    if (!lobby) {
+        return res.status(404).json({ error: 'Lobby nicht gefunden' });
+    }
+
+    lobby.settings = req.body.settings || lobby.settings;
+    lobby.maxPlayers = parseInt(req.body.settings?.players, 10) || lobby.maxPlayers;
+    req.session.settings = lobby.settings;
+    setSession(res, req.session);
+
+    res.json({ success: true });
 });
 
 router.post("/api/createGame", (req, res) => {
