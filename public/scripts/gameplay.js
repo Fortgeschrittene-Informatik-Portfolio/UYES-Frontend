@@ -18,6 +18,7 @@ let myHand = [];
 // Whether it's currently this client's turn
 let myTurn = false;
 let isClockwise = true;
+let turnInterval = null;
 
 // Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
@@ -150,7 +151,11 @@ export async function initGameplay() {
 
     const changeAvatarBtn = document.getElementById('changeAvatar');
     changeAvatarBtn?.addEventListener('click', () => {
+        changeAvatarBtn.classList.add('rotate');
         socket.emit('change-avatar', gameCode);
+    });
+    changeAvatarBtn?.addEventListener('animationend', () => {
+        changeAvatarBtn.classList.remove('rotate');
     });
 
     const changeSettingsBtn = document.querySelector('#ending-buttons .ending:first-child');
@@ -266,6 +271,8 @@ function highlightTurn(name) {
     // remember whether it is our turn
     myTurn = name === playerName;
 
+    startTurnTimer();
+
     // Spielerreihenfolge rotieren, sodass der übergebene Spieler an erster
     // Stelle steht. Damit lässt sich leicht berechnen, wie viele Züge es bis zu
     // unserem eigenen Zug sind.
@@ -285,6 +292,23 @@ function highlightTurn(name) {
     document.body.classList.toggle('my-turn', name === playerName);
     // re-render hand so playable state updates
     renderHand(myHand);
+}
+
+function startTurnTimer() {
+    clearInterval(turnInterval);
+    const timerEl = document.getElementById('timer');
+    let remaining = 30;
+    if (timerEl) timerEl.textContent = `${remaining}s`;
+    turnInterval = setInterval(() => {
+        remaining--;
+        if (timerEl) timerEl.textContent = `${remaining}s`;
+        if (remaining <= 0) {
+            clearInterval(turnInterval);
+            if (myTurn) {
+                socket.emit('draw-card', gameCode);
+            }
+        }
+    }, 1000);
 }
 
 function setAvatarImages() {
@@ -499,6 +523,9 @@ function resetGameUI() {
         waitText.classList.add('hidden');
         waitText.style.display = 'none';
     }
+    clearInterval(turnInterval);
+    const timerEl = document.getElementById('timer');
+    if (timerEl) timerEl.textContent = '30s';
     document.getElementById('color-overlay')?.classList.remove('active');
     pendingWildCard = null;
 }

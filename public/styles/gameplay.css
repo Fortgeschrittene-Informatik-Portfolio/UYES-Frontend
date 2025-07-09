@@ -535,3 +535,12 @@ body#gameplay {
     }
 
 }
+
+/* Rotate animation for avatar change button */
+#changeAvatar.rotate {
+    animation: avatarSpin 0.5s linear;
+}
+
+@keyframes avatarSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }}
