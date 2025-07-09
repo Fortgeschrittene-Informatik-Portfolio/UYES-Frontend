@@ -78,8 +78,10 @@ router.post('/api/updateSettings', (req, res) => {
         return res.status(404).json({ error: 'Lobby nicht gefunden' });
     }
 
-    lobby.settings = req.body.settings || lobby.settings;
-    lobby.maxPlayers = parseInt(req.body.settings?.players, 10) || lobby.maxPlayers;
+    const incoming = req.body.settings || {};
+    // prevent changing player count after lobby creation
+    const { players, ...other } = incoming;
+    lobby.settings = { ...lobby.settings, ...other };
     req.session.settings = lobby.settings;
     setSession(res, req.session);
 

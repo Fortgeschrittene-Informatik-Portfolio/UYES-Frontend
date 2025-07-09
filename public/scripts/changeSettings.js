@@ -56,7 +56,7 @@ export function initChangeSettings() {
         });
     }
 
-    setupAmountControls('playerSlider', 'playerCount', '.subtract', '.add');
+    // player count cannot be changed after lobby creation
     setupAmountControls('cardSlider', 'cardCount', '.subtract', '.add');
     setupSelectAllCheckbox('#special-cards input[type="checkbox"]', 'check-all');
 
@@ -83,7 +83,6 @@ export function initChangeSettings() {
     document.getElementById('start-new-game')?.addEventListener('click', async (e) => {
         e.preventDefault();
         const settings = {
-            players: document.getElementById('playerSlider').value,
             cards: document.getElementById('cardSlider').value,
             draw2: document.getElementById('draw2').checked,
             reverse: document.getElementById('reverse').checked,
