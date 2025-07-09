@@ -17,6 +17,7 @@ let myHand = [];
 
 // Whether it's currently this client's turn
 let myTurn = false;
+let isClockwise = true;
 
 // Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
@@ -64,6 +65,7 @@ export async function initGameplay() {
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
+    socket.on('order-reversed', handleOrderReversed);
     socket.on('game-started', resetGameUI);
     socket.on('player-left', ({ players, counts, player }) => {
         if (player && player !== playerName) {
@@ -431,6 +433,8 @@ function resetGameUI() {
     topDiscard = null;
     myHand = [];
     myTurn = false;
+    isClockwise = true;
+    updateDirectionIcon();
 
     // remove all active UYES bubbles from previous round
     document.querySelectorAll('.uyes-bubble.active')
@@ -454,4 +458,22 @@ function resetGameUI() {
     document.getElementById('wait-for-host')?.classList.add('hidden');
     document.getElementById('color-overlay')?.classList.remove('active');
     pendingWildCard = null;
+}
+
+function updateDirectionIcon() {
+    const icon = document.querySelector('#gameDirection i');
+    if (!icon) return;
+    icon.classList.toggle('fa-rotate-right', isClockwise);
+    icon.classList.toggle('fa-rotate-left', !isClockwise);
+}
+
+function handleOrderReversed(order) {
+    isClockwise = !isClockwise;
+    updateDirectionIcon();
+
+    if (Array.isArray(order)) {
+        const myIndex = order.indexOf(playerName);
+        const rotated = order.slice(myIndex + 1).concat(order.slice(0, myIndex + 1));
+        playerList = rotated;
+    }
 }
