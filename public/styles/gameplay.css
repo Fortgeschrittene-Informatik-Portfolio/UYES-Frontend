@@ -14,14 +14,19 @@
 
 #player-hand-container {
     grid-row: 3;
-    grid-column: 1/-1;
+    grid-column: 1 / -1;
     width: 100%;
     font-size: 1.2em;
-    align-items: center;
-    justify-content: center;
     display: flex;
-    flex-wrap: wrap;
-
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-left: 2em;        /* offset for negative card margin */
+    gap: 0;                   /* cards already overlap via margin */
+    scroll-behavior: smooth;
+    scrollbar-color: var(--primary-blue) var(--primary-yellow);
 }
 
 #yourTurn {
