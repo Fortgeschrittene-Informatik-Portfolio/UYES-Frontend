@@ -47,7 +47,7 @@ export function helpFunctionality(socket, getGameCode, playerName) {
 
     if (settingBtn) {
         settingBtn.addEventListener("click", () => {
-            window.open("/start/game/create", "_blank");
+            window.open("/help", "_blank");
         });
     }
 }
