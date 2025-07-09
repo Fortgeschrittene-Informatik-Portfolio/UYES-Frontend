@@ -336,6 +336,7 @@ function showWinner(winner) {
     }
     if (waitText) {
         waitText.classList.toggle('hidden', isHost);
+        waitText.style.display = isHost ? 'none' : 'flex';
     }
 }
 
