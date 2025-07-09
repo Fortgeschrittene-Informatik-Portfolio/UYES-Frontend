@@ -17,6 +17,10 @@ let myHand = [];
 
 // Whether it's currently this client's turn
 let myTurn = false;
+let isClockwise = true;
+
+// Temporarily store a wild card to choose a color before playing
+let pendingWildCard = null;
 
 
 export async function initGameplay() {
@@ -61,6 +65,7 @@ export async function initGameplay() {
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
+    socket.on('order-reversed', handleOrderReversed);
     socket.on('game-started', resetGameUI);
     socket.on('player-left', ({ players, counts, player }) => {
         if (player && player !== playerName) {
@@ -117,7 +122,7 @@ export async function initGameplay() {
         if (data) {
             try {
                 const card = JSON.parse(data);
-                socket.emit('play-card', gameCode, card);
+                playCard(card);
             } catch { /* ignore invalid data */ }
         }
     });
@@ -149,6 +154,18 @@ export async function initGameplay() {
     });
 
     helpFunctionality(socket, () => gameCode, playerName);
+
+    const overlay = document.getElementById('color-overlay');
+    overlay?.querySelectorAll('[data-color]').forEach(el => {
+        el.addEventListener('click', () => {
+            const color = el.getAttribute('data-color');
+            if (pendingWildCard) {
+                socket.emit('play-card', gameCode, { ...pendingWildCard, chosenColor: color });
+                pendingWildCard = null;
+                overlay.classList.remove('active');
+            }
+        });
+    });
 
 }
 
@@ -186,7 +203,7 @@ function renderHand(cards) {
                 e.dataTransfer.setData('application/json', JSON.stringify(card));
             });
             span.addEventListener('click', () => {
-                socket.emit('play-card', gameCode, { color: card.color, value: card.value });
+                playCard({ color: card.color, value: card.value });
             });
         } else {
             span.classList.add('unplayable');
@@ -269,7 +286,8 @@ function setAvatarImages() {
 function updateDiscard({ player, card }) {
     const pile = document.querySelector('#discard-pile span.card');
     if (pile) {
-        pile.className = `card big ${card.color}`;
+        const color = card.color === 'wild' ? (card.chosenColor || card.color) : card.color;
+        pile.className = `card big ${color}`;
         pile.innerHTML = `<span><span>${displayValue(card.value)}</span></span>`;
     }
     topDiscard = card;
@@ -277,10 +295,20 @@ function updateDiscard({ player, card }) {
 
 function isCardPlayable(card) {
     if (!topDiscard) return true;
-    return card.color === 'wild' ||
-        card.color === topDiscard.color ||
-        card.value === topDiscard.value ||
-        topDiscard.color === 'wild';
+    if (card.color === 'wild') return true;
+    if (topDiscard.color === 'wild') {
+        return card.color === topDiscard.chosenColor;
+    }
+    return card.color === topDiscard.color || card.value === topDiscard.value;
+}
+
+function playCard(card) {
+    if (card.color === 'wild') {
+        pendingWildCard = { color: card.color, value: card.value };
+        document.getElementById('color-overlay')?.classList.add('active');
+    } else {
+        socket.emit('play-card', gameCode, { color: card.color, value: card.value });
+    }
 }
 
 function showWinner(winner) {
@@ -405,6 +433,8 @@ function resetGameUI() {
     topDiscard = null;
     myHand = [];
     myTurn = false;
+    isClockwise = true;
+    updateDirectionIcon();
 
     // remove all active UYES bubbles from previous round
     document.querySelectorAll('.uyes-bubble.active')
@@ -426,4 +456,24 @@ function resetGameUI() {
         endButtons.style.display = 'none';
     }
     document.getElementById('wait-for-host')?.classList.add('hidden');
+    document.getElementById('color-overlay')?.classList.remove('active');
+    pendingWildCard = null;
+}
+
+function updateDirectionIcon() {
+    const icon = document.querySelector('#gameDirection i');
+    if (!icon) return;
+    icon.classList.toggle('fa-rotate-right', isClockwise);
+    icon.classList.toggle('fa-rotate-left', !isClockwise);
+}
+
+function handleOrderReversed(order) {
+    isClockwise = !isClockwise;
+    updateDirectionIcon();
+
+    if (Array.isArray(order)) {
+        const myIndex = order.indexOf(playerName);
+        const rotated = order.slice(myIndex + 1).concat(order.slice(0, myIndex + 1));
+        playerList = rotated;
+    }
 }

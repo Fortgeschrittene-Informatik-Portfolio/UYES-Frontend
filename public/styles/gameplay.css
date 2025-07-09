@@ -464,6 +464,26 @@ body#gameplay {
 
 }
 
+
+#color-overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.4);
+    z-index: 150;
+}
+#color-overlay.active {
+    display: flex;
+}
+#color-options {
+    display: flex;
+    gap: 1em;
+}
+#color-options .card.big {
+    cursor: pointer;
+
 #gameDirection{
     position: absolute;
     color: white;
@@ -476,4 +496,5 @@ body#gameplay {
     *{
         margin-top: 20cqh;
     }
+
 }
