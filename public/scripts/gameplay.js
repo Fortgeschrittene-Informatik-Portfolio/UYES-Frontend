@@ -107,8 +107,12 @@ export async function initGameplay() {
     // container. Using the capture phase ensures the events fire even when the
     // drop target is one of the existing card elements.
     handContainer?.addEventListener('dragover', (e) => {
-        if (myTurn && e.dataTransfer.getData('text/plain') === 'draw') {
+        // allow dropping regardless of the transferred data since some
+        // browsers do not expose it during dragover
+        if (myTurn) {
             e.preventDefault();
+            // show a copy cursor for clarity
+            e.dataTransfer.dropEffect = 'copy';
         }
     }, true);
     handContainer?.addEventListener('drop', (e) => {
