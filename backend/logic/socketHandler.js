@@ -195,6 +195,24 @@ export function setupSocket(io) {
                 }
             }
         });
+
+        socket.on("close-lobby", (gameCode) => {
+            const lobby = lobbies[gameCode];
+            if (!lobby) return;
+            if (lobby.host && socket.data.playerName !== lobby.host) return;
+
+            for (const player of lobby.players) {
+                if (player === socket.data.playerName) continue;
+                for (const [_id, s] of io.sockets.sockets) {
+                    if (s.data?.playerName === player && s.rooms.has(gameCode)) {
+                        s.emit("kicked");
+                        s.leave(gameCode);
+                    }
+                }
+            }
+            socket.leave(gameCode);
+            delete lobbies[gameCode];
+        });
         socket.on("change-code", (oldCode, newCode) => {
             if (!lobbies[oldCode]) return;
 
