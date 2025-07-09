@@ -481,7 +481,11 @@ function resetGameUI() {
         endButtons.classList.add('hidden');
         endButtons.style.display = 'none';
     }
-    document.getElementById('wait-for-host')?.classList.add('hidden');
+    const waitText = document.getElementById('wait-for-host');
+    if (waitText) {
+        waitText.classList.add('hidden');
+        waitText.style.display = 'none';
+    }
     document.getElementById('color-overlay')?.classList.remove('active');
     pendingWildCard = null;
 }
