@@ -94,6 +94,10 @@ export async function initLobbyHost() {
         });
     }
 
+    socket.on("start-game-error", (msg) => {
+        alert(msg);
+    });
+
     const redirectToGame = () => {
         if (window.location.pathname !== "/gameplay") {
             window.location.href = "/gameplay";
