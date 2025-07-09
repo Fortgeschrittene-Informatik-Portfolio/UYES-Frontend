@@ -6,7 +6,7 @@ export function initChangeSettings() {
     let playerName;
 
     document.getElementById("createBackBtn")?.addEventListener("click", () => {
-        window.location.href = "/lobby";
+        window.history.back();
     });
 
     function setupAmountControls(sliderId, displayId, subtractSelector, addSelector) {

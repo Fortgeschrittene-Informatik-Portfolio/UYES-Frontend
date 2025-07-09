@@ -3,7 +3,8 @@
     cursor: pointer;
 }
 
-#createGame {
+#createGame,
+#changeSettings {
 
     #mainWrapper {
         grid-column: 1/-1;
@@ -206,7 +207,8 @@ div#menu-createGame {
 
 
 @media only screen and (max-width: 600px) {
-    #createGame {
+    #createGame,
+    #changeSettings {
         #start-settings {
             width: 80%;
 
