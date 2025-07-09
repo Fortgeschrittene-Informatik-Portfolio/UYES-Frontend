@@ -14,6 +14,8 @@ Install the project dependencies:
 npm install
 ```
 
+Copy `.env.example` to `.env` to adjust configuration. The server uses `PORT` and `JWT_SECRET` from this file. Defaults are provided if no `.env` is present.
+
 Start the application in development mode with automatic reload:
 
 ```bash
@@ -26,4 +28,4 @@ Or start it once using Node.js:
 npm start
 ```
 
-Once the server is running, open `http://localhost:5000` in your browser to access the game.
+Once the server is running, open `http://localhost:<PORT>` in your browser (replace `<PORT>` with the value from your `.env` or the default `5000`).

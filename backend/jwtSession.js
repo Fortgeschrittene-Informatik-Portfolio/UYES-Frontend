@@ -1,19 +1,18 @@
 import jwt from 'jsonwebtoken';
-
-const SECRET = process.env.JWT_SECRET || 'your-secret';
+import { JWT_SECRET } from './config.js';
 
 export function getSession(req) {
     const token = req.cookies?.session;
     if (!token) return {};
     try {
-        return jwt.verify(token, SECRET);
+        return jwt.verify(token, JWT_SECRET);
     } catch {
         return {};
     }
 }
 
 export function setSession(res, data) {
-    const token = jwt.sign(data, SECRET);
+    const token = jwt.sign(data, JWT_SECRET);
     res.cookie('session', token, { httpOnly: true });
 }
 
