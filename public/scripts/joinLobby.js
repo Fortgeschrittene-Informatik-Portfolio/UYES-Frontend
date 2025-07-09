@@ -1,7 +1,6 @@
 // scripts/joinLobby.js
 
 export function initJoinLobby() {
-    console.log("🔓 Join Lobby geladen");
 
     document.getElementById("joinBackBtn")?.addEventListener("click", () => {
         window.location.href = "/start/game";

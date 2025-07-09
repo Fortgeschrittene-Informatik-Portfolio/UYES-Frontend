@@ -1,7 +1,6 @@
 import { handleIntro } from './utils/intros.js';
 
 export function initChooseLobby() {
-    console.log("chooseLobby geladen");
 
 
     handleIntro({
@@ -20,7 +19,6 @@ export function initChooseLobby() {
     document.getElementById("join")?.addEventListener("click", () => {
         window.location.href = "/start/game/join";
     });
-
 
 
 }

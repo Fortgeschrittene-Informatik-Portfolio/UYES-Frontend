@@ -1,7 +1,6 @@
 import { handleIntro } from './utils/intros.js';
 
 export function initCreateGame() {
-    console.log("createGame geladen");
 
 
     handleIntro({
