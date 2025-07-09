@@ -37,9 +37,13 @@ function createDeck(settings = {}) {
     return deck.sort(() => Math.random() - 0.5);
 }
 
-function dealInitialCards(game) {
+function dealInitialCards(game, count = 5) {
+    const required = count * game.turnOrder.length + 1;
+    if (game.deck.length < required) {
+        throw new Error('Not enough cards in deck for initial deal');
+    }
     for (const player of game.turnOrder) {
-        game.hands[player] = game.deck.splice(0, 5);
+        game.hands[player] = game.deck.splice(0, count);
     }
     game.discard.push(game.deck.pop());
 }
@@ -248,7 +252,13 @@ export function setupSocket(io) {
 
             io.to(gameCode).emit('game-started');
 
-            dealInitialCards(game);
+            const startingCards = parseInt(lobby.settings?.cards, 10) || 5;
+            try {
+                dealInitialCards(game, startingCards);
+            } catch (err) {
+                socket.emit('start-game-error', err.message);
+                return;
+            }
             // Zufällig bestimmen, welcher Spieler beginnt
             game.current = Math.floor(Math.random() * game.turnOrder.length);
             lobby.game = game;
