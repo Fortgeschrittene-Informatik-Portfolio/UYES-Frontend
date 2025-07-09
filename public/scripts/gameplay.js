@@ -267,11 +267,13 @@ function renderHand(cards) {
     }
 }
 
-function highlightTurn(name) {
+function highlightTurn(data) {
+    const name = typeof data === 'string' ? data : data.player;
+    const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
     // remember whether it is our turn
     myTurn = name === playerName;
 
-    startTurnTimer();
+    startTurnTimer(startedAt);
 
     // Spielerreihenfolge rotieren, sodass der übergebene Spieler an erster
     // Stelle steht. Damit lässt sich leicht berechnen, wie viele Züge es bis zu
@@ -294,13 +296,13 @@ function highlightTurn(name) {
     renderHand(myHand);
 }
 
-function startTurnTimer() {
+function startTurnTimer(startedAt = Date.now()) {
     clearInterval(turnInterval);
     const timerEl = document.getElementById('timer');
-    let remaining = 30;
-    if (timerEl) timerEl.textContent = `${remaining}s`;
-    turnInterval = setInterval(() => {
-        remaining--;
+    const end = startedAt + 30000;
+
+    function update() {
+        const remaining = Math.max(0, Math.ceil((end - Date.now()) / 1000));
         if (timerEl) timerEl.textContent = `${remaining}s`;
         if (remaining <= 0) {
             clearInterval(turnInterval);
@@ -308,7 +310,10 @@ function startTurnTimer() {
                 socket.emit('draw-card', gameCode);
             }
         }
-    }, 1000);
+    }
+
+    update();
+    turnInterval = setInterval(update, 1000);
 }
 
 function setAvatarImages() {

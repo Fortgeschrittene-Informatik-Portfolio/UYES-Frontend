@@ -171,7 +171,10 @@ export function setupSocket(io) {
                 const topCard = runningGame.discard[runningGame.discard.length - 1];
                 socket.emit('card-played', { player: null, card: topCard });
                 broadcastHandCounts(io, gameCode, runningGame);
-                socket.emit('player-turn', runningGame.turnOrder[runningGame.current]);
+                socket.emit('player-turn', {
+                    player: runningGame.turnOrder[runningGame.current],
+                    startedAt: runningGame.turnStartedAt
+                });
             }
 
 
@@ -272,7 +275,8 @@ export function setupSocket(io) {
                 turnOrder: [...lobby.players],
                 current: 0,
                 uyesPressed: {},
-                settings: lobby.settings
+                settings: lobby.settings,
+                turnStartedAt: Date.now()
             };
 
             io.to(gameCode).emit('game-started');
@@ -300,7 +304,11 @@ export function setupSocket(io) {
 
             broadcastHandCounts(io, gameCode, game);
 
-            io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
+            game.turnStartedAt = Date.now();
+            io.to(gameCode).emit('player-turn', {
+                player: game.turnOrder[game.current],
+                startedAt: game.turnStartedAt
+            });
         });
 
         socket.on('play-card', (gameCode, card) => {
@@ -390,7 +398,8 @@ export function setupSocket(io) {
 
             handleUyesEnd(io, gameCode, game, player);
 
-            io.to(gameCode).emit('player-turn', next);
+            game.turnStartedAt = Date.now();
+            io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt });
         });
 
         socket.on('draw-card', (gameCode) => {
@@ -412,7 +421,8 @@ export function setupSocket(io) {
 
             const next = nextTurn(game);
             handleUyesEnd(io, gameCode, game, player);
-            io.to(gameCode).emit('player-turn', next);
+            game.turnStartedAt = Date.now();
+            io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt });
         });
 
         socket.on('uyes', (gameCode) => {
@@ -462,7 +472,8 @@ export function setupSocket(io) {
 
                 const counts = game.turnOrder.map(n => ({ name: n, count: game.hands[n]?.length || 0 }));
                 io.to(gameCode).emit('player-left', { players: lobby.players, counts, player: name });
-                io.to(gameCode).emit('player-turn', game.turnOrder[game.current]);
+                game.turnStartedAt = Date.now();
+                io.to(gameCode).emit('player-turn', { player: game.turnOrder[game.current], startedAt: game.turnStartedAt });
             }
 
             socket.leave(gameCode);
