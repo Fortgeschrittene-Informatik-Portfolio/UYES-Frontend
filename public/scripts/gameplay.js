@@ -151,6 +151,14 @@ export async function initGameplay() {
         }
     });
 
+    const backHomeBtn = document.getElementById('backHome');
+    backHomeBtn?.addEventListener('click', () => {
+        if (!document.body.classList.contains('Joiner')) {
+            socket.emit('close-lobby', gameCode);
+        }
+        window.location.href = '/start/game';
+    });
+
     const exitBtn = document.getElementById('ExitGameBtn');
     const exitDiv = document.getElementById('submitLeaving');
     const stopLeaving = document.getElementById('stopLeaving');
