@@ -67,6 +67,9 @@ export async function initGameplay() {
     socket.on('player-uyes', toggleUyesBubble);
     socket.on('order-reversed', handleOrderReversed);
     socket.on('game-started', resetGameUI);
+    socket.on('hand-limit-reached', () => {
+        alert('Reached maximum amount of cards in hand.');
+    });
     socket.on('player-left', ({ players, counts, player }) => {
         if (player && player !== playerName) {
             alert(`${player} left the game.`);

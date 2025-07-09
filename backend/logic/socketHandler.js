@@ -377,6 +377,12 @@ export function setupSocket(io) {
             const player = socket.data.playerName;
             if (game.turnOrder[game.current] !== player) return;
 
+            const limit = parseInt(game.settings?.handLimit, 10);
+            if (limit && game.hands[player].length >= limit) {
+                socket.emit('hand-limit-reached');
+                return;
+            }
+
             drawCards(game, player, 1);
             socket.emit('deal-cards', game.hands[player]);
             broadcastHandCounts(io, gameCode, game);
