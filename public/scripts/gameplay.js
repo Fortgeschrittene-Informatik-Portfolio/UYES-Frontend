@@ -57,7 +57,7 @@ export async function initGameplay() {
 
     maxPlayers = data.players;
 
-    setupAvatarSlots(maxPlayers);
+    setupAvatarSlots();
     setAvatarImages();
 
     socket.on('deal-cards', renderHand);
@@ -400,14 +400,15 @@ function showWinner(winner) {
     }
 }
 
-function setupAvatarSlots(total) {
+function setupAvatarSlots() {
     const container = document.getElementById('player-avatars2');
     if (!container) return;
     container.innerHTML = '';
     avatarSlots = [];
     const rows = [document.createElement('div'), document.createElement('div')];
     rows.forEach(r => r.classList.add('row'));
-    const count = Math.min(total - 1, 4);
+    // Always create four avatar slots so the order mapping works
+    const count = 4;
     for (let i = 0; i < count; i++) {
         const avatar = document.createElement('div');
         avatar.className = 'avatar inactive';
@@ -441,7 +442,7 @@ function setupAvatarSlots(total) {
 }
 
 function updateHandCounts(list) {
-    if (!avatarSlots.length) setupAvatarSlots(list.length);
+    if (!avatarSlots.length) setupAvatarSlots();
     // Dreh die vom Server gesendete Spielreihenfolge so, dass sie aus Sicht
     // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
     // Spielern überein.
