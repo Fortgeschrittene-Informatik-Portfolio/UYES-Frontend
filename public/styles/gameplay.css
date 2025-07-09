@@ -229,14 +229,6 @@
     right: 105%;
 }
 
-#player2 {
-    border: 0.8cqw solid var(--primary-yellow);
-    background-color: rgba(149, 145, 4, 0.5);
-
-    background-size: contain;
-
-}
-
 #player1 {
     background-size: contain;
 }
@@ -259,21 +251,9 @@
 }
 
 body#gameplay {
-    #player2 {
-        border: 0.2cqw solid white;
-    }
-
-    #player3 {
-        border: 0.8cqw solid var(--primary-yellow);
-        background-color: rgba(149, 145, 4, 0.5);
-    }
-
     #own-avatar {
         background-color: var(--secondary-yellow);
-        opacity: 0.5;
     }
-
-
 }
 
 .my-turn #UYES {

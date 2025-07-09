@@ -67,6 +67,10 @@ export async function initGameplay() {
     socket.on('player-uyes', toggleUyesBubble);
     socket.on('order-reversed', handleOrderReversed);
     socket.on('game-started', resetGameUI);
+    socket.on('avatar-changed', ({ player, file }) => {
+        playerAvatars[player] = file;
+        setAvatarImages();
+    });
     socket.on('hand-limit-reached', () => {
         alert('Reached maximum amount of cards in hand.');
     });
@@ -142,6 +146,11 @@ export async function initGameplay() {
         if (myTurn) {
             socket.emit('uyes', gameCode);
         }
+    });
+
+    const changeAvatarBtn = document.getElementById('changeAvatar');
+    changeAvatarBtn?.addEventListener('click', () => {
+        socket.emit('change-avatar', gameCode);
     });
 
     const changeSettingsBtn = document.querySelector('#ending-buttons .ending:first-child');
@@ -279,10 +288,12 @@ function highlightTurn(name) {
 }
 
 function setAvatarImages() {
-    let index = 1;
+    const order = [2,0,1,3];
+    let idx = 0;
     for (const n of playerList) {
         if (n === playerName) continue;
-        const el = document.getElementById(`player${index}`);
+        const slotIndex = order[idx] ?? idx;
+        const el = document.getElementById(`player${slotIndex + 1}`);
         if (el) {
             el.dataset.player = n;
             const file = playerAvatars[n];
@@ -290,7 +301,7 @@ function setAvatarImages() {
                 el.style.backgroundImage = `url('/images/avatars/${file}')`;
             }
         }
-        index++;
+        idx++;
     }
     const own = document.getElementById('own-avatar');
     if (own) {
@@ -423,8 +434,10 @@ function updateHandCounts(list) {
     // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
     const others = rotated.filter(p => p.name !== playerName);
 
+    const order = [2,0,1,3];
     for (let i = 0; i < avatarSlots.length; i++) {
-        const slot = avatarSlots[i];
+        const idx = order[i] ?? i;
+        const slot = avatarSlots[idx];
         const data = others[i];
         if (data) {
             slot.querySelector('.cardsleft').textContent = `${data.count}x`;

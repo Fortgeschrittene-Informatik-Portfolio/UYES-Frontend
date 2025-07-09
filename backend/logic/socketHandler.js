@@ -425,6 +425,17 @@ export function setupSocket(io) {
             io.to(gameCode).emit('player-uyes', { player, active: true });
         });
 
+        socket.on('change-avatar', (gameCode) => {
+            const lobby = lobbies[gameCode];
+            if (!lobby) return;
+            const player = socket.data.playerName;
+            const avatars = lobby.avatars;
+            if (!player || !avatars) return;
+            const file = avatarFiles[Math.floor(Math.random() * avatarFiles.length)];
+            avatars[player] = file;
+            io.to(gameCode).emit('avatar-changed', { player, file });
+        });
+
         socket.on('leave-game', (gameCode, playerName) => {
             const lobby = lobbies[gameCode];
             const game = lobby?.game;
