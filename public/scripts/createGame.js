@@ -43,6 +43,7 @@ export function initCreateGame() {
 
     setupAmountControls('playerSlider', 'playerCount', '.subtract', '.add');
     setupAmountControls('cardSlider', 'cardCount', '.subtract', '.add');
+    setupAmountControls('handLimitSlider', 'handLimitCount', '.subtract', '.add');
 
     function setupSelectAllCheckbox(groupSelector, selectAllId) {
         const checkboxes = Array.from(document.querySelectorAll(groupSelector));
@@ -78,6 +79,7 @@ export function initCreateGame() {
             settings: {
                 players: document.getElementById("playerSlider").value,
                 cards: document.getElementById("cardSlider").value,
+                handLimit: document.getElementById("handLimitSlider").value,
                 draw2: document.getElementById("draw2").checked,
                 reverse: document.getElementById("reverse").checked,
                 skip: document.getElementById("skip").checked,
