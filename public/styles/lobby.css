@@ -1,0 +1,210 @@
+
+#helpButtonClicked{
+    display: none;
+
+    &.helpOpen{
+        display:flex;
+        flex-direction: column;
+        position: absolute;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px); /* erzeugt den "Milchglas"-Effekt */
+        z-index: 100;
+        width: 100%;
+        height: 100%;
+        justify-content: space-evenly;
+        align-items: center;
+
+        *{
+            width: 25%;
+            flex-grow: 0;
+        }
+        #closeHelpBtn{
+            background-color: var(--secondary-yellow);
+            position: absolute;
+            width: 10%;
+            top: 0;
+            left: 0;
+        }
+        #ExitGameBtn{
+            font-size: 2em;
+        }
+    }
+}
+
+#submitLeaving {
+    display: none;
+
+    &.exitOpen {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px); /* erzeugt den "Milchglas"-Effekt */
+        z-index: 101;
+        width: 100%;
+        height: 100%;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    h2{
+        font-size: 6em;
+        color: white;
+        -webkit-text-stroke: 0.045em black;
+        margin-bottom: 0;
+    }
+    div{
+        display: flex;
+        button{
+            width: 50%;
+        }
+    }
+
+}
+
+
+
+
+
+
+#main.lobby{
+    all:initial;
+    display: flex;
+    flex-direction: column;
+    grid-column: 1/-1;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+
+.gameCode{
+    display: flex;
+    align-content: center;
+    h2{
+        align-self: center;
+        color: white;
+        font-weight: 900;
+        text-align: center;
+        margin: 0;
+    }
+
+    #refresh-code-button{
+        flex-grow: 0;
+        font-size: 1.5cqw;
+        width: 30%;
+        text-align: center;
+        margin: 2%;
+    }
+}
+
+
+
+
+
+
+#player-lobby-container{
+    background: darkgrey;
+    flex-grow: 1;
+    border: solid dimgrey;
+    border-radius: 10%;
+    width: 60%;
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2.5%;
+    padding-bottom: 2.5%;
+
+    h2{
+        color: black;
+        font-weight: 800;
+        text-align:center;
+        margin: 0;
+        font-size: 3cqw;
+    }
+
+}
+
+
+.player-lobby-fields{
+    /*position: relative;*/
+    width: 100%;
+    /*height: 10%;*/
+    flex-grow: 1;
+    border: 0.05em solid dimgrey;
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p{
+        &#hostTag{
+            color: var(--primary-yellow);
+            -webkit-text-stroke: 0.05cqw black;
+            font-weight: 800;
+            position: absolute;
+            left: 30%;
+            /*height: 25%;*/
+            font-size: 1.5cqw;
+            +p{
+                text-decoration: underline;
+            }
+        }
+        margin: 0;
+        &.openSlot{
+            color: dimgrey;
+            +.removePlayerButton{
+                display:none;
+            }
+        }
+        &.takenSlot{
+            font-size: 2cqw;
+            +.removePlayerButton{
+                padding: initial;
+                box-shadow: initial;
+                background-color: lightgrey;
+                border: 0.25cqw solid dimgrey;
+                font-weight: 800;
+                margin: initial;
+
+                justify-self: flex-end;
+                text-overflow: ellipsis;
+
+                transform: translateX(600%);
+
+                z-index: 5;
+                top: 0.1cqw;
+                font-size: 1cqw;
+
+                &:active{
+                    transform: translateX(600%) scale(1.2);
+                    /*transform: initial;*/
+
+                }
+
+
+            }
+        }
+    }
+    &.header{
+        align-content: center;
+
+    }
+}
+
+
+#startGameplay{
+    width: 25%;
+
+    &.notFull{
+        pointer-events: none;
+        background-color: darkgrey;
+        border: solid 0.5cqh dimgrey;
+    }
+}
+
+.Joiner{
+    .removePlayerButton, #refresh-code-button, #startGameplay{
+        display: none;
+    }
+}

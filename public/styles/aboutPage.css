@@ -1,0 +1,27 @@
+#aboutText {
+    width: 80%;
+    height: 85%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ecd40a;
+    border-radius: 8px;
+    box-shadow: 4px 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    font-size: smaller;
+    line-height: 1.6;
+}
+
+#back-to-main-menu {
+    text-align: center;
+    font-size: 1.6em;
+    /*height: fit-content;*/
+    width: 15%;
+
+
+}
+
+#aboutText h2 {
+    font-size: 2em;
+    color: #941124;
+    margin-bottom: 10px;
+}
