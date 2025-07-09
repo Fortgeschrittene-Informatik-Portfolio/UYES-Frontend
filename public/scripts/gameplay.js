@@ -100,17 +100,20 @@ export async function initGameplay() {
     });
 
     const handContainer = document.getElementById('player-hand-container');
+    // Allow drawing by dragging the deck card onto any spot within the hand
+    // container. Using the capture phase ensures the events fire even when the
+    // drop target is one of the existing card elements.
     handContainer?.addEventListener('dragover', (e) => {
         if (myTurn && e.dataTransfer.getData('text/plain') === 'draw') {
             e.preventDefault();
         }
-    });
+    }, true);
     handContainer?.addEventListener('drop', (e) => {
         if (myTurn && e.dataTransfer.getData('text/plain') === 'draw') {
             e.preventDefault();
             socket.emit('draw-card', gameCode);
         }
-    });
+    }, true);
 
     const discard = document.getElementById('discard-pile');
     discard?.addEventListener('dragover', (e) => {
