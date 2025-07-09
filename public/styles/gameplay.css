@@ -20,7 +20,7 @@
     font-size: 1.2em;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
