@@ -18,6 +18,9 @@ let myHand = [];
 // Whether it's currently this client's turn
 let myTurn = false;
 
+// Temporarily store a wild card to choose a color before playing
+let pendingWildCard = null;
+
 
 export async function initGameplay() {
     let data;
@@ -117,7 +120,7 @@ export async function initGameplay() {
         if (data) {
             try {
                 const card = JSON.parse(data);
-                socket.emit('play-card', gameCode, card);
+                playCard(card);
             } catch { /* ignore invalid data */ }
         }
     });
@@ -149,6 +152,18 @@ export async function initGameplay() {
     });
 
     helpFunctionality(socket, () => gameCode, playerName);
+
+    const overlay = document.getElementById('color-overlay');
+    overlay?.querySelectorAll('[data-color]').forEach(el => {
+        el.addEventListener('click', () => {
+            const color = el.getAttribute('data-color');
+            if (pendingWildCard) {
+                socket.emit('play-card', gameCode, { ...pendingWildCard, chosenColor: color });
+                pendingWildCard = null;
+                overlay.classList.remove('active');
+            }
+        });
+    });
 
 }
 
@@ -186,7 +201,7 @@ function renderHand(cards) {
                 e.dataTransfer.setData('application/json', JSON.stringify(card));
             });
             span.addEventListener('click', () => {
-                socket.emit('play-card', gameCode, { color: card.color, value: card.value });
+                playCard({ color: card.color, value: card.value });
             });
         } else {
             span.classList.add('unplayable');
@@ -269,7 +284,8 @@ function setAvatarImages() {
 function updateDiscard({ player, card }) {
     const pile = document.querySelector('#discard-pile span.card');
     if (pile) {
-        pile.className = `card big ${card.color}`;
+        const color = card.color === 'wild' ? (card.chosenColor || card.color) : card.color;
+        pile.className = `card big ${color}`;
         pile.innerHTML = `<span><span>${displayValue(card.value)}</span></span>`;
     }
     topDiscard = card;
@@ -277,10 +293,20 @@ function updateDiscard({ player, card }) {
 
 function isCardPlayable(card) {
     if (!topDiscard) return true;
-    return card.color === 'wild' ||
-        card.color === topDiscard.color ||
-        card.value === topDiscard.value ||
-        topDiscard.color === 'wild';
+    if (card.color === 'wild') return true;
+    if (topDiscard.color === 'wild') {
+        return card.color === topDiscard.chosenColor;
+    }
+    return card.color === topDiscard.color || card.value === topDiscard.value;
+}
+
+function playCard(card) {
+    if (card.color === 'wild') {
+        pendingWildCard = { color: card.color, value: card.value };
+        document.getElementById('color-overlay')?.classList.add('active');
+    } else {
+        socket.emit('play-card', gameCode, { color: card.color, value: card.value });
+    }
 }
 
 function showWinner(winner) {
@@ -426,4 +452,6 @@ function resetGameUI() {
         endButtons.style.display = 'none';
     }
     document.getElementById('wait-for-host')?.classList.add('hidden');
+    document.getElementById('color-overlay')?.classList.remove('active');
+    pendingWildCard = null;
 }

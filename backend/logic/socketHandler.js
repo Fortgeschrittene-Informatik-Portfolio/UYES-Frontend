@@ -281,10 +281,21 @@ export function setupSocket(io) {
 
             const candidate = hand[idx];
             const top = game.discard[game.discard.length - 1];
-            const isValid = candidate.color === 'wild' || candidate.color === top.color || candidate.value === top.value || top.color === 'wild';
+            let isValid = false;
+            if (candidate.color === 'wild') {
+                isValid = ['red', 'yellow', 'green', 'blue'].includes(card.chosenColor);
+            } else if (top.color === 'wild') {
+                const chosen = top.chosenColor || top.color;
+                isValid = candidate.color === chosen;
+            } else {
+                isValid = candidate.color === top.color || candidate.value === top.value;
+            }
             if (!isValid) return;
 
             const played = hand.splice(idx, 1)[0];
+            if (played.color === 'wild') {
+                played.chosenColor = card.chosenColor;
+            }
             game.discard.push(played);
 
             socket.emit('deal-cards', hand);
@@ -292,13 +303,21 @@ export function setupSocket(io) {
             io.to(gameCode).emit('card-played', { player, card: played });
             broadcastHandCounts(io, gameCode, game);
 
+            let next;
             if (played.value === 'reverse') {
                 game.turnOrder.reverse();
                 game.current = game.turnOrder.indexOf(player);
                 io.to(gameCode).emit('order-reversed', game.turnOrder);
+                if (game.turnOrder.length === 2) {
+                    const skipped = game.turnOrder[(game.current + 1) % game.turnOrder.length];
+                    io.to(gameCode).emit('player-skipped', skipped);
+                    next = player;
+                } else {
+                    next = nextTurn(game);
+                }
+            } else {
+                next = nextTurn(game);
             }
-
-            let next = nextTurn(game);
 
             if (played.value === 'skip') {
                 const skipped = next;
