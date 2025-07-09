@@ -1,4 +1,4 @@
-main{
+main {
     grid-column: 1/-1;
     grid-row: 2;
     display: flex;
@@ -6,25 +6,31 @@ main{
     align-items: center;
     width: 100%;
     flex-direction: column;
-    *{
+
+    * {
         width: 100%;
         flex-grow: 0;
         flex-shrink: 0;
     }
 }
 
-#gameCodeInput{
+#gameCodeInput {
     width: 20cqw;
     height: 4cqw;
     font-size: 2cqw;
     cursor: text;
-    &::placeholder{
+    border: black solid;
+    border-radius: 15px;
+    background-color: lightgray;
+
+
+    &::placeholder {
         font-size: 1.8cqw;
     }
 }
 
 
-.joinForm{
+.joinForm {
     border-radius: 10%;
     aspect-ratio: 2.5/1;
     width: 20%;
@@ -33,18 +39,23 @@ main{
     background-color: var(--primary-yellow);
     border: solid 0.5cqh white;
 
-    &#cancelJoin{
+    &#cancelJoin {
         background-color: var(--secondary-yellow);
     }
 }
 
-.joinLobby{
-    form:first-child{
+.joinLobby {
+    form:first-child {
         width: 30%;
-        #NameInput{
-            font-size: 3cqw;
 
-            &::placeholder{
+        #NameInput {
+            height: 4cqw;
+            font-size: 3cqw;
+            border-radius: 15px;
+            border: black solid;
+            background-color: lightgray;
+
+            &::placeholder {
                 font-size: 2.5cqw;
 
             }
