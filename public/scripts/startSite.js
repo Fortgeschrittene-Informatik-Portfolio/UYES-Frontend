@@ -1,7 +1,6 @@
 import { handleIntro } from './utils/intros.js';
 
 export function initStartSite() {
-    console.log("StartSite geladen");
 
     handleIntro({
         flagName: "introSeenStart",

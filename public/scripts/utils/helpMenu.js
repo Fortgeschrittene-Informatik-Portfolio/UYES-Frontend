@@ -34,7 +34,6 @@ export function helpFunctionality(socket, getGameCode, playerName) {
     }
     if (leave) {
         leave.addEventListener("click", () => {
-            console.log("🚪 Spieler klickt auf Exit – leave wird ausgeführt");
             socket.emit("leave-lobby", getGameCode(), playerName);
             window.location.href = "/start/game";
         });

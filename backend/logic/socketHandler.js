@@ -126,6 +126,7 @@ export function setupSocket(io) {
                         maxPlayers: maxPlayersFromHost || 5,
                         settings: socket.data.session?.settings || {}
                     };
+                    console.log(`\u{1F195} Lobby ${gameCode} erstellt von ${playerName}`);
                 } else {
                     socket.emit("lobby-not-found");
                     return;
@@ -141,6 +142,7 @@ export function setupSocket(io) {
 
             socket.join(gameCode);
             socket.data.playerName = playerName; // 🔑 wichtig!
+            console.log(`➡️ ${playerName} betritt Lobby ${gameCode}`);
 
 
             if (!lobbies[gameCode].players.includes(playerName)) {
@@ -212,6 +214,7 @@ export function setupSocket(io) {
             }
             socket.leave(gameCode);
             delete lobbies[gameCode];
+            console.log(`\u{1F512} Lobby ${gameCode} geschlossen von ${socket.data.playerName}`);
         });
         socket.on("change-code", (oldCode, newCode) => {
             if (!lobbies[oldCode]) return;
