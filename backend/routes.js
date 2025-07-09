@@ -25,6 +25,10 @@ router.get('/help', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/helpPage.html'));
 });
 
+router.get('/rules', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/html/rulesPage.html'));
+});
+
 router.get('/start/game', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/chooseLobby.html'));
 });

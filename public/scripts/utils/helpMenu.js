@@ -3,7 +3,7 @@ export function helpFunctionality(socket, getGameCode, playerName) {
     const helpDiv = document.getElementById("helpButtonClicked");
     const closeHelpBtn = document.getElementById("closeHelpBtn");
     const aboutBtn = document.getElementById("AboutBtn");
-    const settingBtn = document.getElementById("SettingsBtn");
+    const rulesBtn = document.getElementById("RulesBtn");
     const exitBtn = document.getElementById("ExitGameBtn");
 
     const exitDiv = document.getElementById("submitLeaving");
@@ -45,9 +45,9 @@ export function helpFunctionality(socket, getGameCode, playerName) {
         });
     }
 
-    if (settingBtn) {
-        settingBtn.addEventListener("click", () => {
-            window.open("/help", "_blank");
+    if (rulesBtn) {
+        rulesBtn.addEventListener("click", () => {
+            window.open("/rules", "_blank");
         });
     }
 }
