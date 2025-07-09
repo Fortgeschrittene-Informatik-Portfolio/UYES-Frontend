@@ -12,6 +12,8 @@ const avatarFiles = fs
 
 import { getSession } from '../jwtSession.js';
 
+const HAND_LIMIT = 40;
+
 
 const lobbies = {};
 // Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, host: string, game?: GameState } }
@@ -377,8 +379,8 @@ export function setupSocket(io) {
             const player = socket.data.playerName;
             if (game.turnOrder[game.current] !== player) return;
 
-            const limit = parseInt(game.settings?.handLimit, 10);
-            if (limit && game.hands[player].length >= limit) {
+            const limit = HAND_LIMIT;
+            if (game.hands[player].length >= limit) {
                 socket.emit('hand-limit-reached');
                 return;
             }
