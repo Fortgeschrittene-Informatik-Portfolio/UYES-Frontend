@@ -131,3 +131,24 @@
         display: none;
     }
 }
+
+@media (max-width: 600px) {
+  #main.lobby {
+    width: 100vw;
+    padding: 0;
+  }
+  .gameCode h2 {
+    font-size: 1.2em;
+  }
+  #player-lobby-container {
+    width: 98vw;
+    padding: 2vw 0;
+  }
+  .player-lobby-fields p.takenSlot {
+    font-size: 1em;
+  }
+  #startGameplay {
+    width: 80vw;
+    font-size: 1.2em;
+  }
+}

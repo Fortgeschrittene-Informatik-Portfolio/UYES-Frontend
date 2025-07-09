@@ -67,6 +67,38 @@ div#menu {
     background-size: contain; /* Inhalt skalieren, ohne zu beschneiden */
 }
 
+@media (max-width: 600px) {
+  #group {
+    width: 90vw;
+    margin: 0 auto 2em auto;
+    display: block;
+  }
+  div#menu {
+    position: static;
+    margin: 0.05cm auto 7em auto;
+    width: 100vw;
+    padding: 0 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  div#menu section.menu {
+    gap: 0.2em;
+    width: 100vw;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: space-evenly;
+    overflow-x: hidden;
+  }
+  div#menu .button {
+    width: 40vw;
+    max-width: 100%;
+    font-size: 1.2em;
+    margin: 0.5em 0;
+    box-sizing: border-box;
+  }
+}
+
 @media only screen and (max-width: 600px) {
     #group {
         width: 100%

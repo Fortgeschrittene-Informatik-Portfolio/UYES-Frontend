@@ -149,3 +149,29 @@ body.help-page-body {
     border-radius: 10px;
 
 }
+
+@media (max-width: 600px) {
+  body.help-page-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    background-size: cover;
+  }
+  .help-rules-container {
+    max-width: 98vw;
+    height: auto;
+    padding: 2vw 0 0 0;
+    font-size: 1em;
+  }
+  .help-section-header h2 {
+    font-size: 1.1em;
+  }
+  .help-go-back-button {
+    width: 90%;
+    font-size: 1em;
+    margin-top: 0;
+    margin-left: 0;
+  }
+  #help-language {
+    margin-right: 10vw;
+  }
+}

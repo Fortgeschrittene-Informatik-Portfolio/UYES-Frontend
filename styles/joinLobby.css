@@ -54,4 +54,25 @@ main{
 
 }
 
+@media (max-width: 600px) {
+  main {
+    width: 98vw;
+    padding: 0;
+  }
+  #gameCodeInput {
+    width: 80vw;
+    font-size: 1em;
+  }
+  .joinForm {
+    width: 80vw;
+    font-size: 1.2em;
+  }
+  .joinLobby form:first-child {
+    width: 90vw;
+  }
+  #NameInput {
+    font-size: 1em;
+  }
+}
+
 
