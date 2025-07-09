@@ -384,6 +384,16 @@ body#gameplay {
     cursor: grabbing;
 }
 
+.my-turn #draw-pile span.card:hover *,
+.my-turn #player-hand-container span.card:not(.unplayable):hover * {
+    cursor: grab;
+}
+
+.my-turn #draw-pile span.card:active *,
+.my-turn #player-hand-container span.card:not(.unplayable):active * {
+    cursor: grabbing;
+}
+
 .my-turn #player-hand-container span.card:not(.unplayable):hover {
     cursor: grab;
 }
