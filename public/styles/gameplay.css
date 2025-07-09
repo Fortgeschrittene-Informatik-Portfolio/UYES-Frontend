@@ -521,3 +521,21 @@ body#gameplay {
     }
 
 }
+
+#changeAvatar{
+    position: absolute;
+    aspect-ratio: 1/1;
+    width: 20%;
+    border-radius: 50%;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: white;
+
+    top: 80%;
+    left: 80%;
+    margin: 0;
+    z-index:0;
+
+
+}
