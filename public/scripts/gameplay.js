@@ -62,8 +62,7 @@ export async function initGameplay() {
 
     socket.on('deal-cards', renderHand);
     socket.on('player-turn', highlightTurn);
-    socket.on('card-played', handleCardPlayed);
-    socket.on('cards-drawn', handleCardsDrawn);
+    socket.on('card-played', updateDiscard);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
@@ -357,46 +356,6 @@ function updateDiscard({ player, card }) {
         pile.innerHTML = `<span><span>${displayValue(card.value)}</span></span>`;
     }
     topDiscard = card;
-}
-
-function animateCardMove(startEl, endEl, card, cb) {
-    if (!startEl || !endEl) { cb && cb(); return; }
-    const start = startEl.getBoundingClientRect();
-    const end = endEl.getBoundingClientRect();
-    const el = document.createElement('span');
-    const color = card.color === 'wild' ? (card.chosenColor || card.color) : card.color;
-    el.className = `card big moving ${color}`;
-    el.innerHTML = `<span><span>${card.value ? displayValue(card.value) : ''}</span></span>`;
-    el.style.position = 'absolute';
-    el.style.left = `${start.left}px`;
-    el.style.top = `${start.top}px`;
-    el.style.width = `${start.width}px`;
-    el.style.height = `${start.height}px`;
-    document.body.appendChild(el);
-    const dx = end.left + end.width / 2 - (start.left + start.width / 2);
-    const dy = end.top + end.height / 2 - (start.top + start.height / 2);
-    const scale = end.width / start.width;
-    requestAnimationFrame(() => {
-        el.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
-    });
-    el.addEventListener('transitionend', () => {
-        el.remove();
-        cb && cb();
-    });
-}
-
-function handleCardPlayed(data) {
-    const avatar = getAvatarElement(data.player);
-    const pile = document.querySelector('#discard-pile span.card');
-    animateCardMove(avatar, pile, data.card, () => updateDiscard(data));
-}
-
-function handleCardsDrawn({ player, count }) {
-    const pile = document.querySelector('#draw-pile span.card');
-    const avatar = getAvatarElement(player);
-    for (let i = 0; i < count; i++) {
-        animateCardMove(pile, avatar, { color: 'back', value: '' });
-    }
 }
 
 function isCardPlayable(card) {
