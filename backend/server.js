@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import compression from 'compression';
 
 import { jwtSessionMiddleware } from './jwtSession.js';
 import { PORT, PUBLIC_DIR } from './config.js';
@@ -17,7 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(jwtSessionMiddleware);
 
-app.use(express.static(PUBLIC_DIR));
+app.use(compression());
+app.use(express.static(PUBLIC_DIR, { maxAge: '1d' }));
 app.use('/', routes);
 
 const server = createServer(app);
