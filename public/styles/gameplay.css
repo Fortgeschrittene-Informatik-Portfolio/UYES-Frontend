@@ -463,3 +463,17 @@ body#gameplay {
     }
 
 }
+
+#gameDirection{
+    position: absolute;
+    color: white;
+    display:flex;
+    font-size: 500%;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    justify-content: center;
+    *{
+        margin-top: 15%;
+    }
+}
