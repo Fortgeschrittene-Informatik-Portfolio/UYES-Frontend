@@ -406,6 +406,10 @@ function resetGameUI() {
     myHand = [];
     myTurn = false;
 
+    // remove all active UYES bubbles from previous round
+    document.querySelectorAll('.uyes-bubble.active')
+        .forEach(el => el.classList.remove('active'));
+
     renderHand([]);
 
     const winnerEl = document.getElementById('winner');
