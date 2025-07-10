@@ -229,6 +229,17 @@
     right: 105%;
 }
 
+/* ensure consistent layout independent of row */
+#player-avatars2 .row > .avatar:first-child .cardHands {
+    right: 105%;
+    left: auto;
+}
+
+#player-avatars2 .row > .avatar:last-child .cardHands {
+    left: 105%;
+    right: auto;
+}
+
 #player1 {
     background-size: contain;
 }
@@ -537,11 +548,13 @@ body#gameplay {
 
 }
 
-/* Rotate animation for avatar change button */
-#changeAvatar.rotate {
-    animation: avatarSpin 0.5s linear;
+/* simple grow animation for avatar change button */
+#changeAvatar.grow {
+    animation: avatarGrow 0.3s ease-in-out;
 }
 
-@keyframes avatarSpin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }}
+@keyframes avatarGrow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
