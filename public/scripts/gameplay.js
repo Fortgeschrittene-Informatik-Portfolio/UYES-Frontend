@@ -435,13 +435,13 @@ function setupAvatarSlots() {
         bubble.textContent = 'UYES!';
         avatar.appendChild(bubble);
         avatarSlots.push(avatar);
+        const isFirstInRow = i % 2 === 0;
         if (i < 2) {
-            avatar.classList.add('left-hand');
             rows[0].appendChild(avatar);
         } else {
-            avatar.classList.add('right-hand');
             rows[1].appendChild(avatar);
         }
+        avatar.classList.add(isFirstInRow ? 'right-hand' : 'left-hand');
     }
     rows.forEach(r => container.appendChild(r));
 }
