@@ -103,10 +103,10 @@
 
 
 #player-lobby-container{
-    background: darkgrey;
+    background: var(--primary-yellow);
     flex-grow: 1;
     border: solid dimgrey;
-    border-radius: 10%;
+    border-radius: 15%;
     width: 60%;
     justify-self: center;
     display: flex;
@@ -139,8 +139,8 @@
     align-items: center;
     p{
         &#hostTag{
-            color: var(--primary-yellow);
-            -webkit-text-stroke: 0.05cqw black;
+            color: black;
+            -webkit-text-stroke: 0.05cqw white;
             font-weight: 800;
             position: absolute;
             left: 30%;
@@ -206,5 +206,26 @@
 .Joiner{
     .removePlayerButton, #refresh-code-button, #startGameplay{
         display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    #main.lobby {
+        width: 100vw;
+        padding: 0;
+    }
+    .gameCode h2 {
+        font-size: 1.2em;
+    }
+    #player-lobby-container {
+        width: 98vw;
+        padding: 2vw 0;
+    }
+    .player-lobby-fields p.takenSlot {
+        font-size: 1em;
+    }
+    #startGameplay {
+        width: 80vw;
+        font-size: 1.2em;
     }
 }

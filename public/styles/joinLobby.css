@@ -20,13 +20,20 @@ main{
     font-size: 2cqw;
     cursor: text;
     &::placeholder{
+        border: black solid;
+        border-radius: 15px;
+        background-color: lightgray;
         font-size: 1.8cqw;
     }
     border: 0.5cqw solid black;
     margin: 10%;
 }
 #NameInput{
-    border: 0.25cqw solid black;
+    height: 4cqw;
+    font-size: 3cqw;
+    border-radius: 15px;
+    border: black solid;
+    background-color: lightgray;
 }
 
 .joinForm{
@@ -64,3 +71,23 @@ main{
 }
 
 
+@media (max-width: 600px) {
+    main {
+        width: 98vw;
+        padding: 0;
+    }
+    #gameCodeInput {
+        width: 80vw;
+        font-size: 1em;
+    }
+    .joinForm {
+        width: 80vw;
+        font-size: 1.2em;
+    }
+    .joinLobby form:first-child {
+        width: 90vw;
+    }
+    #NameInput {
+        font-size: 1em;
+    }
+}
