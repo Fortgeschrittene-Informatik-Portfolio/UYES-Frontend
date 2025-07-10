@@ -8,7 +8,8 @@ const __dirname = path.dirname(__filename);
 
 const avatarFiles = fs
   .readdirSync(path.join(__dirname, "../../public/images/avatars"))
-  .filter(f => /avatar/i.test(f));
+  // include all common image files instead of only those containing "avatar" in the name
+  .filter(f => /\.(?:png|jpe?g|gif)$/i.test(f));
 
 import { getSession } from '../jwtSession.js';
 

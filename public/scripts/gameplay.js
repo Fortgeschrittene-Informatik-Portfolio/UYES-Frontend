@@ -151,11 +151,11 @@ export async function initGameplay() {
 
     const changeAvatarBtn = document.getElementById('changeAvatar');
     changeAvatarBtn?.addEventListener('click', () => {
-        changeAvatarBtn.classList.add('rotate');
+        changeAvatarBtn.classList.add('grow');
         socket.emit('change-avatar', gameCode);
     });
     changeAvatarBtn?.addEventListener('animationend', () => {
-        changeAvatarBtn.classList.remove('rotate');
+        changeAvatarBtn.classList.remove('grow');
     });
 
     const changeSettingsBtn = document.querySelector('#ending-buttons .ending:first-child');
