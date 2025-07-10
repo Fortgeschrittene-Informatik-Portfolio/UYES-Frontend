@@ -19,7 +19,8 @@ app.use(cookieParser());
 app.use(jwtSessionMiddleware);
 
 app.use(compression());
-app.use(express.static(PUBLIC_DIR, { maxAge: '1d' }));
+const staticOptions = process.env.NODE_ENV === 'production' ? { maxAge: '1d' } : { maxAge: 0 };
+app.use(express.static(PUBLIC_DIR, staticOptions));
 app.use('/', routes);
 
 const server = createServer(app);
@@ -31,3 +32,14 @@ setupSocket(io);
 server.listen(PORT, () => {
     console.log(`🟢 Server läuft auf http://localhost:${PORT}/start`);
 });
+
+function shutdown() {
+    server.close(() => {
+        console.log('🔴 Server gestoppt');
+        process.exit(0);
+    });
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+process.on('SIGHUP', shutdown);
