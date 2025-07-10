@@ -95,8 +95,8 @@
     align-items: center;
 
     .pile {
-        margin-left: 2em;
-        margin-right: 2em;
+
+        margin: 0 10% 0 10%;
 
 
         h2 {
@@ -229,14 +229,6 @@
     right: 105%;
 }
 
-#player2 {
-    border: 0.8cqw solid var(--primary-yellow);
-    background-color: rgba(149, 145, 4, 0.5);
-
-    background-size: contain;
-
-}
-
 #player1 {
     background-size: contain;
 }
@@ -259,21 +251,9 @@
 }
 
 body#gameplay {
-    #player2 {
-        border: 0.2cqw solid white;
-    }
-
-    #player3 {
-        border: 0.8cqw solid var(--primary-yellow);
-        background-color: rgba(149, 145, 4, 0.5);
-    }
-
     #own-avatar {
         background-color: var(--secondary-yellow);
-        opacity: 0.5;
     }
-
-
 }
 
 .my-turn #UYES {
@@ -521,3 +501,47 @@ body#gameplay {
     }
 
 }
+
+#changeAvatar{
+    position: absolute;
+    aspect-ratio: 1/1;
+    width: 20%;
+    border-radius: 50%;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: white;
+
+    top: 80%;
+    left: 80%;
+    margin: 0;
+    z-index:0;
+
+
+}
+
+#timerContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+
+    h3{
+        color:white;
+        font-size: 500%;
+        margin: 0;
+    }
+
+}
+
+/* Rotate animation for avatar change button */
+#changeAvatar.rotate {
+    animation: avatarSpin 0.5s linear;
+}
+
+@keyframes avatarSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }}

@@ -18,6 +18,7 @@ let myHand = [];
 // Whether it's currently this client's turn
 let myTurn = false;
 let isClockwise = true;
+let turnInterval = null;
 
 // Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
@@ -56,7 +57,7 @@ export async function initGameplay() {
 
     maxPlayers = data.players;
 
-    setupAvatarSlots(maxPlayers);
+    setupAvatarSlots();
     setAvatarImages();
 
     socket.on('deal-cards', renderHand);
@@ -67,6 +68,10 @@ export async function initGameplay() {
     socket.on('player-uyes', toggleUyesBubble);
     socket.on('order-reversed', handleOrderReversed);
     socket.on('game-started', resetGameUI);
+    socket.on('avatar-changed', ({ player, file }) => {
+        playerAvatars[player] = file;
+        setAvatarImages();
+    });
     socket.on('hand-limit-reached', () => {
         alert('Reached maximum amount of cards in hand.');
     });
@@ -142,6 +147,15 @@ export async function initGameplay() {
         if (myTurn) {
             socket.emit('uyes', gameCode);
         }
+    });
+
+    const changeAvatarBtn = document.getElementById('changeAvatar');
+    changeAvatarBtn?.addEventListener('click', () => {
+        changeAvatarBtn.classList.add('rotate');
+        socket.emit('change-avatar', gameCode);
+    });
+    changeAvatarBtn?.addEventListener('animationend', () => {
+        changeAvatarBtn.classList.remove('rotate');
     });
 
     const changeSettingsBtn = document.querySelector('#ending-buttons .ending:first-child');
@@ -253,9 +267,13 @@ function renderHand(cards) {
     }
 }
 
-function highlightTurn(name) {
+function highlightTurn(data) {
+    const name = typeof data === 'string' ? data : data.player;
+    const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
     // remember whether it is our turn
     myTurn = name === playerName;
+
+    startTurnTimer(startedAt);
 
     // Spielerreihenfolge rotieren, sodass der übergebene Spieler an erster
     // Stelle steht. Damit lässt sich leicht berechnen, wie viele Züge es bis zu
@@ -278,11 +296,33 @@ function highlightTurn(name) {
     renderHand(myHand);
 }
 
+function startTurnTimer(startedAt = Date.now()) {
+    clearInterval(turnInterval);
+    const timerEl = document.getElementById('timer');
+    const end = startedAt + 30000;
+
+    function update() {
+        const remaining = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+        if (timerEl) timerEl.textContent = `${remaining}s`;
+        if (remaining <= 0) {
+            clearInterval(turnInterval);
+            if (myTurn) {
+                socket.emit('draw-card', gameCode);
+            }
+        }
+    }
+
+    update();
+    turnInterval = setInterval(update, 1000);
+}
+
 function setAvatarImages() {
-    let index = 1;
+    const order = [2,0,1,3];
+    let idx = 0;
     for (const n of playerList) {
         if (n === playerName) continue;
-        const el = document.getElementById(`player${index}`);
+        const slotIndex = order[idx] ?? idx;
+        const el = document.getElementById(`player${slotIndex + 1}`);
         if (el) {
             el.dataset.player = n;
             const file = playerAvatars[n];
@@ -290,7 +330,7 @@ function setAvatarImages() {
                 el.style.backgroundImage = `url('/images/avatars/${file}')`;
             }
         }
-        index++;
+        idx++;
     }
     const own = document.getElementById('own-avatar');
     if (own) {
@@ -365,14 +405,15 @@ function showWinner(winner) {
     }
 }
 
-function setupAvatarSlots(total) {
+function setupAvatarSlots() {
     const container = document.getElementById('player-avatars2');
     if (!container) return;
     container.innerHTML = '';
     avatarSlots = [];
     const rows = [document.createElement('div'), document.createElement('div')];
     rows.forEach(r => r.classList.add('row'));
-    const count = Math.min(total - 1, 4);
+    // Always create four avatar slots so the order mapping works
+    const count = 4;
     for (let i = 0; i < count; i++) {
         const avatar = document.createElement('div');
         avatar.className = 'avatar inactive';
@@ -406,7 +447,7 @@ function setupAvatarSlots(total) {
 }
 
 function updateHandCounts(list) {
-    if (!avatarSlots.length) setupAvatarSlots(list.length);
+    if (!avatarSlots.length) setupAvatarSlots();
     // Dreh die vom Server gesendete Spielreihenfolge so, dass sie aus Sicht
     // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
     // Spielern überein.
@@ -423,8 +464,10 @@ function updateHandCounts(list) {
     // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
     const others = rotated.filter(p => p.name !== playerName);
 
+    const order = [2,0,1,3];
     for (let i = 0; i < avatarSlots.length; i++) {
-        const slot = avatarSlots[i];
+        const idx = order[i] ?? i;
+        const slot = avatarSlots[idx];
         const data = others[i];
         if (data) {
             slot.querySelector('.cardsleft').textContent = `${data.count}x`;
@@ -486,6 +529,9 @@ function resetGameUI() {
         waitText.classList.add('hidden');
         waitText.style.display = 'none';
     }
+    clearInterval(turnInterval);
+    const timerEl = document.getElementById('timer');
+    if (timerEl) timerEl.textContent = '30s';
     document.getElementById('color-overlay')?.classList.remove('active');
     pendingWildCard = null;
 }
