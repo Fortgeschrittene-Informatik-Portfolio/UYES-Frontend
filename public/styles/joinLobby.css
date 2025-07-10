@@ -15,13 +15,14 @@ main{
 }
 
 #gameCodeInput{
-    width: 20cqw;
+    width: 25cqw;
     height: 4cqw;
     /*font-size: 2cqw;*/
     cursor: text;
     border-radius: 15px;
     background-color: lightgray;
     font-size: 1.8cqw;
+
     &::placeholder{
 
     }
