@@ -215,9 +215,9 @@ function displayValue(value) {
         case 'wild4':
             return '4+';
         case 'reverse':
-            return '⤾';
+            return '<i class="fas fa-retweet specialCard"></i>';
         case 'skip':
-            return 'Ø';
+            return '<i class="fas fa-ban specialCard"></i>';
         case 'wild':
             return 'W';
         default:
