@@ -441,7 +441,7 @@ function setupAvatarSlots() {
         } else {
             rows[1].appendChild(avatar);
         }
-        avatar.classList.add(isFirstInRow ? 'right-hand' : 'left-hand');
+        avatar.classList.add(isFirstInRow ? 'left-hand' : 'right-hand');
     }
     rows.forEach(r => container.appendChild(r));
 }

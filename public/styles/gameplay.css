@@ -222,22 +222,22 @@
 }
 
 .avatar.left-hand .cardHands {
-    left: 105%;
+    right: 105%;
 }
 
 .avatar.right-hand .cardHands {
-    right: 105%;
+    left: 105%;
 }
 
 /* ensure consistent layout independent of row */
 #player-avatars2 .row > .avatar:first-child .cardHands {
-    right: 105%;
-    left: auto;
+    left: 105%;
+    right: auto;
 }
 
 #player-avatars2 .row > .avatar:last-child .cardHands {
-    left: 105%;
-    right: auto;
+    right: 105%;
+    left: auto;
 }
 
 #player1 {
