@@ -14,7 +14,11 @@ Install the project dependencies:
 npm install
 ```
 
-Copy `.env.example` to `.env` to adjust configuration. The server uses `PORT` and `JWT_SECRET` from this file, so you can change the server's listening port by editing `PORT`. Defaults are provided if no `.env` is present.
+
+Run the command again whenever new dependencies are introduced (for example,
+after pulling recent updates).
+
+Copy `.env.example` to `.env` to adjust configuration. The server uses `PORT` and `JWT_SECRET` from this file. Defaults are provided if no `.env` is present.
 
 
 Start the application in development mode with automatic reload:
