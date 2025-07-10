@@ -563,3 +563,132 @@ body#gameplay {
     color: black;
     font-size: 120%;
 }
+
+.draw{
+
+    &.notVisible{
+        display: none;
+    }
+
+    z-index: 100;
+    position: absolute;
+    top: 44%;
+    left: 32%;
+
+    &.leftDown{
+        animation: toLeftDown   ease-in-out 1s;
+    }
+    &.leftTop{
+        animation: toLeftTop   ease-in-out 1s;
+    }
+    &.rightDown{
+        animation: toRightDown   ease-in-out 1s;
+    }
+    &.rightTop{
+        animation: toRightTop   ease-in-out 1s;
+    }
+    &.self{
+        animation: toSelf   ease-in-out 1s;
+    }
+}
+
+.discard{
+
+    &.notVisible{
+        display: none;
+    }
+
+    animation: toDiscard   ease-in-out 1s;
+    z-index: 100;
+    position: absolute;
+    &.leftDown{
+        top: 60%;
+        left: 22%;
+    }
+    &.leftTop{
+        top: 25%;
+        left: 22%;
+
+    }
+    &.rightDown{
+        top: 60%;
+        left: 76%;
+    }
+    &.rightTop{
+        top: 25%;
+        left: 76%;
+    }
+    &.self{
+        left: 50%;
+        top:70%;
+    }
+}
+
+
+
+@keyframes toDiscard{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        top: 44%;
+        left: 62%;;
+    }
+}
+
+@keyframes toLeftDown{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(100%) translateX(-150%);
+    }
+}
+
+@keyframes toLeftTop{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(-125%) translateX(-150%);
+    }
+}
+@keyframes toRightDown{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(100%) translateX(700%);
+    }
+}
+@keyframes toRightTop{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(-125%) translateX(700%);
+    }
+}
+
+@keyframes toSelf{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(200%) translateX(300%);
+    }
+}
+
+
