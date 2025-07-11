@@ -177,6 +177,7 @@ export function setupSocket(io) {
                     startedAt: runningGame.turnStartedAt,
                     drawStack: runningGame.drawStack || 0
                 });
+                socket.emit('game-started');
             }
 
 
