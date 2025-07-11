@@ -102,17 +102,6 @@ body.help-page-body {
     font-size: 2.5cqw;
 }
 
-#help-language {
-    margin-bottom: 5%;
-    justify-self: center;
-}
-
-#help-language-dropdown {
-    background-color: var(--primary-yellow) ;
-    border-radius: 10%;
-}
-
-
 
 @media only screen and (max-width: 600px) {
 
