@@ -376,6 +376,7 @@ export function setupSocket(io) {
                     }
                 }
                 io.to(gameCode).emit('cards-drawn', { player: affected, count: 2 });
+                broadcastHandCounts(io, gameCode, game);
                 io.to(gameCode).emit('player-skipped', affected);
                 next = nextTurn(game);
             } else if (played.value === 'wild4') {
@@ -387,6 +388,7 @@ export function setupSocket(io) {
                     }
                 }
                 io.to(gameCode).emit('cards-drawn', { player: affected, count: 4 });
+                broadcastHandCounts(io, gameCode, game);
                 io.to(gameCode).emit('player-skipped', affected);
                 next = nextTurn(game);
             }
