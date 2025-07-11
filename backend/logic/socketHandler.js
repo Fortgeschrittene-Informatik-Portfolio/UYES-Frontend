@@ -167,6 +167,7 @@ export function setupSocket(io) {
             // die anstehende Runde sehen können.
             const runningGame = lobbies[gameCode].game;
             if (runningGame) {
+                socket.emit('game-started');
                 const hand = runningGame.hands[playerName] || [];
                 socket.emit('deal-cards', hand);
                 const topCard = runningGame.discard[runningGame.discard.length - 1];
@@ -177,7 +178,6 @@ export function setupSocket(io) {
                     startedAt: runningGame.turnStartedAt,
                     drawStack: runningGame.drawStack || 0
                 });
-                socket.emit('game-started');
             }
 
 
