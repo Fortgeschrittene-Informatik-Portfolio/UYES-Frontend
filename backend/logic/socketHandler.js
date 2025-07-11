@@ -110,6 +110,7 @@ function handleUyesEnd(io, gameCode, game, player) {
                 s.emit('deal-cards', game.hands[player]);
             }
         }
+        io.to(gameCode).emit('cards-drawn', { player, count: 1 });
         broadcastHandCounts(io, gameCode, game);
     }
 }
