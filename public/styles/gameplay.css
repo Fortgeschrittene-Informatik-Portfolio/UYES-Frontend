@@ -32,6 +32,11 @@
     /*scrollbar-width: none;    !* Firefox *!*/
 }
 
+/* prevent left overflow of the first card in hand */
+#player-hand-container span.card:first-child {
+    margin-left: 0;
+}
+
 #player-hand-container::-webkit-scrollbar {
     display: none;            /* Chrome, Safari */
 }
