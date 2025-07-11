@@ -1,4 +1,5 @@
-const MUSIC_SRC = '/music/background.wav';
+const MUSIC_SRC = '/music/background.mp3';
+
 let audioElem;
 
 export function startMusic() {
