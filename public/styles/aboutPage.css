@@ -36,11 +36,12 @@
         margin-bottom: 2em;
     }
     #aboutText h2 {
-        font-size: 1em;
+        font-size: 2em;
     }
     #back-to-main-menu {
-        font-size: 0.75em;
-        padding: 0.2em 0.5em;
-        margin-top: 1.5em;
+        width: 35%;
+        /*font-size: 0.75em;*/
+        /*padding: 0.2em 0.5em;*/
+        /*margin-top: 1.5em;*/
     }
 }
