@@ -137,6 +137,11 @@ export function setupSocket(io) {
 
             const lobby = lobbies[gameCode];
 
+            if (lobby.game && !lobby.players.includes(playerName)) {
+                socket.emit('game-in-progress');
+                return;
+            }
+
             if (lobby.players.length >= lobby.maxPlayers && !lobby.players.includes(playerName)) {
                 socket.emit("lobby-full");
                 return;
@@ -188,6 +193,9 @@ export function setupSocket(io) {
 
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerNameToKick);
             delete lobbies[gameCode].avatars[playerNameToKick];
+            if (lobbies[gameCode].game) {
+                lobbies[gameCode].maxPlayers = lobbies[gameCode].players.length;
+            }
             io.to(gameCode).emit(
                 "update-lobby",
                 lobbies[gameCode].players,
@@ -462,6 +470,16 @@ export function setupSocket(io) {
             // remove from lobby
             lobby.players = lobby.players.filter(p => p !== name);
             delete lobby.avatars[name];
+            if (lobby.game) {
+                lobby.maxPlayers = lobby.players.length;
+                io.to(gameCode).emit(
+                    'update-lobby',
+                    lobby.players,
+                    lobby.maxPlayers,
+                    lobby.avatars,
+                    lobby.host
+                );
+            }
 
             // remove from game state
             if (game) {
