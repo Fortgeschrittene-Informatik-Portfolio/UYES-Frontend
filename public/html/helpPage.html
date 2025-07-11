@@ -21,18 +21,18 @@
 </div>
 <div class="help-rules-container">
     <details class="help-collapsible-section">
-        <summary class="help-section-header">UYES! Rules</summary>
+        <summary class="help-section-header" data-i18n="help.rules">UYES! Rules</summary>
         <div class="help-section-content">
-            <p>Read the full rules on our dedicated page.</p>
-            <button class="button" id="rulesBtnHelp">Go to Rules</button>
+            <p data-i18n="help.readRules">Read the full rules on our dedicated page.</p>
+            <button class="button" id="rulesBtnHelp" data-i18n="help.gotoRules">Go to Rules</button>
         </div>
     </details>
 
     <details class="help-collapsible-section">
-        <summary class="help-section-header">Volume and Language Settings</summary>
+        <summary class="help-section-header" data-i18n="help.settings">Volume and Language Settings</summary>
         <div class="help-section-content">
             <div id="help-volume">
-                <h3 class="help-amount">Volume:</h3>
+                <h3 class="help-amount" data-i18n="help.volume">Volume:</h3>
                 <button class="help-reduce-volume">-</button>
                 <label>
                     <input id="volume-range" type="range" min="0" max="1" step="0.1" value="0.5">
@@ -41,10 +41,10 @@
             </div>
 
             <div id="help-language">
-                <label class="help-language">Language:</label>
+                <label class="help-language" data-i18n="help.language">Language:</label>
                 <label for="help-language-dropdown"></label><select name="language" id="help-language-dropdown">
-                    <option value="English">English</option>
-                    <option value="German">German</option>
+                    <option value="en">English</option>
+                    <option value="de">German</option>
                 </select>
             </div>
 
