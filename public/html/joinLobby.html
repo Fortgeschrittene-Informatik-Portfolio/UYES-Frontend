@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>joinLobby</title>
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="icon" href="/images/logo.png" type="image.png">
@@ -18,8 +20,8 @@
 
 <main class="joinLobby">
     <form method="POST" action="/api/joinGame">
-        <label for="NameInput"></label>
-        <input id="NameInput" type="text" placeholder="Enter your name here..." name="playerName">
+        <label for="NameInputJoin"></label>
+        <input id="NameInputJoin" type="text" placeholder="Enter your name here..." name="playerName">
 
         <label for="gameCodeInput"></label>
         <input id="gameCodeInput" type="text" placeholder="Enter game-code here..." name="code" required>
