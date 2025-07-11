@@ -367,13 +367,15 @@ function updateDiscard({ player, card }) {
 
 function runAnimation(type, orientation, delay = 0) {
     if (!gameStarted || !orientation) return;
-    const el = document.querySelector(`.${type}.${orientation}`);
-    if (!el) return;
+    const template = document.querySelector(`.${type}.${orientation}`);
+    if (!template) return;
     setTimeout(() => {
+        const el = template.cloneNode(true);
         el.classList.remove('notVisible');
+        template.parentNode?.appendChild(el);
         const handler = () => {
-            el.classList.add('notVisible');
             el.removeEventListener('animationend', handler);
+            el.remove();
         };
         el.addEventListener('animationend', handler);
     }, delay);
