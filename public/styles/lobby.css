@@ -87,16 +87,15 @@
         text-align: center;
         margin: 0;
     }
-
-    #refresh-code-button{
-        flex-grow: 0;
-        font-size: 1.5cqw;
-        width: 30%;
-        text-align: center;
-        margin: 2%;
-    }
 }
 
+#refresh-code-button{
+    flex-grow: 0;
+    font-size: 1.5cqw;
+    width: 30%;
+    text-align: center;
+    margin: 2%;
+}
 
 
 
@@ -125,7 +124,18 @@
     }
 
 }
-
+#hostTag{
+    color: black;
+    -webkit-text-stroke: 0.05cqw white;
+    font-weight: 800;
+    position: absolute;
+    left: 30%;
+    /*height: 25%;*/
+    font-size: 1.7cqw;
+    +p{
+        text-decoration: underline;
+    }
+}
 
 .player-lobby-fields{
     /*position: relative;*/
@@ -138,18 +148,7 @@
     justify-content: center;
     align-items: center;
     p{
-        &#hostTag{
-            color: black;
-            -webkit-text-stroke: 0.05cqw white;
-            font-weight: 800;
-            position: absolute;
-            left: 30%;
-            /*height: 25%;*/
-            font-size: 1.5cqw;
-            +p{
-                text-decoration: underline;
-            }
-        }
+
         margin: 0;
         &.openSlot{
             color: dimgrey;
@@ -209,23 +208,30 @@
     }
 }
 
-@media (max-width: 600px) {
-    #main.lobby {
-        width: 100vw;
-        padding: 0;
-    }
-    .gameCode h2 {
-        font-size: 1.2em;
-    }
+@media only screen and (max-width: 600px) {
+
     #player-lobby-container {
-        width: 98vw;
-        padding: 2vw 0;
+        width: 90%;
     }
     .player-lobby-fields p.takenSlot {
-        font-size: 1em;
+        font-size: 120%;
+    }
+    #hostTag{
+        left: 10%;
+        font-size: 120%;
     }
     #startGameplay {
-        width: 80vw;
-        font-size: 1.2em;
+        width: 50%;
+        font-size: 120%;
+    }
+    #refresh-code-button{
+        font-size: 120%;
+        width: 35%;
+        margin-right: 5%;
+    }
+    #helpBtnLobby{
+        position: absolute;
+        top: 16%;
+        justify-self: center;
     }
 }
