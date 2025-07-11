@@ -14,6 +14,16 @@ export function startMusic() {
     }
 }
 
+// apply volume changes across tabs
+window.addEventListener('storage', (e) => {
+    if (e.key === 'bg-music-volume' && audioElem) {
+        const vol = parseFloat(e.newValue);
+        if (Number.isFinite(vol)) {
+            audioElem.volume = vol;
+        }
+    }
+});
+
 export function setVolume(vol) {
     const volume = Math.min(Math.max(vol, 0), 1);
     localStorage.setItem('bg-music-volume', String(volume));
