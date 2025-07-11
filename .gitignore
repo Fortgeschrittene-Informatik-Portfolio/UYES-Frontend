@@ -175,3 +175,7 @@ cython_debug/
 
 node_modules/
 
+
+# Ignore audio assets
+public/music/*.wav
+
