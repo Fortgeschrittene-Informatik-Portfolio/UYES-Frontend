@@ -8,6 +8,7 @@ import { initChangeSettings } from './changeSettings.js';
 import { initLobbyHost } from "./lobby.js";
 import { initJoinLobby } from "./joinLobby.js";
 import { initGameplay } from "./gameplay.js";
+import { startMusic } from './utils/music.js';
 
 
 
@@ -16,6 +17,7 @@ import { initGameplay } from "./gameplay.js";
 
 
 const pageId = document.body.id;
+startMusic();
 
 if (pageId === 'startsite') {
     initStartSite();
