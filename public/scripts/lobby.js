@@ -1,6 +1,5 @@
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
-import { t } from './utils/i18n.js';
 const socket = io(); // Standardverbindung
 let currentGameCode;
 
@@ -42,17 +41,17 @@ export async function initLobbyHost() {
     });
 
     socket.on("lobby-not-found", () => {
-        alert(t('lobby.notFound'));
+        alert("❌ Lobby nicht gefunden");
         window.location.href = "/start/game";
     });
 
     socket.on("lobby-full", () => {
-        alert(t('lobby.full'));
+        alert("❌ Lobby ist voll");
         window.location.href = "/start/game";
     });
 
     socket.on("game-in-progress", () => {
-        alert(t('lobby.inProgress'));
+        alert("Game already in progress");
         window.location.href = "/start/game";
     });
 
@@ -78,7 +77,7 @@ export async function initLobbyHost() {
     });
 
     socket.on("kicked", () => {
-        alert(t('lobby.kicked'));
+        alert("Du wurdest aus der Lobby entfernt.");
         window.location.href = "/start/game";
     });
 
