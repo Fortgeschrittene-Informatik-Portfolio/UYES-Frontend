@@ -30,7 +30,7 @@ main{
     border: 0.5cqw solid black;
     margin: 10% 0 10% 0;
 }
-#NameInputJoin{
+#NameInput.Join{
     height: 4cqw;
     font-size: 3cqw;
     border-radius: 15px;
@@ -76,7 +76,7 @@ main{
         width: 80vw;
         font-size: 1em;
     }
-    #NameInputJoin{
+    #NameInput.Join{
         height: 25%;
         font-size: 200%;
         &::placeholder{

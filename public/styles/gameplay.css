@@ -1,10 +1,11 @@
 #UYES {
     position: absolute;
+    top: 65%;
+    justify-self: center;
+
     aspect-ratio: 2.5/1;
     width: 10%;
     pointer-events: none;
-    top: 85%;
-    left: 70%;
     background-color: dimgrey;
     border: solid 0.5cqh darkgrey; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
     border-radius: 15%;
@@ -24,12 +25,11 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    padding-left: 2em;        /* offset for negative card margin */
     gap: 0;                   /* cards already overlap via margin */
-    scroll-behavior: smooth;
-    scrollbar-color: var(--primary-blue) var(--primary-yellow);
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none;    /* Firefox */
+    /*scroll-behavior: smooth;*/
+    /*scrollbar-color: var(--primary-blue) var(--primary-yellow);*/
+    /*-ms-overflow-style: none; !* IE and Edge *!*/
+    /*scrollbar-width: none;    !* Firefox *!*/
 }
 
 #player-hand-container::-webkit-scrollbar {
@@ -90,7 +90,6 @@
     grid-column: 1/-1;
     display: flex;
     flex-wrap: wrap;
-    /*justify-content: center;*/
     justify-content: center;
     align-items: center;
 
@@ -413,7 +412,6 @@ body#gameplay {
     display: flex;
 }
 
-@media only screen and (max-width: 600px) {}
 #helpButtonClicked{
     display: none;
 
@@ -508,7 +506,7 @@ body#gameplay {
     justify-content: center;
 
     * {
-        margin-top: 20cqh;
+        margin-top: 22cqh;
     }
 
 }
@@ -539,13 +537,11 @@ body#gameplay {
     justify-content: center;
     align-items: center;
     z-index: -1;
-
-    h3{
-        color:white;
-        font-size: 500%;
-        margin: 0;
-    }
-
+}
+#timer{
+    color:white;
+    font-size: 500%;
+    margin: 0;
 }
 
 /* simple grow animation for avatar change button */
@@ -691,4 +687,30 @@ body#gameplay {
     }
 }
 
+
+@media only screen and (max-width: 600px) {
+    #piles{
+        flex-wrap: nowrap;
+        .pile{
+            h2{
+                font-size: 200%;
+            }
+        }
+    }
+    #timer{
+        font-size: 300%;
+    }
+    #gameDirection{
+        *{
+            margin-top: 30cqh
+        }
+    }
+    .avatar{
+        width: 15%;
+    }
+    #UYES{
+        width: 25%;
+        font-size: 100%;
+    }
+}
 
