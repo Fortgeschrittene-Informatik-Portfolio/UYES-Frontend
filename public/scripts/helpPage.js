@@ -6,7 +6,7 @@ export function initHelpPage() {
     startMusic();
 
     document.getElementById("backBtnHelp")?.addEventListener("click", () => {
-        window.location.href = "/start";
+        window.history.back();
     });
 
     document.getElementById("rulesBtnHelp")?.addEventListener("click", () => {
