@@ -22,6 +22,9 @@ let turnInterval = null;
 
 // Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
+let gameStarted = false;
+let playerOrientation = {};
+const slotOrientations = ['leftTop', 'rightTop', 'leftDown', 'rightDown'];
 
 
 export async function initGameplay() {
@@ -62,7 +65,8 @@ export async function initGameplay() {
 
     socket.on('deal-cards', renderHand);
     socket.on('player-turn', highlightTurn);
-    socket.on('card-played', updateDiscard);
+    socket.on('card-played', onCardPlayed);
+    socket.on('cards-drawn', handleCardsDrawn);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
@@ -335,6 +339,7 @@ function setAvatarImages() {
     const own = document.getElementById('own-avatar');
     if (own) {
         own.dataset.player = playerName;
+        own.dataset.orientation = 'self';
         const file = playerAvatars[playerName];
         if (file) {
             own.style.backgroundImage = `url('/images/avatars/${file}')`;
@@ -358,6 +363,43 @@ function updateDiscard({ player, card }) {
     topDiscard = card;
 }
 
+function runAnimation(type, orientation, delay = 0) {
+    if (!gameStarted || !orientation) return;
+    const el = document.querySelector(`.${type}.${orientation}`);
+    if (!el) return;
+    setTimeout(() => {
+        el.classList.remove('notVisible');
+        const handler = () => {
+            el.classList.add('notVisible');
+            el.removeEventListener('animationend', handler);
+        };
+        el.addEventListener('animationend', handler);
+    }, delay);
+}
+
+function animateDraw(player, count = 1) {
+    const orientation = playerOrientation[player];
+    for (let i = 0; i < count; i++) {
+        runAnimation('draw', orientation, i * 300);
+    }
+}
+
+function animateDiscard(player) {
+    const orientation = playerOrientation[player];
+    runAnimation('discard', orientation);
+}
+
+function handleCardsDrawn({ player, count }) {
+    animateDraw(player, count);
+}
+
+function onCardPlayed(data) {
+    updateDiscard(data);
+    if (data.player) {
+        animateDiscard(data.player);
+    }
+}
+
 function isCardPlayable(card) {
     if (!topDiscard) return true;
     if (card.color === 'wild') return true;
@@ -377,6 +419,7 @@ function playCard(card) {
 }
 
 function showWinner(winner) {
+    gameStarted = false;
     const win = document.getElementById('winner');
     if (win) {
         const nameEl = win.querySelector('.player-name');
@@ -419,6 +462,7 @@ function setupAvatarSlots() {
         avatar.className = 'avatar inactive';
         avatar.id = `player${i + 1}`;
         avatar.dataset.playerName = '';
+        avatar.dataset.orientation = slotOrientations[i];
         avatar.innerHTML = `
             <div class="player-name"></div>
             <div class="cardHands">
@@ -465,6 +509,7 @@ function updateHandCounts(list) {
     const others = rotated.filter(p => p.name !== playerName);
 
     const order = [2,0,1,3];
+    playerOrientation = { [playerName]: 'self' };
     for (let i = 0; i < avatarSlots.length; i++) {
         const idx = order[i] ?? i;
         const slot = avatarSlots[idx];
@@ -474,6 +519,7 @@ function updateHandCounts(list) {
             slot.dataset.playerName = data.name;
             slot.querySelector('.player-name').textContent = data.name;
             slot.classList.remove('inactive');
+            playerOrientation[data.name] = slot.dataset.orientation;
         } else {
             slot.querySelector('.cardsleft').textContent = '';
             slot.dataset.playerName = '';
@@ -499,6 +545,7 @@ function toggleUyesBubble({ player, active }) {
 }
 
 function resetGameUI() {
+    gameStarted = true;
     topDiscard = null;
     myHand = [];
     myTurn = false;

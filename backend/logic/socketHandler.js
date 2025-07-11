@@ -418,6 +418,7 @@ export function setupSocket(io) {
 
             drawCards(game, player, 1);
             socket.emit('deal-cards', game.hands[player]);
+            io.to(gameCode).emit('cards-drawn', { player, count: 1 });
             broadcastHandCounts(io, gameCode, game);
 
             const next = nextTurn(game);
