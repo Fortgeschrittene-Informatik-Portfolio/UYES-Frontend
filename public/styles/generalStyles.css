@@ -109,11 +109,10 @@ body:has(.speech-bubble[open]) #eichberg2 {
     display: none;
 }
 
-@media (max-width: 600px) {
-    div#header {
-        font-size: 2em;
-        margin-top: 2.5em;
-    }
+@media only screen and (max-width: 600px) {
+   dialog{
+       display:none;
+   }
     #gameTitle {
         font-size: 30em;
         font-weight: 900;

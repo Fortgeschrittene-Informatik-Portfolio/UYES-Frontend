@@ -71,7 +71,9 @@ div#menu {
     #group {
         width: 100%
     }
-
+    #menu{
+        margin-bottom: 20%;
+    }
     #menu button {
         position: relative;
     }
@@ -82,14 +84,12 @@ div#menu {
 
     div#menu #help {
         width: 25%;
-
-        top: 50%;
+        top: 25%;
     }
 
     div#menu #about {
         width: 25%;
-
-        top: 50%;
+        top: 25%;
     }
 
     #eichberg2 {
