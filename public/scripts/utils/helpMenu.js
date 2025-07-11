@@ -41,7 +41,7 @@ export function helpFunctionality(socket, getGameCode, playerName) {
 
     if (aboutBtn) {
         aboutBtn.addEventListener("click", () => {
-            window.open("/help", "_blank");
+            window.location.href = "/help";
         });
     }
 
