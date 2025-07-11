@@ -174,7 +174,8 @@ export function setupSocket(io) {
                 broadcastHandCounts(io, gameCode, runningGame);
                 socket.emit('player-turn', {
                     player: runningGame.turnOrder[runningGame.current],
-                    startedAt: runningGame.turnStartedAt
+                    startedAt: runningGame.turnStartedAt,
+                    drawStack: runningGame.drawStack || 0
                 });
             }
 
@@ -277,7 +278,8 @@ export function setupSocket(io) {
                 current: 0,
                 uyesPressed: {},
                 settings: lobby.settings,
-                turnStartedAt: Date.now()
+                turnStartedAt: Date.now(),
+                drawStack: 0
             };
 
             io.to(gameCode).emit('game-started');
@@ -308,7 +310,8 @@ export function setupSocket(io) {
             game.turnStartedAt = Date.now();
             io.to(gameCode).emit('player-turn', {
                 player: game.turnOrder[game.current],
-                startedAt: game.turnStartedAt
+                startedAt: game.turnStartedAt,
+                drawStack: game.drawStack
             });
         });
 
@@ -335,6 +338,7 @@ export function setupSocket(io) {
                 isValid = candidate.color === top.color || candidate.value === top.value;
             }
             if (!isValid) return;
+            if (game.drawStack > 0 && candidate.value !== 'draw2') return;
 
             const played = hand.splice(idx, 1)[0];
             if (played.color === 'wild') {
@@ -368,16 +372,7 @@ export function setupSocket(io) {
                 next = nextTurn(game);
                 io.to(gameCode).emit('player-skipped', skipped);
             } else if (played.value === 'draw2') {
-                const affected = next;
-                drawCards(game, affected, 2);
-                for (const [_id, s] of io.sockets.sockets) {
-                    if (s.data.playerName === affected && s.rooms.has(gameCode)) {
-                        s.emit('deal-cards', game.hands[affected]);
-                    }
-                }
-                io.to(gameCode).emit('cards-drawn', { player: affected, count: 2 });
-                io.to(gameCode).emit('player-skipped', affected);
-                next = nextTurn(game);
+                game.drawStack = (game.drawStack || 0) + 2;
             } else if (played.value === 'wild4') {
                 const affected = next;
                 drawCards(game, affected, 4);
@@ -400,7 +395,7 @@ export function setupSocket(io) {
             handleUyesEnd(io, gameCode, game, player);
 
             game.turnStartedAt = Date.now();
-            io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt });
+            io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt, drawStack: game.drawStack });
         });
 
         socket.on('draw-card', (gameCode) => {
@@ -411,20 +406,25 @@ export function setupSocket(io) {
             if (game.turnOrder[game.current] !== player) return;
 
             const limit = HAND_LIMIT;
-            if (game.hands[player].length >= limit) {
+            const count = game.drawStack > 0 ? game.drawStack : 1;
+            if (game.hands[player].length + count > limit) {
                 socket.emit('hand-limit-reached');
                 return;
             }
 
-            drawCards(game, player, 1);
+            drawCards(game, player, count);
             socket.emit('deal-cards', game.hands[player]);
-            io.to(gameCode).emit('cards-drawn', { player, count: 1 });
+            io.to(gameCode).emit('cards-drawn', { player, count });
+            if (game.drawStack > 0) {
+                io.to(gameCode).emit('player-skipped', player);
+                game.drawStack = 0;
+            }
             broadcastHandCounts(io, gameCode, game);
 
             const next = nextTurn(game);
             handleUyesEnd(io, gameCode, game, player);
             game.turnStartedAt = Date.now();
-            io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt });
+            io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt, drawStack: game.drawStack });
         });
 
         socket.on('uyes', (gameCode) => {
@@ -475,7 +475,7 @@ export function setupSocket(io) {
                 const counts = game.turnOrder.map(n => ({ name: n, count: game.hands[n]?.length || 0 }));
                 io.to(gameCode).emit('player-left', { players: lobby.players, counts, player: name });
                 game.turnStartedAt = Date.now();
-                io.to(gameCode).emit('player-turn', { player: game.turnOrder[game.current], startedAt: game.turnStartedAt });
+                io.to(gameCode).emit('player-turn', { player: game.turnOrder[game.current], startedAt: game.turnStartedAt, drawStack: game.drawStack });
             }
 
             socket.leave(gameCode);

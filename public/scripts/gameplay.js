@@ -19,6 +19,7 @@ let myHand = [];
 let myTurn = false;
 let isClockwise = true;
 let turnInterval = null;
+let drawStack = 0;
 
 // Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
@@ -274,6 +275,7 @@ function renderHand(cards) {
 function highlightTurn(data) {
     const name = typeof data === 'string' ? data : data.player;
     const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
+    drawStack = typeof data === 'object' && data.drawStack ? data.drawStack : 0;
     // remember whether it is our turn
     myTurn = name === playerName;
 
@@ -401,6 +403,7 @@ function onCardPlayed(data) {
 }
 
 function isCardPlayable(card) {
+    if (drawStack > 0 && card.value !== 'draw2') return false;
     if (!topDiscard) return true;
     if (card.color === 'wild') return true;
     if (topDiscard.color === 'wild') {
@@ -550,6 +553,7 @@ function resetGameUI() {
     myHand = [];
     myTurn = false;
     isClockwise = true;
+    drawStack = 0;
     updateDirectionIcon();
 
     // remove all active UYES bubbles from previous round
