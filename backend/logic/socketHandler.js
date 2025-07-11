@@ -372,7 +372,9 @@ export function setupSocket(io) {
                 next = nextTurn(game);
                 io.to(gameCode).emit('player-skipped', skipped);
             } else if (played.value === 'draw2') {
+
                 game.drawStack = (game.drawStack || 0) + 2;
+
             } else if (played.value === 'wild4') {
                 const affected = next;
                 drawCards(game, affected, 4);
@@ -382,6 +384,7 @@ export function setupSocket(io) {
                     }
                 }
                 io.to(gameCode).emit('cards-drawn', { player: affected, count: 4 });
+                broadcastHandCounts(io, gameCode, game);
                 io.to(gameCode).emit('player-skipped', affected);
                 next = nextTurn(game);
             }
