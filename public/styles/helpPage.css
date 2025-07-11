@@ -22,9 +22,8 @@ body.help-page-body {
     justify-self: center;
     padding: 0;
     overflow-y: auto;
-    &::-webkit-scrollbar {
-        scrollbar-color: var(--primary-yellow) var(--primary-blue);
-    }
+    scrollbar-color: var(--primary-yellow) var(--primary-blue);
+
 }
 
 

@@ -31,3 +31,26 @@ body#chooseLobby{
     }
 }
 
+@media only screen and (max-width: 600px) {
+    body#chooseLobby{
+        #gameOnMain{
+
+            h2{
+                font-size: 500%;
+            }
+            #lobbyButtons{
+                margin-top: 40%;
+                .lobby{
+                    width: 25%;
+                }
+            }
+        }
+    }
+    #backBtnChooseLobby{
+        position: relative;
+        grid-column: 1 / -1;
+        grid-row: 3;
+        justify-self: center;
+        align-self: center;
+    }
+}

@@ -9,6 +9,9 @@
     font-family: Arial, sans-serif;
     font-size: smaller;
     line-height: 1.6;
+    overflow-y: auto;
+    scrollbar-color: var(--primary-yellow) var(--primary-blue);
+
 }
 
 #back-to-main-menu {
