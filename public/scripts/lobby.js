@@ -50,6 +50,11 @@ export async function initLobbyHost() {
         window.location.href = "/start/game";
     });
 
+    socket.on("game-in-progress", () => {
+        alert("Game already in progress");
+        window.location.href = "/start/game";
+    });
+
 
     // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
