@@ -4,4 +4,8 @@ export function initHelpPage() {
         window.location.href = "/start";
     });
 
+    document.getElementById("rulesBtnHelp")?.addEventListener("click", () => {
+        window.location.href = "/rules";
+    });
+
 }

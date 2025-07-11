@@ -5,6 +5,7 @@
     <title>UYES Rules</title>
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="icon" href="/images/logo.png" type="image.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/scripts/index.js" type="module" defer></script>
 </head>
 <body id="rules-page-body" class="help-page-body">
@@ -31,12 +32,29 @@
 
     <h3>Card Types</h3>
     <ul>
-        <li><strong>Number cards</strong>: 1–9 in red, yellow, green and blue.</li>
-        <li><strong>Draw Two</strong> (+2): the next player draws two cards and is skipped. Stacking draw cards is currently not allowed.</li>
-        <li><strong>Skip</strong>: the next player loses their turn.</li>
-        <li><strong>Reverse</strong>: changes the playing direction. With two players it works like Skip.</li>
-        <li><strong>Wild</strong>: choose the color that continues play.</li>
-        <li><strong>Wild Draw Four</strong> (+4): choose a color, the next player draws four cards and is skipped.</li>
+        <li><strong>Number cards</strong>: 1–9 in red, yellow, green and blue.
+            <span class="card small blue"><span><span>5</span></span></span>
+        </li>
+        <li><strong>Draw Two</strong> (+2):
+            <span class="card small red"><span><span>2+</span></span></span>
+            the next player draws two cards and is skipped. Stacking draw cards is currently not allowed.
+        </li>
+        <li><strong>Skip</strong>:
+            <span class="card small yellow"><span><span><i class="fas fa-ban specialCard"></i></span></span></span>
+            the next player loses their turn.
+        </li>
+        <li><strong>Reverse</strong>:
+            <span class="card small green"><span><span><i class="fas fa-retweet specialCard"></i></span></span></span>
+            changes the playing direction. With two players it works like Skip.
+        </li>
+        <li><strong>Wild</strong>:
+            <span class="card small wild"><span><span>W</span></span></span>
+            choose the color that continues play.
+        </li>
+        <li><strong>Wild Draw Four</strong> (+4):
+            <span class="card small wild"><span><span>4+</span></span></span>
+            choose a color, the next player draws four cards and is skipped.
+        </li>
     </ul>
 
     <h3>Running out of Cards</h3>
