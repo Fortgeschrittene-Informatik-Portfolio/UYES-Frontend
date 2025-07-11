@@ -1,4 +1,5 @@
 // scripts/joinLobby.js
+import { t } from './utils/i18n.js';
 
 export function initJoinLobby() {
 
@@ -17,7 +18,7 @@ export function initJoinLobby() {
         const name = nameInput.value.trim();
 
         if (!/^\d{9}$/.test(code)) {
-            alert("❌ Bitte gib einen gültigen 9-stelligen Game-Code ein");
+            alert(t('join.invalidCode'));
             return;
         }
 
@@ -31,7 +32,7 @@ export function initJoinLobby() {
         if (res.redirected) {
             window.location.href = res.url; // Leitet zu /lobby weiter
         } else {
-            alert("❌ Lobby nicht gefunden");
+            alert(t('join.notFound'));
         }
     });
 }

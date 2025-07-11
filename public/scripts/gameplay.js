@@ -1,5 +1,6 @@
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
+import { t } from './utils/i18n.js';
 const socket = io();
 let gameCode;
 let playerName;
@@ -35,7 +36,7 @@ export async function initGameplay() {
         if (!res.ok) throw new Error('Request failed');
         data = await res.json();
     } catch (err) {
-        alert('❌ Fehler beim Laden der Lobby-Daten');
+        alert(t('gameplay.loadError'));
         console.error(err);
         window.location.href = '/start/game';
         return;
@@ -78,17 +79,17 @@ export async function initGameplay() {
         setAvatarImages();
     });
     socket.on('hand-limit-reached', () => {
-        alert('Reached maximum amount of cards in hand.');
+        alert(t('gameplay.handLimit'));
     });
     socket.on('player-left', ({ players, counts, player }) => {
         if (player && player !== playerName) {
-            alert(`${player} left the game.`);
+            alert(t('gameplay.playerLeft', { player }));
         }
         playerList = players.slice();
         updateHandCounts(counts);
     });
     socket.on('kicked', () => {
-        alert('Du wurdest aus der Lobby entfernt.');
+        alert(t('gameplay.kicked'));
         window.location.href = '/start/game';
     });
 

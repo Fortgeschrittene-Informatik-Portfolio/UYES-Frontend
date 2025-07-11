@@ -9,6 +9,7 @@ import { initLobbyHost } from "./lobby.js";
 import { initJoinLobby } from "./joinLobby.js";
 import { initGameplay } from "./gameplay.js";
 import { startMusic } from './utils/music.js';
+import { applyTranslations, setLanguage } from './utils/i18n.js';
 
 
 
@@ -18,6 +19,8 @@ import { startMusic } from './utils/music.js';
 
 const pageId = document.body.id;
 startMusic();
+setLanguage(localStorage.getItem('lang') || 'en');
+applyTranslations(document);
 
 if (pageId === 'startsite') {
     initStartSite();
