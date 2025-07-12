@@ -260,6 +260,30 @@
     top: 78%;
     left: 8%;
 
+    /* show card count to the left */
+    .cardHands {
+        right: 105%;
+        position: relative;
+        top: 20%;
+        display: flex;
+        flex-direction: column;
+
+        .avatar-row {
+            display: flex;
+            justify-content: center;
+
+            .cardsleft {
+                color: white;
+                -webkit-text-stroke: 0.07cqw black;
+                margin: 0;
+            }
+        }
+
+        .card {
+            width: 25%;
+        }
+    }
+
 }
 
 body#gameplay {
