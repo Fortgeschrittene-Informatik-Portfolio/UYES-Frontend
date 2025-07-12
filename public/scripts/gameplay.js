@@ -505,6 +505,12 @@ function updateHandCounts(list) {
     // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
     // Spielern überein.
 
+    const myData = list.find(p => p.name === playerName);
+    const ownCountEl = document.querySelector('#own-avatar .cardsleft');
+    if (ownCountEl && myData) {
+        ownCountEl.textContent = `${myData.count}x`;
+    }
+
     const names = list.map(p => p.name);
     const myIndex = names.indexOf(playerName);
     const rotated = list
