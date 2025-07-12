@@ -515,6 +515,12 @@ function updateHandCounts(list) {
 
     const order = [2,0,1,3];
     playerOrientation = { [playerName]: 'self' };
+
+    const ownData = list.find(p => p.name === playerName);
+    const ownEl = document.querySelector('#own-avatar .cardsleft');
+    if (ownEl) {
+        ownEl.textContent = ownData ? `${ownData.count}x` : '';
+    }
     for (let i = 0; i < avatarSlots.length; i++) {
         const idx = order[i] ?? i;
         const slot = avatarSlots[idx];
