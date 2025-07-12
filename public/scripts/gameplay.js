@@ -513,32 +513,39 @@ function updateHandCounts(list) {
     // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
     const others = rotated.filter(p => p.name !== playerName);
 
-    const order = [2,0,1,3];
-    playerOrientation = { [playerName]: 'self' };
+    const known = Object.keys(playerOrientation).filter(n => n !== playerName);
+    const samePlayers = known.length === others.length && others.every(p => known.includes(p.name));
 
-    const ownData = list.find(p => p.name === playerName);
-    const ownEl = document.querySelector('#own-avatar .cardsleft');
-    if (ownEl) {
-        ownEl.textContent = ownData ? `${ownData.count}x` : '';
-    }
-    for (let i = 0; i < avatarSlots.length; i++) {
-        const idx = order[i] ?? i;
-        const slot = avatarSlots[idx];
-        const data = others[i];
-        if (data) {
-            slot.querySelector('.cardsleft').textContent = `${data.count}x`;
-            slot.dataset.playerName = data.name;
-            slot.querySelector('.player-name').textContent = data.name;
-            slot.classList.remove('inactive');
-            playerOrientation[data.name] = slot.dataset.orientation;
-        } else {
-            slot.querySelector('.cardsleft').textContent = '';
-            slot.dataset.playerName = '';
-            slot.querySelector('.player-name').textContent = '';
-            slot.classList.add('inactive');
+    if (!samePlayers) {
+        const order = [2,0,1,3];
+        playerOrientation = { [playerName]: 'self' };
+        for (let i = 0; i < avatarSlots.length; i++) {
+            const idx = order[i] ?? i;
+            const slot = avatarSlots[idx];
+            const data = others[i];
+            if (data) {
+                slot.dataset.playerName = data.name;
+                slot.querySelector('.player-name').textContent = data.name;
+                slot.classList.remove('inactive');
+                playerOrientation[data.name] = slot.dataset.orientation;
+                slot.querySelector('.cardsleft').textContent = `${data.count}x`;
+            } else {
+                slot.dataset.playerName = '';
+                slot.querySelector('.player-name').textContent = '';
+                slot.classList.add('inactive');
+                slot.querySelector('.cardsleft').textContent = '';
+            }
+        }
+        setAvatarImages();
+    } else {
+        for (const data of others) {
+            const slot = avatarSlots.find(s => s.dataset.playerName === data.name);
+            if (slot) {
+                slot.querySelector('.cardsleft').textContent = `${data.count}x`;
+            }
+
         }
     }
-    setAvatarImages();
 }
 
 function getAvatarElement(name) {
