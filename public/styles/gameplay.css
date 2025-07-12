@@ -15,8 +15,8 @@
 
 #player-hand-container {
     grid-row: 3;
-    grid-column: 1 / -1;
-    width: 60%;
+    grid-column: 2;
+    width: 100%;
     margin: 0 auto;
     font-size: 1.2em;
     display: flex;
@@ -24,12 +24,9 @@
     /*justify-content: center;*/
     flex-wrap: nowrap;
     overflow-x: auto;
-    overflow-y: hidden;
-    gap: 0;                   /* cards already overlap via margin */
-    /*scroll-behavior: smooth;*/
-    /*scrollbar-color: var(--primary-blue) var(--primary-yellow);*/
-    /*-ms-overflow-style: none; !* IE and Edge *!*/
-    /*scrollbar-width: none;    !* Firefox *!*/
+    overflow-y: clip;
+    gap: 0;
+
 }
 
 /* prevent left overflow of the first card in hand */

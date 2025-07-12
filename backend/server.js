@@ -29,8 +29,8 @@ const io = new Server(server);
 // 🧠 Socket-Handler starten
 setupSocket(io);
 
-server.listen(PORT, () => {
-    console.log(`🟢 Server läuft auf http://localhost:${PORT}/start`);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🟢 Server läuft auf http://0.0.0.0:${PORT}/start`);
 });
 
 function shutdown() {
