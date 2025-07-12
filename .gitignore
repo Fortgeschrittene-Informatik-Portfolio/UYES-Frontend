@@ -177,5 +177,5 @@ node_modules/
 
 
 # Ignore audio assets
-public/music/*.mp3
+#public/music/*.mp3
 
