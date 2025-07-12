@@ -177,7 +177,7 @@ export function setupSocket(io) {
 
             socket.join(gameCode);
             socket.data.playerName = playerName; // 🔑 wichtig!
-            console.log(`➡️ ${playerName} betritt Lobby ${gameCode}`);
+
 
 
             if (!lobbies[gameCode].players.includes(playerName)) {
@@ -279,7 +279,6 @@ export function setupSocket(io) {
             io.to(newCode).emit("update-code", newCode);
         });
         socket.on("leave-lobby", (gameCode, playerName) => {
-            console.log(`🚪 ${playerName} verlässt Lobby ${gameCode}`);
 
             if (!lobbies[gameCode]) return;
 
@@ -437,6 +436,7 @@ export function setupSocket(io) {
 
             if (hand.length === 0) {
                 io.to(gameCode).emit('game-end', player);
+                console.log(`\u{1F3C1} Spiel in Lobby ${gameCode} beendet: ${player} hat gewonnen`);
                 delete lobby.game;
                 return;
             }
@@ -553,6 +553,7 @@ export function setupSocket(io) {
 
             if (lobby.players.length === 0) {
                 delete lobbies[gameCode];
+                console.log(`\u{1F6AB} Lobby ${gameCode} aufgelöst (keine Spieler)`);
             } else if (lobby.players.length === 1) {
                 const last = lobby.players[0];
                 for (const [_id, s] of io.sockets.sockets) {
@@ -562,12 +563,12 @@ export function setupSocket(io) {
                     }
                 }
                 delete lobbies[gameCode];
+                console.log(`\u{1F6AB} Lobby ${gameCode} aufgelöst (zu wenige Spieler)`);
             }
         });
 
 
         socket.on("disconnect", () => {
-            console.log(`🛑 Socket getrennt: ${socket.id}`);
             // Optional: du kannst hier aus der Lobby per socket-to-player Map löschen
         });
     });
