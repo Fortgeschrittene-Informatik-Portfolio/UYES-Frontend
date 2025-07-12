@@ -422,6 +422,14 @@ export function setupSocket(io) {
             const count = game.drawStack > 0 ? game.drawStack : 1;
             if (game.hands[player].length + count > limit) {
                 socket.emit('hand-limit-reached');
+                if (game.drawStack > 0) {
+                    io.to(gameCode).emit('player-skipped', player);
+                    game.drawStack = 0;
+                }
+                const next = nextTurn(game);
+                handleUyesEnd(io, gameCode, game, player);
+                game.turnStartedAt = Date.now();
+                io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt, drawStack: game.drawStack });
                 return;
             }
 
