@@ -155,7 +155,6 @@
     position: relative;
     background-color: rgba(169, 169, 169, 0.5); /* Grauton mit 50% Transparenz */
     flex-grow: 0;
-    /*display: flex;*/
 
     .player-name {
         position: absolute;
@@ -197,6 +196,7 @@
 }
 
 .avatar.inactive {
+    flex-grow: 0;
     opacity: 0.3;
 }
 
