@@ -104,8 +104,10 @@ function handleUyesEnd(io, gameCode, game, player) {
     io.to(gameCode).emit('player-uyes', { player, active: false });
     if (pressed || hasOne) {
         drawCards(game, player, 1);
-        for (const [_id, s] of io.sockets.sockets) {
-            if (s.data.playerName === player && s.rooms.has(gameCode)) {
+        const roomSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+        for (const id of roomSockets) {
+            const s = io.sockets.sockets.get(id);
+            if (s.data.playerName === player) {
                 s.emit('deal-cards', game.hands[player]);
             }
         }
@@ -190,8 +192,10 @@ export function setupSocket(io) {
             );
 
             // Dem gekickten Spieler Bescheid geben & rausschmeißen
-            for (const [id, s] of io.sockets.sockets) {
-                if (s.data?.playerName === playerNameToKick && s.rooms.has(gameCode)) {
+            const kickSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+            for (const id of kickSockets) {
+                const s = io.sockets.sockets.get(id);
+                if (s.data?.playerName === playerNameToKick) {
                     s.emit("kicked");
                     s.leave(gameCode);
                 }
@@ -203,13 +207,13 @@ export function setupSocket(io) {
             if (!lobby) return;
             if (lobby.host && socket.data.playerName !== lobby.host) return;
 
-            for (const player of lobby.players) {
-                if (player === socket.data.playerName) continue;
-                for (const [_id, s] of io.sockets.sockets) {
-                    if (s.data?.playerName === player && s.rooms.has(gameCode)) {
-                        s.emit("kicked");
-                        s.leave(gameCode);
-                    }
+            const closeSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+            for (const id of closeSockets) {
+                const s = io.sockets.sockets.get(id);
+                const pname = s.data?.playerName;
+                if (pname && pname !== socket.data.playerName) {
+                    s.emit("kicked");
+                    s.leave(gameCode);
                 }
             }
             socket.leave(gameCode);
@@ -222,11 +226,11 @@ export function setupSocket(io) {
             lobbies[newCode] = lobbies[oldCode];
             delete lobbies[oldCode];
 
-            for (const [_id, s] of io.sockets.sockets) {
-                if (s.rooms.has(oldCode)) {
-                    s.join(newCode);
-                    s.leave(oldCode);
-                }
+            const changeSockets = io.sockets.adapter.rooms.get(oldCode) || new Set();
+            for (const id of changeSockets) {
+                const s = io.sockets.sockets.get(id);
+                s.join(newCode);
+                s.leave(oldCode);
             }
 
             io.to(newCode).emit("update-code", newCode);
@@ -291,11 +295,11 @@ export function setupSocket(io) {
             const topCard = game.discard[game.discard.length - 1];
             io.to(gameCode).emit('card-played', { player: null, card: topCard });
 
-            for (const [id, s] of io.sockets.sockets) {
-                if (s.rooms.has(gameCode)) {
-                    const hand = game.hands[s.data.playerName] || [];
-                    s.emit('deal-cards', hand);
-                }
+            const startSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+            for (const id of startSockets) {
+                const s = io.sockets.sockets.get(id);
+                const hand = game.hands[s.data.playerName] || [];
+                s.emit('deal-cards', hand);
             }
 
             broadcastHandCounts(io, gameCode, game);
@@ -361,8 +365,10 @@ export function setupSocket(io) {
             } else if (played.value === 'draw2') {
                 const affected = next;
                 drawCards(game, affected, 2);
-                for (const [_id, s] of io.sockets.sockets) {
-                    if (s.data.playerName === affected && s.rooms.has(gameCode)) {
+                const affectedSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+                for (const id of affectedSockets) {
+                    const s = io.sockets.sockets.get(id);
+                    if (s.data.playerName === affected) {
                         s.emit('deal-cards', game.hands[affected]);
                     }
                 }
@@ -372,8 +378,10 @@ export function setupSocket(io) {
             } else if (played.value === 'wild4') {
                 const affected = next;
                 drawCards(game, affected, 4);
-                for (const [_id, s] of io.sockets.sockets) {
-                    if (s.data.playerName === affected && s.rooms.has(gameCode)) {
+                const affectedSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+                for (const id of affectedSockets) {
+                    const s = io.sockets.sockets.get(id);
+                    if (s.data.playerName === affected) {
                         s.emit('deal-cards', game.hands[affected]);
                     }
                 }
@@ -460,8 +468,10 @@ export function setupSocket(io) {
                 delete lobbies[gameCode];
             } else if (lobby.players.length === 1) {
                 const last = lobby.players[0];
-                for (const [_id, s] of io.sockets.sockets) {
-                    if (s.data.playerName === last && s.rooms.has(gameCode)) {
+                const lastSockets = io.sockets.adapter.rooms.get(gameCode) || new Set();
+                for (const id of lastSockets) {
+                    const s = io.sockets.sockets.get(id);
+                    if (s.data.playerName === last) {
                         s.emit('kicked');
                         s.leave(gameCode);
                     }
