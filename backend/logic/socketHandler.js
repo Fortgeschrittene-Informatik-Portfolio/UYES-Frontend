@@ -60,9 +60,8 @@ function createDeck(settings = {}) {
 }
 
 function dealInitialCards(game, count = 5, deckSettings = {}) {
-    const required = count * game.turnOrder.length + 1;
-    // If there are not enough cards, generate additional decks
-    while (game.deck.length < required) {
+    const minDeck = HAND_LIMIT * game.turnOrder.length + 1;
+    while (game.deck.length < minDeck) {
         game.deck = game.deck.concat(createDeck(deckSettings));
     }
     for (const player of game.turnOrder) {
