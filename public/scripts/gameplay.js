@@ -543,6 +543,7 @@ function updateHandCounts(list) {
             if (slot) {
                 slot.querySelector('.cardsleft').textContent = `${data.count}x`;
             }
+
         }
     }
 }
