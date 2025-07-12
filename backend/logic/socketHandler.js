@@ -20,16 +20,35 @@ const lobbies = {};
 // Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, host: string, game?: GameState } }
 
 
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
 function createDeck(settings = {}) {
     const colors = ['red', 'yellow', 'green', 'blue'];
     const deck = [];
     for (const color of colors) {
+        deck.push({ color, value: 0 });
         for (let i = 1; i <= 9; i++) {
             deck.push({ color, value: i });
+            deck.push({ color, value: i });
         }
-        if (settings.draw2) deck.push({ color, value: 'draw2' });
-        if (settings.reverse) deck.push({ color, value: 'reverse' });
-        if (settings.skip) deck.push({ color, value: 'skip' });
+        if (settings.draw2) {
+            deck.push({ color, value: 'draw2' });
+            deck.push({ color, value: 'draw2' });
+        }
+        if (settings.reverse) {
+            deck.push({ color, value: 'reverse' });
+            deck.push({ color, value: 'reverse' });
+        }
+        if (settings.skip) {
+            deck.push({ color, value: 'skip' });
+            deck.push({ color, value: 'skip' });
+        }
     }
     if (settings.wild) {
         for (let i = 0; i < 4; i++) deck.push({ color: 'wild', value: 'wild' });
@@ -37,7 +56,7 @@ function createDeck(settings = {}) {
     if (settings.wild4) {
         for (let i = 0; i < 4; i++) deck.push({ color: 'wild', value: 'wild4' });
     }
-    return deck.sort(() => Math.random() - 0.5);
+    return shuffle(deck);
 }
 
 function dealInitialCards(game, count = 5, deckSettings = {}) {
@@ -62,7 +81,7 @@ function drawCards(game, player, count) {
     for (let i = 0; i < count; i++) {
         if (game.deck.length === 0) {
             const top = game.discard.pop();
-            game.deck = game.discard.sort(() => Math.random() - 0.5);
+            game.deck = shuffle(game.discard);
             game.discard = [top];
         }
         const card = game.deck.pop();
