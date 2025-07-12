@@ -91,6 +91,10 @@ export async function initGameplay() {
         alert('Du wurdest aus der Lobby entfernt.');
         window.location.href = '/start/game';
     });
+    socket.on('host-assigned', () => {
+        alert('You are now the host.');
+        document.body.classList.remove('Joiner');
+    });
 
     socket.emit('join-lobby', gameCode, playerName);
 

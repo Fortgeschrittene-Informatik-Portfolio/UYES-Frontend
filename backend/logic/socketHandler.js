@@ -91,6 +91,16 @@ function broadcastHandCounts(io, gameCode, game) {
 
 }
 
+function notifyHost(io, gameCode, hostName) {
+    if (!hostName) return;
+    for (const [_id, s] of io.sockets.sockets) {
+        if (s.data.playerName === hostName && s.rooms.has(gameCode)) {
+            s.emit('host-assigned');
+            break;
+        }
+    }
+}
+
 function handleUyesEnd(io, gameCode, game, player) {
     const pressed = !!game.uyesPressed[player];
     delete game.uyesPressed[player];
@@ -193,6 +203,10 @@ export function setupSocket(io) {
 
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerNameToKick);
             delete lobbies[gameCode].avatars[playerNameToKick];
+            if (lobbies[gameCode].host === playerNameToKick) {
+                lobbies[gameCode].host = lobbies[gameCode].players[0] || null;
+                notifyHost(io, gameCode, lobbies[gameCode].host);
+            }
             if (lobbies[gameCode].game) {
                 lobbies[gameCode].maxPlayers = lobbies[gameCode].players.length;
             }
@@ -254,6 +268,10 @@ export function setupSocket(io) {
             // Spieler aus der Lobby entfernen
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerName);
             delete lobbies[gameCode].avatars[playerName];
+            if (lobbies[gameCode].host === playerName) {
+                lobbies[gameCode].host = lobbies[gameCode].players[0] || null;
+                notifyHost(io, gameCode, lobbies[gameCode].host);
+            }
 
             // Raum verlassen
             socket.leave(gameCode);
@@ -478,16 +496,20 @@ export function setupSocket(io) {
             // remove from lobby
             lobby.players = lobby.players.filter(p => p !== name);
             delete lobby.avatars[name];
+            if (lobby.host === name) {
+                lobby.host = lobby.players[0] || null;
+                notifyHost(io, gameCode, lobby.host);
+            }
             if (lobby.game) {
                 lobby.maxPlayers = lobby.players.length;
-                io.to(gameCode).emit(
-                    'update-lobby',
-                    lobby.players,
-                    lobby.maxPlayers,
-                    lobby.avatars,
-                    lobby.host
-                );
             }
+            io.to(gameCode).emit(
+                'update-lobby',
+                lobby.players,
+                lobby.maxPlayers,
+                lobby.avatars,
+                lobby.host
+            );
 
             // remove from game state
             if (game) {

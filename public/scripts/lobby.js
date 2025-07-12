@@ -39,6 +39,10 @@ export async function initLobbyHost() {
             document.body.classList.add("Joiner");
         }
     });
+    socket.on('host-assigned', () => {
+        alert('You are now the host.');
+        document.body.classList.remove('Joiner');
+    });
 
     socket.on("lobby-not-found", () => {
         alert("❌ Lobby nicht gefunden");
