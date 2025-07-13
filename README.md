@@ -34,3 +34,17 @@ npm start
 ```
 
 Once the server is running, open `http://localhost:<PORT>` in your browser (replace `<PORT>` with the value from your `.env` or the default `5000`).
+
+## Code Quality
+
+Run ESLint to check for coding issues:
+
+```bash
+npm run lint
+```
+
+Automatically format files using Prettier:
+
+```bash
+npm run format
+```
