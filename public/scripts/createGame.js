@@ -1,4 +1,5 @@
 import { handleIntro } from './utils/intros.js';
+import { setupAmountControls, setupSelectAllCheckbox } from './utils/uiHelpers.js';
 
 export function initCreateGame() {
 
@@ -13,58 +14,9 @@ export function initCreateGame() {
         window.location.href = "/start/game";
     });
 
-
-    function setupAmountControls(sliderId, displayId, subtractSelector, addSelector) {
-        const slider = document.getElementById(sliderId);
-        const display = document.getElementById(displayId);
-        const subtractBtn = slider.closest('div').querySelector(subtractSelector);
-        const addBtn = slider.closest('div').querySelector(addSelector);
-
-        const updateDisplay = () => {
-            display.textContent = slider.value;
-        };
-
-        subtractBtn?.addEventListener('click', () => {
-            slider.stepDown();
-            slider.dispatchEvent(new Event('input'));
-            updateDisplay();
-        });
-
-        addBtn?.addEventListener('click', () => {
-            slider.stepUp();
-            slider.dispatchEvent(new Event('input'));
-            updateDisplay();
-        });
-
-        slider.addEventListener('input', updateDisplay);
-        updateDisplay();
-    }
-
     setupAmountControls('playerSlider', 'playerCount', '.subtract', '.add');
     setupAmountControls('cardSlider', 'cardCount', '.subtract', '.add');
 
-    function setupSelectAllCheckbox(groupSelector, selectAllId) {
-        const checkboxes = Array.from(document.querySelectorAll(groupSelector));
-        const selectAll = document.getElementById(selectAllId);
-
-        selectAll?.addEventListener('change', () => {
-            checkboxes.forEach(cb => {
-                if (cb.id !== selectAllId) cb.checked = selectAll.checked;
-            });
-        });
-
-        checkboxes.forEach(cb => {
-            if (cb.id === selectAllId) return;
-
-            cb.addEventListener('change', () => {
-                const allChecked = checkboxes
-                    .filter(cb => cb.id !== selectAllId)
-                    .every(cb => cb.checked);
-
-                selectAll.checked = allChecked;
-            });
-        });
-    }
     setupSelectAllCheckbox('#special-cards input[type="checkbox"]', 'check-all');
 
     document.getElementById("continue-createGame")?.addEventListener("click", async (e) => {
