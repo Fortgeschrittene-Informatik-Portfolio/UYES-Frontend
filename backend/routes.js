@@ -5,7 +5,7 @@ import { createLobby } from './logic/lobbyHandling.js';
 import { getLobbyMeta } from './logic/socketHandler.js';
 import { setSession } from './jwtSession.js';
 
-hkjlkjlk
+
 
 
 const __filename = fileURLToPath(import.meta.url);
