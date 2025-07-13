@@ -83,7 +83,6 @@ router.post('/api/updateSettings', (req, res) => {
     }
 
     const incoming = req.body.settings || {};
-    // prevent changing player count after lobby creation
     const { players, ...other } = incoming;
     lobby.settings = { ...lobby.settings, ...other };
     req.session.settings = lobby.settings;
@@ -93,7 +92,7 @@ router.post('/api/updateSettings', (req, res) => {
 });
 
 router.post("/api/createGame", (req, res) => {
-    const lobby = createLobby(req.body); // erstellt neue Lobby mit Host
+    const lobby = createLobby(req.body);
 
     req.session.gameId = lobby.gameId;
     req.session.playerName = lobby.playerName;
@@ -106,7 +105,7 @@ router.post("/api/createGame", (req, res) => {
 
 router.post("/api/joinGame", (req, res) => {
     const code = String(req.body.code || "").trim();
-    const name = (req.body.playerName || "").trim(); // ⚠️ Hier angepasst: "playerName" statt "name"
+    const name = (req.body.playerName || "").trim();
 
     if (!/^[0-9]{9}$/.test(code)) {
         return res.status(400).json({ error: "Ungültiger Game-Code" });
@@ -119,8 +118,6 @@ router.post("/api/joinGame", (req, res) => {
 
     const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
     const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
-
-    // ❗️Hier: KEINE komplette Überschreibung der Session!
 
     req.session.gameId = code;
     setSession(res, req.session);

@@ -1,6 +1,6 @@
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
-const socket = io(); // Standardverbindung
+const socket = io();
 let currentGameCode;
 
 export async function initLobbyHost() {
@@ -13,22 +13,17 @@ export async function initLobbyHost() {
     const role = gameData.role;
     let hostName = gameData.host || (role === "host" ? playerName : null);
 
-    // Spieler in WebSocket-Raum eintragen
     socket.emit("join-lobby", currentGameCode, playerName, maxPlayers);
 
-    // Game-Code anzeigen
     const codeElement = document.getElementById("game-code");
     codeElement.textContent = `Game-Code: #${currentGameCode || "000000"}`;
 
-    // BODY-Klasse setzen (nur Joiner)
     if (role === "joiner") {
         document.body.classList.add("Joiner");
     }
 
-    // Lobby initial rendern
-    renderLobby(gameData, [playerName], hostName); // Host kennt nur sich selbst – Joiner sieht später Liste
+    renderLobby(gameData, [playerName], hostName);
 
-    // Wenn neue Spieler beitreten oder Server Lobby-Update schickt
     socket.on("update-lobby", (players, _maxPlayers, _avatars, newHost) => {
         hostName = newHost;
         renderLobby(gameData, players, hostName);
@@ -60,7 +55,6 @@ export async function initLobbyHost() {
     });
 
 
-    // Game-Code neu generieren
     document.getElementById("refresh-code-button")?.addEventListener("click", async () => {
         const newCode = Math.floor(100000000 + Math.random() * 900000000).toString();
         const oldCode = currentGameCode;
@@ -154,7 +148,6 @@ function renderLobby(gameData, playerList, hostName) {
         container.appendChild(playerDiv);
     }
 
-    // 🔴 Kick-Buttons aktivieren
     document.querySelectorAll(".removePlayerButton[data-player]").forEach(btn => {
         btn.addEventListener("click", () => {
             const playerToKick = btn.getAttribute("data-player");
