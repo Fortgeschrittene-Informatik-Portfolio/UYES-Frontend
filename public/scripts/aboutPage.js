@@ -1,3 +1,4 @@
+// Handles navigation buttons on the about page
 export function initAboutPage() {
 
     document.getElementById("back-to-main-menu")?.addEventListener("click", () => {

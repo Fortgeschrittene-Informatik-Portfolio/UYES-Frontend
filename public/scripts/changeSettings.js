@@ -1,5 +1,8 @@
+// Settings page where the host can adjust card rules before starting
 import { io } from "/socket.io/socket.io.esm.min.js";
+import { setupAmountControls, setupSelectAllCheckbox } from './utils/uiHelpers.js';
 
+/** Initialize lobby settings controls and emit changes to players. */
 export function initChangeSettings() {
     const socket = io();
     let gameCode;
@@ -8,55 +11,6 @@ export function initChangeSettings() {
     document.getElementById("createBackBtn")?.addEventListener("click", () => {
         window.history.back();
     });
-
-    function setupAmountControls(sliderId, displayId, subtractSelector, addSelector) {
-        const slider = document.getElementById(sliderId);
-        const display = document.getElementById(displayId);
-        const subtractBtn = slider.closest('div').querySelector(subtractSelector);
-        const addBtn = slider.closest('div').querySelector(addSelector);
-
-        const updateDisplay = () => {
-            display.textContent = slider.value;
-        };
-
-        subtractBtn?.addEventListener('click', () => {
-            slider.stepDown();
-            slider.dispatchEvent(new Event('input'));
-            updateDisplay();
-        });
-
-        addBtn?.addEventListener('click', () => {
-            slider.stepUp();
-            slider.dispatchEvent(new Event('input'));
-            updateDisplay();
-        });
-
-        slider.addEventListener('input', updateDisplay);
-        updateDisplay();
-    }
-
-    function setupSelectAllCheckbox(groupSelector, selectAllId) {
-        const checkboxes = Array.from(document.querySelectorAll(groupSelector));
-        const selectAll = document.getElementById(selectAllId);
-
-        selectAll?.addEventListener('change', () => {
-            checkboxes.forEach(cb => {
-                if (cb.id !== selectAllId) cb.checked = selectAll.checked;
-            });
-        });
-
-        checkboxes.forEach(cb => {
-            if (cb.id === selectAllId) return;
-            cb.addEventListener('change', () => {
-                const allChecked = checkboxes
-                    .filter(c => c.id !== selectAllId)
-                    .every(c => c.checked);
-                selectAll.checked = allChecked;
-            });
-        });
-    }
-
-    // player count cannot be changed after lobby creation
     setupAmountControls('cardSlider', 'cardCount', '.subtract', '.add');
     setupSelectAllCheckbox('#special-cards input[type="checkbox"]', 'check-all');
 

@@ -8,6 +8,7 @@
     <link rel="icon" href="/images/logo.png" type="image.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- index.js selects the correct page script -->
     <script src="/scripts/index.js" type="module" defer></script>
 </head>
 <body id="gameplay">
@@ -21,12 +22,14 @@
     <button id="backHome" class="ending">Back To Home</button>
 </div>
 <div id="wait-for-host" class="hidden">Wait for the host...</div>
+<!-- Page header -->
 <div id="header">
     <section>
         <h1 id="gameTitle">UYES!</h1>
         <p id="credits">by Andrii, Bilal, Daria , Simon, Srisharanya</p>
     </section>
 </div>
+<!-- Help/exit dialog -->
 <div id="helpButtonClicked">
     <button id="closeHelpBtn" >Help</button>
     <button id="RulesBtn" >Rules</button>
@@ -35,6 +38,7 @@
 
 </div>
 
+<!-- Shows play order direction -->
 <div id="gameDirection">
     <i class="fas fa-rotate-right"></i>
 </div>

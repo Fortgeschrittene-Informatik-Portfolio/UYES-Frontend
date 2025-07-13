@@ -1,3 +1,4 @@
+// Simple utility for background music persistence across pages
 const MUSIC_SRC = '/music/background.mp3';
 const BG_MUSIC_TIME_KEY = 'bg-music-time';
 
@@ -27,13 +28,12 @@ export function startMusic() {
             localStorage.setItem(BG_MUSIC_TIME_KEY, String(audioElem.currentTime));
         });
 
-        audioElem.play().catch(() => { /* ignore autoplay errors */ });
+        audioElem.play().catch(() => { });
     } else {
         audioElem.volume = volume;
     }
 }
 
-// apply volume changes across tabs
 window.addEventListener('storage', (e) => {
     if (e.key === 'bg-music-volume' && audioElem) {
         const vol = parseFloat(e.newValue);

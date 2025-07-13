@@ -1,5 +1,4 @@
-// scripts/joinLobby.js
-
+// Join lobby form functionality
 export function initJoinLobby() {
 
     document.getElementById("joinBackBtn")?.addEventListener("click", () => {
@@ -21,7 +20,6 @@ export function initJoinLobby() {
             return;
         }
 
-        // An Server senden → Session wird dort gesetzt
         const res = await fetch("/api/joinGame", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -29,7 +27,7 @@ export function initJoinLobby() {
         });
 
         if (res.redirected) {
-            window.location.href = res.url; // Leitet zu /lobby weiter
+            window.location.href = res.url;
         } else {
             alert("❌ Lobby nicht gefunden");
         }

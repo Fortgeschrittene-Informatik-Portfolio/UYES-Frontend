@@ -1,6 +1,6 @@
+// Display multi-step introductions on first visit
 export function handleIntro({ flagName, lastStepId, resetBtnId, skipBtnId }) {
 
-    // Reset-Button → Intro zurücksetzen
     document.getElementById(resetBtnId)?.addEventListener("click", () => {
         localStorage.removeItem(flagName);
         window.location.reload();
@@ -13,12 +13,10 @@ export function handleIntro({ flagName, lastStepId, resetBtnId, skipBtnId }) {
         return;
     }
 
-    // Letzter "Next"-Button → Intro abgeschlossen
     document.querySelector(`#${lastStepId} button`)?.addEventListener("click", () => {
         localStorage.setItem(flagName, "true");
     });
 
-    // NO-Button → Intro überspringen
     if (skipBtnId) {
         document.getElementById(skipBtnId)?.addEventListener("click", () => {
             localStorage.setItem(flagName, "true");

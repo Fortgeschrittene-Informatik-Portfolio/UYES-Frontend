@@ -1,3 +1,4 @@
+// Core gameplay logic: manages drag & drop and real-time game events
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
@@ -10,18 +11,14 @@ let playerList = [];
 let maxPlayers;
 let avatarSlots = [];
 
-// Track the current top card on the discard pile
 let topDiscard = null;
-// Store current hand to re-render when turn state changes
 let myHand = [];
 
-// Whether it's currently this client's turn
 let myTurn = false;
 let isClockwise = true;
 let turnInterval = null;
 let drawStack = 0;
 
-// Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
 let gameStarted = false;
 let playerOrientation = {};
@@ -53,7 +50,6 @@ export async function initGameplay() {
         document.body.classList.remove('Joiner');
     }
 
-    // Hide the end-of-game buttons until a winner is announced
     const buttons = document.getElementById('ending-buttons');
     if (buttons) {
         buttons.style.display = 'none';
@@ -108,6 +104,7 @@ export async function initGameplay() {
             socket.emit('draw-card', gameCode);
         }
     });
+    // Allow dragging from the draw pile to pick up a card
     drawPile?.addEventListener('dragstart', (e) => {
         if (!myTurn) {
             e.preventDefault();
@@ -117,15 +114,11 @@ export async function initGameplay() {
     });
 
     const handContainer = document.getElementById('player-hand-container');
-    // Allow drawing by dragging the deck card onto any spot within the hand
-    // container. Using the capture phase ensures the events fire even when the
-    // drop target is one of the existing card elements.
+    // Dropping the draw pile on the hand triggers a draw
     handContainer?.addEventListener('dragover', (e) => {
-        // allow dropping regardless of the transferred data since some
-        // browsers do not expose it during dragover
+        
         if (myTurn) {
             e.preventDefault();
-            // show a copy cursor for clarity
             e.dataTransfer.dropEffect = 'copy';
         }
     }, true);
@@ -137,6 +130,7 @@ export async function initGameplay() {
     }, true);
 
     const discard = document.getElementById('discard-pile');
+    // Target area for playing a card
     discard?.addEventListener('dragover', (e) => {
         e.preventDefault();
     });
@@ -147,7 +141,7 @@ export async function initGameplay() {
             try {
                 const card = JSON.parse(data);
                 playCard(card);
-            } catch { /* ignore invalid data */ }
+            } catch { }
         }
     });
 
@@ -247,6 +241,7 @@ function renderHand(cards) {
         const playable = myTurn && isCardPlayable(card);
         span.draggable = playable;
         if (playable) {
+            // Allow dragging playable cards to the discard pile
             span.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('application/json', JSON.stringify(card));
             });
@@ -276,18 +271,15 @@ function renderHand(cards) {
     }
 }
 
+// Update UI when a new player turn begins
 function highlightTurn(data) {
     const name = typeof data === 'string' ? data : data.player;
     const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
     drawStack = typeof data === 'object' && data.drawStack ? data.drawStack : 0;
-    // remember whether it is our turn
     myTurn = name === playerName;
 
     startTurnTimer(startedAt);
 
-    // Spielerreihenfolge rotieren, sodass der übergebene Spieler an erster
-    // Stelle steht. Damit lässt sich leicht berechnen, wie viele Züge es bis zu
-    // unserem eigenen Zug sind.
     while (playerList.length && playerList[0] !== name) {
         playerList.push(playerList.shift());
     }
@@ -302,7 +294,6 @@ function highlightTurn(data) {
         a.classList.toggle('active', !!match);
     });
     document.body.classList.toggle('my-turn', name === playerName);
-    // re-render hand so playable state updates
     renderHand(myHand);
 }
 
@@ -464,7 +455,6 @@ function setupAvatarSlots() {
     avatarSlots = [];
     const rows = [document.createElement('div'), document.createElement('div')];
     rows.forEach(r => r.classList.add('row'));
-    // Always create four avatar slots so the order mapping works
     const count = 4;
     for (let i = 0; i < count; i++) {
         const avatar = document.createElement('div');
@@ -501,9 +491,6 @@ function setupAvatarSlots() {
 
 function updateHandCounts(list) {
     if (!avatarSlots.length) setupAvatarSlots();
-    // Dreh die vom Server gesendete Spielreihenfolge so, dass sie aus Sicht
-    // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
-    // Spielern überein.
 
     const myData = list.find(p => p.name === playerName);
     const ownCountEl = document.querySelector('#own-avatar .cardsleft');
@@ -517,10 +504,8 @@ function updateHandCounts(list) {
         .slice(myIndex + 1)
         .concat(list.slice(0, myIndex + 1));
 
-    // komplette Reihenfolge (inkl. eigenem Namen) für Turn-Berechnungen
     playerList = rotated.map(p => p.name);
 
-    // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
     const others = rotated.filter(p => p.name !== playerName);
 
     const known = Object.keys(playerOrientation).filter(n => n !== playerName);
@@ -581,7 +566,6 @@ function resetGameUI() {
     drawStack = 0;
     updateDirectionIcon();
 
-    // remove all active UYES bubbles from previous round
     document.querySelectorAll('.uyes-bubble.active')
         .forEach(el => el.classList.remove('active'));
 
@@ -612,6 +596,7 @@ function resetGameUI() {
     pendingWildCard = null;
 }
 
+// Rotate the direction icon based on play order
 function updateDirectionIcon() {
     const icon = document.querySelector('#gameDirection i');
     if (!icon) return;
