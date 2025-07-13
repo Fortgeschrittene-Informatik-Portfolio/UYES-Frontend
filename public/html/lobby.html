@@ -8,10 +8,12 @@
     <link rel="icon" href="/images/logo.png" type="image.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=refresh" />
 
+    <!-- index.js selects the correct page script -->
     <script type="module" src="/scripts/index.js" defer></script>
 
 </head>
 <body id="lobbyHost">
+<!-- Page header -->
 <div id="header">
     <section>
         <h1 id="gameTitle">UYES!</h1>
@@ -19,14 +21,16 @@
     </section>
 </div>
 
+<!-- Help/exit dialog -->
 <div id="helpButtonClicked">
     <button id="closeHelpBtn" >Help</button>
     <button id="RulesBtn" >Rules</button>
     <button id="ExitGameBtn">Exit Game</button>
-    <button id="AboutBtn" >About</button>
+    <button id="AboutBtn" >Settings</button>
 
 </div>
 
+<!-- Confirm leaving dialog -->
 <div id="submitLeaving" >
     <h2>Are You Sure?</h2>
     <div>
@@ -41,6 +45,7 @@
 
 
 
+<!-- Lobby layout -->
 <div id="main" class="lobby">
     <div class="gameCode">
         <h2 id="game-code"></h2>
@@ -52,6 +57,7 @@
     </div>
 </div>
 
+<!-- Start button -->
 <div id="menu">
     <button id="startGameplay" class="notFull">Start Game</button>
 </div>

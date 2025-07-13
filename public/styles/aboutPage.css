@@ -9,6 +9,9 @@
     font-family: Arial, sans-serif;
     font-size: smaller;
     line-height: 1.6;
+    overflow-y: auto;
+    scrollbar-color: var(--primary-yellow) var(--primary-blue);
+
 }
 
 #back-to-main-menu {
@@ -24,4 +27,24 @@
     font-size: 2em;
     color: #941124;
     margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    #aboutText {
+        width: 98vw;
+        min-height: 40vh;
+        padding: 0.5vw;
+        font-size: 0.85em;
+        overflow-y: auto;
+        margin-bottom: 2em;
+    }
+    #aboutText h2 {
+        font-size: 2em;
+    }
+    #back-to-main-menu {
+        width: 35%;
+        /*font-size: 0.75em;*/
+        /*padding: 0.2em 0.5em;*/
+        /*margin-top: 1.5em;*/
+    }
 }

@@ -109,3 +109,25 @@ body:has(.speech-bubble[open]) #eichberg2 {
     display: none;
 }
 
+@media only screen and (max-width: 600px) {
+   dialog{
+       display:none;
+   }
+    #gameTitle {
+        font-size: 30em;
+        font-weight: 900;
+        color: #ECD407;
+        -webkit-text-stroke: 0.045em white;
+        text-shadow: -0.13em 0.07em black;
+        margin: 0;
+    }
+    button, .button {
+        font-size: 1em;
+        margin: 0.5em;
+        width: 80vw;
+        aspect-ratio: 2.6/1;
+    }
+    .backButtonTop {
+        width: 30vw;
+    }
+}

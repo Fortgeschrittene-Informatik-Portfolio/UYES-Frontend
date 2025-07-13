@@ -15,18 +15,31 @@ main{
 }
 
 #gameCodeInput{
-    width: 20cqw;
+    width: 25cqw;
     height: 4cqw;
-    font-size: 2cqw;
+    padding: 0;
     cursor: text;
+    border-radius: 15px;
+    background-color: lightgray;
+    font-size: 1.8cqw;
+    justify-self: center;
+
     &::placeholder{
-        font-size: 1.8cqw;
+
     }
     border: 0.5cqw solid black;
-    margin: 10%;
+    margin: 10% 0 10% 0;
 }
-#NameInput{
-    border: 0.25cqw solid black;
+#NameInput.Join{
+    height: 4cqw;
+    font-size: 3cqw;
+    border-radius: 15px;
+    border: black solid;
+    background-color: lightgray;
+
+    &::placeholder{
+        font-size: 2.5cqw;
+    }
 }
 
 .joinForm{
@@ -46,14 +59,7 @@ main{
 .joinLobby{
     form:first-child{
         width: 30%;
-        #NameInput{
-            font-size: 3cqw;
 
-            &::placeholder{
-                font-size: 2.5cqw;
-
-            }
-        }
 
     }
 
@@ -64,3 +70,39 @@ main{
 }
 
 
+@media only screen and (max-width: 600px) {
+
+    #gameCodeInput {
+        width: 80vw;
+        font-size: 1em;
+    }
+    #NameInput.Join{
+        height: 25%;
+        font-size: 200%;
+        &::placeholder{
+            font-size: 100%;
+        }
+    }
+    .joinForm {
+        width: 80vw;
+        font-size: 1.2em;
+    }
+    .joinLobby form:first-child {
+        width: 90vw;
+    }
+    #gameCodeInput{
+        height: 28%;
+        font-size: 200%;
+        border: 1cqw solid black;
+
+        &::placeholder{
+            font-size: 90%;
+        }
+    }
+    #joinBackBtn{
+        position: absolute;
+        top: 22%;
+        justify-self: center;
+    }
+
+}

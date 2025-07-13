@@ -1,10 +1,11 @@
 #UYES {
     position: absolute;
+    top: 65%;
+    justify-self: center;
+
     aspect-ratio: 2.5/1;
     width: 10%;
     pointer-events: none;
-    top: 85%;
-    left: 70%;
     background-color: dimgrey;
     border: solid 0.5cqh darkgrey; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
     border-radius: 15%;
@@ -14,22 +15,23 @@
 
 #player-hand-container {
     grid-row: 3;
-    grid-column: 1 / -1;
-    width: 60%;
+    grid-column: 2;
+    width: 100%;
     margin: 0 auto;
     font-size: 1.2em;
     display: flex;
     align-items: center;
-    justify-content: center;
+    /*justify-content: center;*/
     flex-wrap: nowrap;
     overflow-x: auto;
-    overflow-y: hidden;
-    padding-left: 2em;        /* offset for negative card margin */
-    gap: 0;                   /* cards already overlap via margin */
-    scroll-behavior: smooth;
-    scrollbar-color: var(--primary-blue) var(--primary-yellow);
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none;    /* Firefox */
+    overflow-y: clip;
+    gap: 0;
+
+}
+
+/* prevent left overflow of the first card in hand */
+#player-hand-container span.card:first-child {
+    margin-left: 0;
 }
 
 #player-hand-container::-webkit-scrollbar {
@@ -90,13 +92,12 @@
     grid-column: 1/-1;
     display: flex;
     flex-wrap: wrap;
-    /*justify-content: center;*/
     justify-content: center;
     align-items: center;
 
     .pile {
-        margin-left: 2em;
-        margin-right: 2em;
+
+        margin: 0 10% 0 10%;
 
 
         h2 {
@@ -150,8 +151,10 @@
     width: 10%;
     position: relative;
     background-color: rgba(169, 169, 169, 0.5); /* Grauton mit 50% Transparenz */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     flex-grow: 0;
-    /*display: flex;*/
 
     .player-name {
         position: absolute;
@@ -177,6 +180,7 @@
             .cardsleft {
                 color: white;
                 -webkit-text-stroke: 0.07cqw black;
+                font-size: 2cqw;
                 margin: 0;
             }
 
@@ -193,6 +197,7 @@
 }
 
 .avatar.inactive {
+    flex-grow: 0;
     opacity: 0.3;
 }
 
@@ -222,19 +227,22 @@
 }
 
 .avatar.left-hand .cardHands {
-    left: 105%;
-}
-
-.avatar.right-hand .cardHands {
     right: 105%;
 }
 
-#player2 {
-    border: 0.8cqw solid var(--primary-yellow);
-    background-color: rgba(149, 145, 4, 0.5);
+.avatar.right-hand .cardHands {
+    left: 105%;
+}
 
-    background-size: contain;
+/* ensure consistent layout independent of row */
+#player-avatars2 .row > .avatar:first-child .cardHands {
+    left: 105%;
+    right: auto;
+}
 
+#player-avatars2 .row > .avatar:last-child .cardHands {
+    right: 105%;
+    left: auto;
 }
 
 #player1 {
@@ -256,24 +264,37 @@
     top: 78%;
     left: 8%;
 
+    /* show card count to the left */
+    .cardHands {
+        right: 105%;
+        position: relative;
+        top: 20%;
+        display: flex;
+        flex-direction: column;
+
+        .avatar-row {
+            display: flex;
+            justify-content: center;
+
+            .cardsleft {
+                color: white;
+                -webkit-text-stroke: 0.07cqw black;
+                font-size: 2cqw;
+                margin: 0;
+            }
+        }
+
+        .card {
+            width: 25%;
+        }
+    }
+
 }
 
 body#gameplay {
-    #player2 {
-        border: 0.2cqw solid white;
-    }
-
-    #player3 {
-        border: 0.8cqw solid var(--primary-yellow);
-        background-color: rgba(149, 145, 4, 0.5);
-    }
-
     #own-avatar {
         background-color: var(--secondary-yellow);
-        opacity: 0.5;
     }
-
-
 }
 
 .my-turn #UYES {
@@ -422,7 +443,6 @@ body#gameplay {
     display: flex;
 }
 
-@media only screen and (max-width: 600px) {}
 #helpButtonClicked{
     display: none;
 
@@ -517,7 +537,211 @@ body#gameplay {
     justify-content: center;
 
     * {
-        margin-top: 20cqh;
+        margin-top: 22cqh;
     }
 
 }
+
+#changeAvatar{
+    position: absolute;
+    aspect-ratio: 1/1;
+    width: 20%;
+    border-radius: 50%;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    color: white;
+
+    top: 80%;
+    left: 80%;
+    margin: 0;
+    z-index:0;
+
+
+}
+
+#timerContainer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: -1;
+}
+#timer{
+    color:white;
+    font-size: 500%;
+    margin: 0;
+}
+
+/* simple grow animation for avatar change button */
+#changeAvatar.grow {
+    animation: avatarGrow 0.3s ease-in-out;
+}
+
+@keyframes avatarGrow {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.specialCard{
+    color: black;
+    font-size: 120%;
+}
+
+.draw{
+
+    &.notVisible{
+        display: none;
+    }
+
+    z-index: 100;
+    position: absolute;
+    top: 44%;
+    left: 32%;
+
+    &.leftDown{
+        animation: toLeftDown   ease-in-out 1s;
+    }
+    &.leftTop{
+        animation: toLeftTop   ease-in-out 1s;
+    }
+    &.rightDown{
+        animation: toRightDown   ease-in-out 1s;
+    }
+    &.rightTop{
+        animation: toRightTop   ease-in-out 1s;
+    }
+    &.self{
+        animation: toSelf   ease-in-out 1s;
+    }
+}
+
+.discard{
+
+    &.notVisible{
+        display: none;
+    }
+
+    animation: toDiscard   ease-in-out 1s;
+    z-index: 100;
+    position: absolute;
+    &.leftDown{
+        top: 60%;
+        left: 22%;
+    }
+    &.leftTop{
+        top: 25%;
+        left: 22%;
+
+    }
+    &.rightDown{
+        top: 60%;
+        left: 76%;
+    }
+    &.rightTop{
+        top: 25%;
+        left: 76%;
+    }
+    &.self{
+        left: 50%;
+        top:70%;
+    }
+}
+
+
+
+@keyframes toDiscard{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        top: 44%;
+        left: 62%;;
+    }
+}
+
+@keyframes toLeftDown{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(100%) translateX(-150%);
+    }
+}
+
+@keyframes toLeftTop{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(-125%) translateX(-150%);
+    }
+}
+@keyframes toRightDown{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(100%) translateX(700%);
+    }
+}
+@keyframes toRightTop{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(-125%) translateX(700%);
+    }
+}
+
+@keyframes toSelf{
+    0%{opacity: 100%;}
+    60%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(200%) translateX(300%);
+    }
+}
+
+
+@media only screen and (max-width: 600px) {
+    #piles{
+        flex-wrap: nowrap;
+        .pile{
+            h2{
+                font-size: 200%;
+            }
+        }
+    }
+    #timer{
+        font-size: 300%;
+    }
+    #gameDirection{
+        *{
+            margin-top: 30cqh
+        }
+    }
+    .avatar{
+        width: 15%;
+    }
+    #UYES{
+        width: 25%;
+        font-size: 100%;
+    }
+}
+

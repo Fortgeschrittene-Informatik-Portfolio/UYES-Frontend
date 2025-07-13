@@ -8,6 +8,7 @@
     <link rel="icon" href="/images/logo.png" type="image.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- index.js selects the correct page script -->
     <script src="/scripts/index.js" type="module" defer></script>
 </head>
 <body id="gameplay">
@@ -21,20 +22,23 @@
     <button id="backHome" class="ending">Back To Home</button>
 </div>
 <div id="wait-for-host" class="hidden">Wait for the host...</div>
+<!-- Page header -->
 <div id="header">
     <section>
         <h1 id="gameTitle">UYES!</h1>
         <p id="credits">by Andrii, Bilal, Daria , Simon, Srisharanya</p>
     </section>
 </div>
+<!-- Help/exit dialog -->
 <div id="helpButtonClicked">
     <button id="closeHelpBtn" >Help</button>
     <button id="RulesBtn" >Rules</button>
     <button id="ExitGameBtn">Exit Game</button>
-    <button id="AboutBtn" >About</button>
+    <button id="AboutBtn" >Settings</button>
 
 </div>
 
+<!-- Shows play order direction -->
 <div id="gameDirection">
     <i class="fas fa-rotate-right"></i>
 </div>
@@ -59,8 +63,24 @@
         <span class="card big red"><span><span>3</span></span></span>
     </div>
 </div>
+<div id="timerContainer">
+    <h3 id="timer">30s</h3>
+</div>
 <div id="player-avatars1"><div id="player-avatars2"></div></div>
-<div id="own-avatar"></div>
+<div id="own-avatar" class="avatar">
+    <div class="cardHands">
+        <div class="avatar-row">
+            <h2 class="cardsleft"></h2>
+        </div>
+        <div class="avatar-row">
+            <span class="card small back"><span><span></span></span></span>
+            <span class="card small back"><span><span></span></span></span>
+        </div>
+    </div>
+    <button id="changeAvatar">
+        <i class="fas fa-rotate"></i>
+    </button>
+</div>
 <div id="player-hand-container"></div>
 <div id="yourTurn">
     Your turn in:
@@ -74,5 +94,21 @@
         <span class="card big blue" data-color="blue"><span><span></span></span></span>
     </div>
 </div>
+
+<span class="card normal back draw leftDown notVisible"><span><span></span></span></span>
+<span class="card normal back draw leftTop notVisible"><span><span></span></span></span>
+<span class="card normal back draw rightDown notVisible"><span><span></span></span></span>
+<span class="card normal back draw rightTop notVisible"><span><span></span></span></span>
+<span class="card normal back draw self notVisible"><span><span></span></span></span>
+
+<span class="card normal back discard leftDown notVisible"><span><span></span></span></span>
+<span class="card normal back discard leftTop notVisible"><span><span></span></span></span>
+<span class="card normal back discard rightDown notVisible"><span><span></span></span></span>
+<span class="card normal back discard rightTop notVisible"><span><span></span></span></span>
+<span class="card normal back discard self notVisible"><span><span></span></span></span>
+
+
+
+
 </body>
 </html>

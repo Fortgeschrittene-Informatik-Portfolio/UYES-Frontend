@@ -67,49 +67,6 @@ body:not(:has(#intro65[open])) {
 }
 
 
-@media only screen and (max-width: 600px) {
-    #eichberg.startsite {
-        width: 50%;
-        position: absolute;
-        top: 40%;
-        right: 40%;
-    }
-
-    .speech-bubble.startsite {
-        top: 65vw;
-        left: 50vw;
-        width: 35vw;
-    }
-
-    .speech.startsite {
-        font-size: 4.3cqw;
-    }
-
-    button.introduction.startsite {
-        left: 53%;
-        top: 76%;
-        width: 17cqw;
-        font-size: 3.6cqw;
-    }
-
-    /* Schriftgröße für bestimmte Intros */
-    #intro2 .speech.startsite {
-        font-size: 4.5cqw;
-    }
-
-    #intro3 .speech.startsite {
-        font-size: 4.1cqw;
-    }
-
-    #intro4 .speech.startsite {
-        font-size: 3.4cqw;
-    }
-
-    #intro5 .speech.startsite {
-        font-size: 3.2cqw;
-    }
-
-}
 
 
 

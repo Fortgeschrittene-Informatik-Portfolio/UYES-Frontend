@@ -1,3 +1,4 @@
+// Generic help and exit menu used across pages
 export function helpFunctionality(socket, getGameCode, playerName) {
     const helpBtn = document.getElementById("helpBtnLobby");
     const helpDiv = document.getElementById("helpButtonClicked");
@@ -41,7 +42,7 @@ export function helpFunctionality(socket, getGameCode, playerName) {
 
     if (aboutBtn) {
         aboutBtn.addEventListener("click", () => {
-            window.open("/about", "_blank");
+            window.location.href = "/help";
         });
     }
 

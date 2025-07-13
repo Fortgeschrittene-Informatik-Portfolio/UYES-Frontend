@@ -157,8 +157,10 @@ body:not(:has(.speech-bubble[open])) #milch-glas-layer {
 
 
 @media only screen and (max-width: 600px) {
-    button.introduction#NO {
-        left: 5%
+    dialog{
+        display:none;
     }
-
+    #eichberg2{
+        display:none;
+    }
 }

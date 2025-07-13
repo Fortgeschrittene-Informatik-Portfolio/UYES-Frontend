@@ -13,46 +13,27 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-router.get('/start', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/startSite.html'));
-});
+const htmlRoutes = {
+    '/start': 'startSite.html',
+    '/about': 'aboutPage.html',
+    '/help': 'helpPage.html',
+    '/rules': 'rulesPage.html',
+    '/start/game': 'chooseLobby.html',
+    '/start/game/create': 'createGame.html',
+    '/change-settings': 'changeSettings.html',
+    '/start/game/join': 'joinLobby.html',
+    '/lobby': 'lobby.html',
+    '/gameplay': 'gameplay.html'
+};
 
-router.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/aboutPage.html'));
-});
+for (const [route, file] of Object.entries(htmlRoutes)) {
+    // Serve the matching HTML file for each path
+    router.get(route, (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/html', file));
+    });
+}
 
-router.get('/help', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/helpPage.html'));
-});
-
-router.get('/rules', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/rulesPage.html'));
-});
-
-router.get('/start/game', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/chooseLobby.html'));
-});
-
-router.get('/start/game/create', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/createGame.html'));
-});
-
-router.get('/change-settings', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/changeSettings.html'));
-});
-
-router.get('/start/game/join', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/joinLobby.html'));
-});
-
-router.get('/lobby', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/lobby.html'));
-});
-
-router.get('/gameplay', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/gameplay.html'));
-});
-
+// Return session and lobby information for the current player
 router.get("/api/lobbyData", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });
@@ -72,6 +53,7 @@ router.get("/api/lobbyData", (req, res) => {
     });
 });
 
+// Update lobby settings when the host changes them
 router.post('/api/updateSettings', (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: 'Keine Session aktiv' });
@@ -83,7 +65,6 @@ router.post('/api/updateSettings', (req, res) => {
     }
 
     const incoming = req.body.settings || {};
-    // prevent changing player count after lobby creation
     const { players, ...other } = incoming;
     lobby.settings = { ...lobby.settings, ...other };
     req.session.settings = lobby.settings;
@@ -92,8 +73,9 @@ router.post('/api/updateSettings', (req, res) => {
     res.json({ success: true });
 });
 
+// Create a new lobby and store session data
 router.post("/api/createGame", (req, res) => {
-    const lobby = createLobby(req.body); // erstellt neue Lobby mit Host
+    const lobby = createLobby(req.body);
 
     req.session.gameId = lobby.gameId;
     req.session.playerName = lobby.playerName;
@@ -104,9 +86,10 @@ router.post("/api/createGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+// Join an existing lobby by game code
 router.post("/api/joinGame", (req, res) => {
     const code = String(req.body.code || "").trim();
-    const name = (req.body.playerName || "").trim(); // ⚠️ Hier angepasst: "playerName" statt "name"
+    const name = (req.body.playerName || "").trim();
 
     if (!/^[0-9]{9}$/.test(code)) {
         return res.status(400).json({ error: "Ungültiger Game-Code" });
@@ -120,8 +103,6 @@ router.post("/api/joinGame", (req, res) => {
     const funnyNames = ["Cardy B", "Drawzilla", "Reverso", "Captain Uno", "Skipz"];
     const getRandomName = () => funnyNames[Math.floor(Math.random() * funnyNames.length)];
 
-    // ❗️Hier: KEINE komplette Überschreibung der Session!
-
     req.session.gameId = code;
     setSession(res, req.session);
     req.session.playerName = name?.trim() !== "" ? name : getRandomName();
@@ -131,6 +112,7 @@ router.post("/api/joinGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+// Change the lobby code while keeping players connected
 router.put("/api/gameCode", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });

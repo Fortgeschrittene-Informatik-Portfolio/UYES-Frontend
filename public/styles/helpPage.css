@@ -10,72 +10,37 @@ body.help-page-body {
 }
 
 .help-rules-container {
-    background-color: var(--primary-yellow)
-;
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    max-width: 450px;
-    height: 55vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 20px 0 0 0;
+    background-color: var(--primary-yellow);
+    grid-column: 1 / -1;
+    grid-row: 2;
+    height: 100%;
     border-radius: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
     font-family: Arial, sans-serif;
     color: #333;
-    line-height: 1.6;
-    transform: translateY(50px);
-    scrollbar-color: var(--primary-blue)
-    var(--primary-yellow)
-;
     align-self: center;
     justify-self: center;
+    padding: 0;
+    overflow-y: auto;
+    scrollbar-color: var(--primary-yellow) var(--primary-blue);
+
 }
 
 
 .help-collapsible-section {
-    margin-bottom: 10px;
+    padding-left: 10%;
+    margin: 10% 0 10% 0;
+    summary{
+        font-size: 200%;
+    }
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    padding-bottom: 10px;
     list-style: none;
 }
 
-.help-section-header {
-    cursor: pointer;
-    padding: 10px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    user-select: none;
-    transition: background-color 0.2s ease;
-}
 
-.help-section-header:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
 
-.help-section-header h2 {
-    margin: 9px;
-    font-size: 1.8em;
-    color: #000;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
-.help-arrow-icon {
-    font-size: 1em;
-    transition: transform 0.2s ease;
-    display: inline-block;
-}
 
-.help-collapsible-section[open] .help-arrow-icon {
-    transform: rotate(90deg);
-}
-
-.help-section-content {
-    padding: 10px 40px 10px 40px;
-}
 
 .help-section-content ul {
     list-style-type: disc;
@@ -88,9 +53,10 @@ body.help-page-body {
 }
 
 .help-section-content ul ul {
+
     list-style-type: circle;
-    margin-left: 30px;
-    margin-top: 5px;
+    margin-left: 15%;
+    margin-top: 5%;
 }
 
 .help-section-content strong {
@@ -112,8 +78,8 @@ body.help-page-body {
 }
 
 #help-volume button {
-    background-color: #4CAF50;
-    color: white;
+    background-color: white;
+    color: black;
     border: none;
     padding: 8px 12px;
     font-size: 16px;
@@ -134,18 +100,22 @@ body.help-page-body {
     border-radius: 15%;
     font-weight: 800;
     font-size: 2.5cqw;
-    margin: 0;
-    margin-top: -130px; /* Move up */
-    margin-left: 20px; /* Move right */
 }
 
-#help-language {
-    float: right;
-    margin-right: 175px;
-}
 
-#help-language-dropdown {
-    background-color: var(--primary-yellow) ;
-    border-radius: 10px;
+@media only screen and (max-width: 600px) {
 
+    .help-rules-container {
+        max-width: 90%;
+    }
+    #rulesBtnHelp{
+        width: 40%;
+    }
+    #backBtnHelp{
+        position: relative;
+        grid-column: 1 / -1;
+        grid-row: 3;
+        justify-self: center;
+        align-self: center;
+    }
 }

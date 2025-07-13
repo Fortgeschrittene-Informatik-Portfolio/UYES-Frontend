@@ -1,5 +1,7 @@
+// Choose between creating or joining a lobby
 import { handleIntro } from './utils/intros.js';
 
+/** Setup the choose lobby buttons and intro. */
 export function initChooseLobby() {
 
 

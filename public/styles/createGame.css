@@ -194,14 +194,11 @@ div#menu-createGame {
     display: flex;
     justify-content: center;
     align-items: center;
-
-
-
-    #continue-createGame {
-        aspect-ratio: 2.6/1;
-        width: 25%;
-        font-size: 4cqw;
-    }
+}
+#continue-createGame {
+    aspect-ratio: 2.6/1;
+    width: 25%;
+    font-size: 4cqw;
 }
 
 
@@ -228,12 +225,28 @@ div#menu-createGame {
             font-size: 4.6cqw;
         }
     }
+    #specialCardsWrap{
+        #special-cards{
+            padding: 5%;
+            .container{
+                font-size: 100%;
+            }
 
+        }
+    }
     #help-createGame {
         position: absolute;
         width: 30%;
         font-size: 5cqw;
         top: 15%;
         left: 31%;
+    }
+    #continue-createGame{
+        width: 50%;
+    }
+    #createBackBtn{
+        position: absolute;
+        top: 18%;
+        justify-self: center;
     }
 }

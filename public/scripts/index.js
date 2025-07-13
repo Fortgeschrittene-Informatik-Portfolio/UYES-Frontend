@@ -8,42 +8,25 @@ import { initChangeSettings } from './changeSettings.js';
 import { initLobbyHost } from "./lobby.js";
 import { initJoinLobby } from "./joinLobby.js";
 import { initGameplay } from "./gameplay.js";
+import { startMusic } from './utils/music.js';
 
-
-
-
-
-
+const pages = {
+    startsite: initStartSite,
+    about: initAboutPage,
+    'help-page-body': initHelpPage,
+    'rules-page-body': initRulesPage,
+    chooseLobby: initChooseLobby,
+    createGame: initCreateGame,
+    changeSettings: initChangeSettings,
+    lobbyHost: initLobbyHost,
+    joinLobby: initJoinLobby,
+    gameplay: initGameplay,
+};
 
 const pageId = document.body.id;
+startMusic();
 
-if (pageId === 'startsite') {
-    initStartSite();
-}
-else if(pageId === 'about'){
-    initAboutPage();
-}
-else if(pageId === 'help-page-body'){
-    initHelpPage();
-}
-else if(pageId === 'rules-page-body'){
-    initRulesPage();
-}
-else if(pageId === 'chooseLobby'){
-    initChooseLobby();
-}
-else if(pageId === 'createGame'){
-    initCreateGame();
-}
-else if(pageId === 'changeSettings'){
-    initChangeSettings();
-}
-else if (pageId === "lobbyHost") {
-    initLobbyHost();
-}
-else if (pageId === "joinLobby") {
-    initJoinLobby();
-}
-else if (pageId === "gameplay") {
-    initGameplay();
+const init = pages[pageId];
+if (init) {
+    init();
 }

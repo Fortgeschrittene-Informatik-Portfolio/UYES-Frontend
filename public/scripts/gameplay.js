@@ -1,3 +1,4 @@
+// Core gameplay logic: manages drag & drop and real-time game events
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
@@ -10,17 +11,18 @@ let playerList = [];
 let maxPlayers;
 let avatarSlots = [];
 
-// Track the current top card on the discard pile
 let topDiscard = null;
-// Store current hand to re-render when turn state changes
 let myHand = [];
 
-// Whether it's currently this client's turn
 let myTurn = false;
 let isClockwise = true;
+let turnInterval = null;
+let drawStack = 0;
 
-// Temporarily store a wild card to choose a color before playing
 let pendingWildCard = null;
+let gameStarted = false;
+let playerOrientation = {};
+const slotOrientations = ['leftTop', 'rightTop', 'leftDown', 'rightDown'];
 
 
 export async function initGameplay() {
@@ -48,7 +50,6 @@ export async function initGameplay() {
         document.body.classList.remove('Joiner');
     }
 
-    // Hide the end-of-game buttons until a winner is announced
     const buttons = document.getElementById('ending-buttons');
     if (buttons) {
         buttons.style.display = 'none';
@@ -56,17 +57,22 @@ export async function initGameplay() {
 
     maxPlayers = data.players;
 
-    setupAvatarSlots(maxPlayers);
+    setupAvatarSlots();
     setAvatarImages();
 
     socket.on('deal-cards', renderHand);
     socket.on('player-turn', highlightTurn);
-    socket.on('card-played', updateDiscard);
+    socket.on('card-played', onCardPlayed);
+    socket.on('cards-drawn', handleCardsDrawn);
     socket.on('game-end', showWinner);
     socket.on('update-hand-counts', updateHandCounts);
     socket.on('player-uyes', toggleUyesBubble);
     socket.on('order-reversed', handleOrderReversed);
     socket.on('game-started', resetGameUI);
+    socket.on('avatar-changed', ({ player, file }) => {
+        playerAvatars[player] = file;
+        setAvatarImages();
+    });
     socket.on('hand-limit-reached', () => {
         alert('Reached maximum amount of cards in hand.');
     });
@@ -81,6 +87,10 @@ export async function initGameplay() {
         alert('Du wurdest aus der Lobby entfernt.');
         window.location.href = '/start/game';
     });
+    socket.on('host-assigned', () => {
+        alert('You are now the host.');
+        document.body.classList.remove('Joiner');
+    });
 
     socket.emit('join-lobby', gameCode, playerName);
 
@@ -94,6 +104,7 @@ export async function initGameplay() {
             socket.emit('draw-card', gameCode);
         }
     });
+    // Allow dragging from the draw pile to pick up a card
     drawPile?.addEventListener('dragstart', (e) => {
         if (!myTurn) {
             e.preventDefault();
@@ -103,15 +114,11 @@ export async function initGameplay() {
     });
 
     const handContainer = document.getElementById('player-hand-container');
-    // Allow drawing by dragging the deck card onto any spot within the hand
-    // container. Using the capture phase ensures the events fire even when the
-    // drop target is one of the existing card elements.
+    // Dropping the draw pile on the hand triggers a draw
     handContainer?.addEventListener('dragover', (e) => {
-        // allow dropping regardless of the transferred data since some
-        // browsers do not expose it during dragover
+        
         if (myTurn) {
             e.preventDefault();
-            // show a copy cursor for clarity
             e.dataTransfer.dropEffect = 'copy';
         }
     }, true);
@@ -123,6 +130,7 @@ export async function initGameplay() {
     }, true);
 
     const discard = document.getElementById('discard-pile');
+    // Target area for playing a card
     discard?.addEventListener('dragover', (e) => {
         e.preventDefault();
     });
@@ -133,7 +141,7 @@ export async function initGameplay() {
             try {
                 const card = JSON.parse(data);
                 playCard(card);
-            } catch { /* ignore invalid data */ }
+            } catch { }
         }
     });
 
@@ -142,6 +150,15 @@ export async function initGameplay() {
         if (myTurn) {
             socket.emit('uyes', gameCode);
         }
+    });
+
+    const changeAvatarBtn = document.getElementById('changeAvatar');
+    changeAvatarBtn?.addEventListener('click', () => {
+        changeAvatarBtn.classList.add('grow');
+        socket.emit('change-avatar', gameCode);
+    });
+    changeAvatarBtn?.addEventListener('animationend', () => {
+        changeAvatarBtn.classList.remove('grow');
     });
 
     const changeSettingsBtn = document.querySelector('#ending-buttons .ending:first-child');
@@ -201,9 +218,9 @@ function displayValue(value) {
         case 'wild4':
             return '4+';
         case 'reverse':
-            return '⤾';
+            return '<i class="fas fa-retweet specialCard"></i>';
         case 'skip':
-            return 'Ø';
+            return '<i class="fas fa-ban specialCard"></i>';
         case 'wild':
             return 'W';
         default:
@@ -224,6 +241,7 @@ function renderHand(cards) {
         const playable = myTurn && isCardPlayable(card);
         span.draggable = playable;
         if (playable) {
+            // Allow dragging playable cards to the discard pile
             span.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('application/json', JSON.stringify(card));
             });
@@ -253,13 +271,15 @@ function renderHand(cards) {
     }
 }
 
-function highlightTurn(name) {
-    // remember whether it is our turn
+// Update UI when a new player turn begins
+function highlightTurn(data) {
+    const name = typeof data === 'string' ? data : data.player;
+    const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
+    drawStack = typeof data === 'object' && data.drawStack ? data.drawStack : 0;
     myTurn = name === playerName;
 
-    // Spielerreihenfolge rotieren, sodass der übergebene Spieler an erster
-    // Stelle steht. Damit lässt sich leicht berechnen, wie viele Züge es bis zu
-    // unserem eigenen Zug sind.
+    startTurnTimer(startedAt);
+
     while (playerList.length && playerList[0] !== name) {
         playerList.push(playerList.shift());
     }
@@ -274,15 +294,36 @@ function highlightTurn(name) {
         a.classList.toggle('active', !!match);
     });
     document.body.classList.toggle('my-turn', name === playerName);
-    // re-render hand so playable state updates
     renderHand(myHand);
 }
 
+function startTurnTimer(startedAt = Date.now()) {
+    clearInterval(turnInterval);
+    const timerEl = document.getElementById('timer');
+    const end = startedAt + 30000;
+
+    function update() {
+        const remaining = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+        if (timerEl) timerEl.textContent = `${remaining}s`;
+        if (remaining <= 0) {
+            clearInterval(turnInterval);
+            if (myTurn) {
+                socket.emit('draw-card', gameCode);
+            }
+        }
+    }
+
+    update();
+    turnInterval = setInterval(update, 1000);
+}
+
 function setAvatarImages() {
-    let index = 1;
+    const order = [2,0,1,3];
+    let idx = 0;
     for (const n of playerList) {
         if (n === playerName) continue;
-        const el = document.getElementById(`player${index}`);
+        const slotIndex = order[idx] ?? idx;
+        const el = document.getElementById(`player${slotIndex + 1}`);
         if (el) {
             el.dataset.player = n;
             const file = playerAvatars[n];
@@ -290,11 +331,12 @@ function setAvatarImages() {
                 el.style.backgroundImage = `url('/images/avatars/${file}')`;
             }
         }
-        index++;
+        idx++;
     }
     const own = document.getElementById('own-avatar');
     if (own) {
         own.dataset.player = playerName;
+        own.dataset.orientation = 'self';
         const file = playerAvatars[playerName];
         if (file) {
             own.style.backgroundImage = `url('/images/avatars/${file}')`;
@@ -318,7 +360,47 @@ function updateDiscard({ player, card }) {
     topDiscard = card;
 }
 
+function runAnimation(type, orientation, delay = 0) {
+    if (!gameStarted || !orientation) return;
+    const template = document.querySelector(`.${type}.${orientation}`);
+    if (!template) return;
+    setTimeout(() => {
+        const el = template.cloneNode(true);
+        el.classList.remove('notVisible');
+        template.parentNode?.appendChild(el);
+        const handler = () => {
+            el.removeEventListener('animationend', handler);
+            el.remove();
+        };
+        el.addEventListener('animationend', handler);
+    }, delay);
+}
+
+function animateDraw(player, count = 1) {
+    const orientation = playerOrientation[player];
+    for (let i = 0; i < count; i++) {
+        runAnimation('draw', orientation, i * 300);
+    }
+}
+
+function animateDiscard(player) {
+    const orientation = playerOrientation[player];
+    runAnimation('discard', orientation);
+}
+
+function handleCardsDrawn({ player, count }) {
+    animateDraw(player, count);
+}
+
+function onCardPlayed(data) {
+    updateDiscard(data);
+    if (data.player) {
+        animateDiscard(data.player);
+    }
+}
+
 function isCardPlayable(card) {
+    if (drawStack > 0 && card.value !== 'draw2') return false;
     if (!topDiscard) return true;
     if (card.color === 'wild') return true;
     if (topDiscard.color === 'wild') {
@@ -337,6 +419,7 @@ function playCard(card) {
 }
 
 function showWinner(winner) {
+    gameStarted = false;
     const win = document.getElementById('winner');
     if (win) {
         const nameEl = win.querySelector('.player-name');
@@ -365,19 +448,20 @@ function showWinner(winner) {
     }
 }
 
-function setupAvatarSlots(total) {
+function setupAvatarSlots() {
     const container = document.getElementById('player-avatars2');
     if (!container) return;
     container.innerHTML = '';
     avatarSlots = [];
     const rows = [document.createElement('div'), document.createElement('div')];
     rows.forEach(r => r.classList.add('row'));
-    const count = Math.min(total - 1, 4);
+    const count = 4;
     for (let i = 0; i < count; i++) {
         const avatar = document.createElement('div');
         avatar.className = 'avatar inactive';
         avatar.id = `player${i + 1}`;
         avatar.dataset.playerName = '';
+        avatar.dataset.orientation = slotOrientations[i];
         avatar.innerHTML = `
             <div class="player-name"></div>
             <div class="cardHands">
@@ -394,22 +478,25 @@ function setupAvatarSlots(total) {
         bubble.textContent = 'UYES!';
         avatar.appendChild(bubble);
         avatarSlots.push(avatar);
+        const isFirstInRow = i % 2 === 0;
         if (i < 2) {
-            avatar.classList.add('left-hand');
             rows[0].appendChild(avatar);
         } else {
-            avatar.classList.add('right-hand');
             rows[1].appendChild(avatar);
         }
+        avatar.classList.add(isFirstInRow ? 'left-hand' : 'right-hand');
     }
     rows.forEach(r => container.appendChild(r));
 }
 
 function updateHandCounts(list) {
-    if (!avatarSlots.length) setupAvatarSlots(list.length);
-    // Dreh die vom Server gesendete Spielreihenfolge so, dass sie aus Sicht
-    // des aktuellen Clients beginnt. Dadurch stimmen die Avatar-Slots bei allen
-    // Spielern überein.
+    if (!avatarSlots.length) setupAvatarSlots();
+
+    const myData = list.find(p => p.name === playerName);
+    const ownCountEl = document.querySelector('#own-avatar .cardsleft');
+    if (ownCountEl && myData) {
+        ownCountEl.textContent = `${myData.count}x`;
+    }
 
     const names = list.map(p => p.name);
     const myIndex = names.indexOf(playerName);
@@ -417,28 +504,43 @@ function updateHandCounts(list) {
         .slice(myIndex + 1)
         .concat(list.slice(0, myIndex + 1));
 
-    // komplette Reihenfolge (inkl. eigenem Namen) für Turn-Berechnungen
     playerList = rotated.map(p => p.name);
 
-    // ohne eigenen Spieler, um nur die anderen Avatare zu füllen
     const others = rotated.filter(p => p.name !== playerName);
 
-    for (let i = 0; i < avatarSlots.length; i++) {
-        const slot = avatarSlots[i];
-        const data = others[i];
-        if (data) {
-            slot.querySelector('.cardsleft').textContent = `${data.count}x`;
-            slot.dataset.playerName = data.name;
-            slot.querySelector('.player-name').textContent = data.name;
-            slot.classList.remove('inactive');
-        } else {
-            slot.querySelector('.cardsleft').textContent = '';
-            slot.dataset.playerName = '';
-            slot.querySelector('.player-name').textContent = '';
-            slot.classList.add('inactive');
+    const known = Object.keys(playerOrientation).filter(n => n !== playerName);
+    const samePlayers = known.length === others.length && others.every(p => known.includes(p.name));
+
+    if (!samePlayers) {
+        const order = [2,0,1,3];
+        playerOrientation = { [playerName]: 'self' };
+        for (let i = 0; i < avatarSlots.length; i++) {
+            const idx = order[i] ?? i;
+            const slot = avatarSlots[idx];
+            const data = others[i];
+            if (data) {
+                slot.dataset.playerName = data.name;
+                slot.querySelector('.player-name').textContent = data.name;
+                slot.classList.remove('inactive');
+                playerOrientation[data.name] = slot.dataset.orientation;
+                slot.querySelector('.cardsleft').textContent = `${data.count}x`;
+            } else {
+                slot.dataset.playerName = '';
+                slot.querySelector('.player-name').textContent = '';
+                slot.classList.add('inactive');
+                slot.querySelector('.cardsleft').textContent = '';
+            }
+        }
+        setAvatarImages();
+    } else {
+        for (const data of others) {
+            const slot = avatarSlots.find(s => s.dataset.playerName === data.name);
+            if (slot) {
+                slot.querySelector('.cardsleft').textContent = `${data.count}x`;
+            }
+
         }
     }
-    setAvatarImages();
 }
 
 function getAvatarElement(name) {
@@ -456,13 +558,14 @@ function toggleUyesBubble({ player, active }) {
 }
 
 function resetGameUI() {
+    gameStarted = true;
     topDiscard = null;
     myHand = [];
     myTurn = false;
     isClockwise = true;
+    drawStack = 0;
     updateDirectionIcon();
 
-    // remove all active UYES bubbles from previous round
     document.querySelectorAll('.uyes-bubble.active')
         .forEach(el => el.classList.remove('active'));
 
@@ -486,10 +589,14 @@ function resetGameUI() {
         waitText.classList.add('hidden');
         waitText.style.display = 'none';
     }
+    clearInterval(turnInterval);
+    const timerEl = document.getElementById('timer');
+    if (timerEl) timerEl.textContent = '30s';
     document.getElementById('color-overlay')?.classList.remove('active');
     pendingWildCard = null;
 }
 
+// Rotate the direction icon based on play order
 function updateDirectionIcon() {
     const icon = document.querySelector('#gameDirection i');
     if (!icon) return;
