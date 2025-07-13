@@ -1,7 +1,8 @@
 /**
- * Entry point for the backend HTTP server.
- * Sets up Express with JSON parsing, cookie handling and
- * compression before mounting the API routes and Socket.IO.
+ * Entry point for the backend HTTP server. Loads middleware for JSON body
+ * parsing, cookies and compression before mounting API routes and Socket.IO.
+ * The port and public directory are configurable via `config.js` and
+ * referenced through the `PORT` and `PUBLIC_DIR` constants.
  */
 import express from 'express';
 import cookieParser from 'cookie-parser';
