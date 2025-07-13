@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 
 const avatarFiles = fs
   .readdirSync(path.join(__dirname, "../../public/images/avatars"))
-  // include all common image files instead of only those containing "avatar" in the name
   .filter(f => /\.(?:png|jpe?g|gif)$/i.test(f));
 
 import { getSession } from '../jwtSession.js';
@@ -17,7 +16,6 @@ const HAND_LIMIT = 40;
 
 
 const lobbies = {};
-// Format: { [gameCode]: { players: [], avatars: {}, maxPlayers: 5, host: string, game?: GameState } }
 
 
 function shuffle(arr) {
@@ -176,7 +174,7 @@ export function setupSocket(io) {
             }
 
             socket.join(gameCode);
-            socket.data.playerName = playerName; // 🔑 wichtig!
+            socket.data.playerName = playerName;
 
 
 
@@ -196,9 +194,6 @@ export function setupSocket(io) {
                 lobbies[gameCode].host
             );
 
-            // Wenn das Spiel bereits läuft, neuen/verbindenden Spielern den aktuellen
-            // Spielzustand senden, damit sie ihre Hand, den Ablagestapel und
-            // die anstehende Runde sehen können.
             const runningGame = lobbies[gameCode].game;
             if (runningGame) {
                 socket.emit('game-started');
@@ -236,7 +231,6 @@ export function setupSocket(io) {
                 lobbies[gameCode].host
             );
 
-            // Dem gekickten Spieler Bescheid geben & rausschmeißen
             for (const [id, s] of io.sockets.sockets) {
                 if (s.data?.playerName === playerNameToKick && s.rooms.has(gameCode)) {
                     s.emit("kicked");
@@ -282,7 +276,6 @@ export function setupSocket(io) {
 
             if (!lobbies[gameCode]) return;
 
-            // Spieler aus der Lobby entfernen
             lobbies[gameCode].players = lobbies[gameCode].players.filter(p => p !== playerName);
             delete lobbies[gameCode].avatars[playerName];
             if (lobbies[gameCode].host === playerName) {
@@ -290,16 +283,13 @@ export function setupSocket(io) {
                 notifyHost(io, gameCode, lobbies[gameCode].host);
             }
 
-            // Raum verlassen
             socket.leave(gameCode);
 
-            // Wenn leer, löschen
             if (lobbies[gameCode].players.length === 0) {
                 delete lobbies[gameCode];
                 return;
             }
 
-            // An alle: aktualisierte Spieler
             io.to(gameCode).emit(
                 "update-lobby",
                 lobbies[gameCode].players,
@@ -313,7 +303,7 @@ export function setupSocket(io) {
             const lobby = lobbies[gameCode];
             if (!lobby) return;
             if (lobby.host && socket.data.playerName !== lobby.host) return;
-            if (lobby.game) return; // already running
+            if (lobby.game) return;
 
             const game = {
                 deck: createDeck(lobby.settings),
@@ -336,7 +326,6 @@ export function setupSocket(io) {
                 socket.emit('start-game-error', err.message);
                 return;
             }
-            // Zufällig bestimmen, welcher Spieler beginnt
             game.current = Math.floor(Math.random() * game.turnOrder.length);
             lobby.game = game;
 
@@ -511,7 +500,6 @@ export function setupSocket(io) {
             const name = playerName || socket.data.playerName;
             if (!lobby) return;
 
-            // remove from lobby
             lobby.players = lobby.players.filter(p => p !== name);
             delete lobby.avatars[name];
             if (lobby.host === name) {
@@ -529,7 +517,6 @@ export function setupSocket(io) {
                 lobby.host
             );
 
-            // remove from game state
             if (game) {
                 const idx = game.turnOrder.indexOf(name);
                 if (idx !== -1) {
@@ -569,7 +556,6 @@ export function setupSocket(io) {
 
 
         socket.on("disconnect", () => {
-            // Optional: du kannst hier aus der Lobby per socket-to-player Map löschen
         });
     });
 }

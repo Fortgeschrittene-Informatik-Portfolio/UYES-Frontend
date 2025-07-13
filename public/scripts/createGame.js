@@ -26,13 +26,13 @@ export function initCreateGame() {
 
         subtractBtn?.addEventListener('click', () => {
             slider.stepDown();
-            slider.dispatchEvent(new Event('input')); // Trigger update
+            slider.dispatchEvent(new Event('input'));
             updateDisplay();
         });
 
         addBtn?.addEventListener('click', () => {
             slider.stepUp();
-            slider.dispatchEvent(new Event('input')); // Trigger update
+            slider.dispatchEvent(new Event('input'));
             updateDisplay();
         });
 
@@ -47,14 +47,12 @@ export function initCreateGame() {
         const checkboxes = Array.from(document.querySelectorAll(groupSelector));
         const selectAll = document.getElementById(selectAllId);
 
-        // Event: Select All → (De)select all others
         selectAll?.addEventListener('change', () => {
             checkboxes.forEach(cb => {
                 if (cb.id !== selectAllId) cb.checked = selectAll.checked;
             });
         });
 
-        // Event: any other checkbox → update Select All
         checkboxes.forEach(cb => {
             if (cb.id === selectAllId) return;
 
@@ -73,7 +71,7 @@ export function initCreateGame() {
         e.preventDefault();
 
         const data = {
-            name: document.getElementById("NameInput").value || "", // leer = Zufallsname
+            name: document.getElementById("NameInput").value || "",
             settings: {
                 players: document.getElementById("playerSlider").value,
                 cards: document.getElementById("cardSlider").value,
@@ -83,7 +81,7 @@ export function initCreateGame() {
                 wild: document.getElementById("wild").checked,
                 wild4: document.getElementById("wild+4").checked
             },
-            role: "host" // 💡 Das ist wichtig – Host-Flag direkt mitgeben
+            role: "host"
         };
 
         sessionStorage.setItem("gameData", JSON.stringify(data));
@@ -96,7 +94,7 @@ export function initCreateGame() {
         });
 
         if (response.redirected) {
-            window.location.href = response.url; // Weiterleiten
+            window.location.href = response.url;
         }
     });
 

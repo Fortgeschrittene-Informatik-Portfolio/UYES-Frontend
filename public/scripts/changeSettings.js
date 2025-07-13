@@ -56,7 +56,6 @@ export function initChangeSettings() {
         });
     }
 
-    // player count cannot be changed after lobby creation
     setupAmountControls('cardSlider', 'cardCount', '.subtract', '.add');
     setupSelectAllCheckbox('#special-cards input[type="checkbox"]', 'check-all');
 

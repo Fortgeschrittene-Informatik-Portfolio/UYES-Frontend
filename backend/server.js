@@ -26,7 +26,6 @@ app.use('/', routes);
 const server = createServer(app);
 const io = new Server(server);
 
-// 🧠 Socket-Handler starten
 setupSocket(io);
 
 server.listen(PORT, '0.0.0.0', () => {
