@@ -1,3 +1,4 @@
+// Helper for numeric input sliders with +/- buttons
 export function setupAmountControls(sliderId, displayId, subtractSelector, addSelector) {
     const slider = document.getElementById(sliderId);
     const display = document.getElementById(displayId);
@@ -24,6 +25,7 @@ export function setupAmountControls(sliderId, displayId, subtractSelector, addSe
     updateDisplay();
 }
 
+// Utility for "select all" checkboxes
 export function setupSelectAllCheckbox(groupSelector, selectAllId) {
     const checkboxes = Array.from(document.querySelectorAll(groupSelector));
     const selectAll = document.getElementById(selectAllId);

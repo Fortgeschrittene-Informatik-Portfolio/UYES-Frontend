@@ -1,3 +1,4 @@
+// Core gameplay logic: manages drag & drop and real-time game events
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
@@ -103,6 +104,7 @@ export async function initGameplay() {
             socket.emit('draw-card', gameCode);
         }
     });
+    // Allow dragging from the draw pile to pick up a card
     drawPile?.addEventListener('dragstart', (e) => {
         if (!myTurn) {
             e.preventDefault();
@@ -112,6 +114,7 @@ export async function initGameplay() {
     });
 
     const handContainer = document.getElementById('player-hand-container');
+    // Dropping the draw pile on the hand triggers a draw
     handContainer?.addEventListener('dragover', (e) => {
         
         if (myTurn) {
@@ -127,6 +130,7 @@ export async function initGameplay() {
     }, true);
 
     const discard = document.getElementById('discard-pile');
+    // Target area for playing a card
     discard?.addEventListener('dragover', (e) => {
         e.preventDefault();
     });
@@ -237,6 +241,7 @@ function renderHand(cards) {
         const playable = myTurn && isCardPlayable(card);
         span.draggable = playable;
         if (playable) {
+            // Allow dragging playable cards to the discard pile
             span.addEventListener('dragstart', (e) => {
                 e.dataTransfer.setData('application/json', JSON.stringify(card));
             });
@@ -266,6 +271,7 @@ function renderHand(cards) {
     }
 }
 
+// Update UI when a new player turn begins
 function highlightTurn(data) {
     const name = typeof data === 'string' ? data : data.player;
     const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
@@ -590,6 +596,7 @@ function resetGameUI() {
     pendingWildCard = null;
 }
 
+// Rotate the direction icon based on play order
 function updateDirectionIcon() {
     const icon = document.querySelector('#gameDirection i');
     if (!icon) return;

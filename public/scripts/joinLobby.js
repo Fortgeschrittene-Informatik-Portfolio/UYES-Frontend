@@ -1,3 +1,4 @@
+// Join lobby form functionality
 export function initJoinLobby() {
 
     document.getElementById("joinBackBtn")?.addEventListener("click", () => {
