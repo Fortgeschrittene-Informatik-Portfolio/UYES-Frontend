@@ -1,3 +1,4 @@
+/** Page showing project information. */
 export function initAboutPage() {
 
     document.getElementById("back-to-main-menu")?.addEventListener("click", () => {

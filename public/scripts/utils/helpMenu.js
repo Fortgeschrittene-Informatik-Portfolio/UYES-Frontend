@@ -1,3 +1,6 @@
+/**
+ * Provides in-game help overlay and exit confirmation dialogs.
+ */
 export function helpFunctionality(socket, getGameCode, playerName) {
     const helpBtn = document.getElementById("helpBtnLobby");
     const helpDiv = document.getElementById("helpButtonClicked");

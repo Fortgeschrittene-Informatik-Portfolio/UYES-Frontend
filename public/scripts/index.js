@@ -1,3 +1,7 @@
+/**
+ * Entry script loaded on every page.
+ * Initializes the correct page module and starts background music.
+ */
 import { initStartSite } from './startSite.js';
 import { initAboutPage } from './aboutPage.js';
 import { initHelpPage } from './helpPage.js';

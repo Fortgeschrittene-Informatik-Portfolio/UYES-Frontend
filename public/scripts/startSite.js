@@ -1,3 +1,7 @@
+/**
+ * Front page script.
+ * Handles intro walkthrough and navigation buttons.
+ */
 import { handleIntro } from './utils/intros.js';
 
 export function initStartSite() {

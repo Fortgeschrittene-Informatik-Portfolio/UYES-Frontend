@@ -1,3 +1,8 @@
+/**
+ * Client side logic for the main gameplay screen.
+ * Manages card animations, drag and drop and communicates
+ * with the server via Socket.IO.
+ */
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
@@ -103,6 +108,7 @@ export async function initGameplay() {
             socket.emit('draw-card', gameCode);
         }
     });
+    // allow dragging from the draw pile to the hand to trigger drawing
     drawPile?.addEventListener('dragstart', (e) => {
         if (!myTurn) {
             e.preventDefault();
@@ -112,8 +118,8 @@ export async function initGameplay() {
     });
 
     const handContainer = document.getElementById('player-hand-container');
+    // enable dropping the draw pile back onto the hand area
     handContainer?.addEventListener('dragover', (e) => {
-        
         if (myTurn) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
@@ -127,9 +133,11 @@ export async function initGameplay() {
     }, true);
 
     const discard = document.getElementById('discard-pile');
+    // dropping a card onto the discard pile plays it
     discard?.addEventListener('dragover', (e) => {
         e.preventDefault();
     });
+    // drop a card JSON payload here to play it
     discard?.addEventListener('drop', (e) => {
         e.preventDefault();
         const data = e.dataTransfer.getData('application/json');

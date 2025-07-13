@@ -1,3 +1,6 @@
+/**
+ * Page for adjusting lobby settings mid game.
+ */
 import { io } from "/socket.io/socket.io.esm.min.js";
 
 export function initChangeSettings() {

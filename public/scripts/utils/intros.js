@@ -1,3 +1,6 @@
+/**
+ * Small helper to show onboarding dialogs once per page.
+ */
 export function handleIntro({ flagName, lastStepId, resetBtnId, skipBtnId }) {
 
     document.getElementById(resetBtnId)?.addEventListener("click", () => {

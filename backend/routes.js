@@ -5,6 +5,8 @@ import { createLobby } from './logic/lobbyHandling.js';
 import { getLobbyMeta } from './logic/socketHandler.js';
 import { setSession } from './jwtSession.js';
 
+/** Express router serving the main HTML pages and API endpoints. */
+
 
 
 
@@ -13,46 +15,62 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
+/**
+ * Router exported by the server.
+ * Handles navigation routes and small API endpoints.
+ */
+
+// Landing page
 router.get('/start', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/startSite.html'));
 });
 
+// Information about the project
 router.get('/about', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/aboutPage.html'));
 });
 
+// Help and volume settings
 router.get('/help', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/helpPage.html'));
 });
 
+// Display game rules
 router.get('/rules', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/rulesPage.html'));
 });
 
+// Choose between creating or joining a lobby
 router.get('/start/game', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/chooseLobby.html'));
 });
 
+// Create lobby page
 router.get('/start/game/create', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/createGame.html'));
 });
 
+// Lobby settings page
 router.get('/change-settings', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/changeSettings.html'));
 });
 
+// Join existing lobby page
 router.get('/start/game/join', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/joinLobby.html'));
 });
 
+// Waiting lobby after creation or join
 router.get('/lobby', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/lobby.html'));
 });
 
+// Main gameplay view
 router.get('/gameplay', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/html/gameplay.html'));
 });
 
+// Current lobby data for client side pages
 router.get("/api/lobbyData", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });
@@ -72,6 +90,7 @@ router.get("/api/lobbyData", (req, res) => {
     });
 });
 
+// Update lobby settings via host
 router.post('/api/updateSettings', (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: 'Keine Session aktiv' });
@@ -91,6 +110,7 @@ router.post('/api/updateSettings', (req, res) => {
     res.json({ success: true });
 });
 
+// Create a new lobby and session
 router.post("/api/createGame", (req, res) => {
     const lobby = createLobby(req.body);
 
@@ -103,6 +123,7 @@ router.post("/api/createGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+// Join an existing lobby
 router.post("/api/joinGame", (req, res) => {
     const code = String(req.body.code || "").trim();
     const name = (req.body.playerName || "").trim();
@@ -128,6 +149,7 @@ router.post("/api/joinGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+// Store new lobby code in the session
 router.put("/api/gameCode", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });

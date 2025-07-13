@@ -1,3 +1,7 @@
+/**
+ * Handles the join lobby form where a player enters the
+ * lobby code and optional name.
+ */
 export function initJoinLobby() {
 
     document.getElementById("joinBackBtn")?.addEventListener("click", () => {

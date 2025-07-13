@@ -1,3 +1,7 @@
+/**
+ * Lets the user choose between creating a new lobby or
+ * joining an existing one.
+ */
 import { handleIntro } from './utils/intros.js';
 
 export function initChooseLobby() {

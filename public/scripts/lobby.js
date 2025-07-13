@@ -1,3 +1,7 @@
+/**
+ * Handles the lobby waiting room. Updates player list in real time
+ * via Socket.IO and allows host to start or manage the lobby.
+ */
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
@@ -24,6 +28,7 @@ export async function initLobbyHost() {
 
     renderLobby(gameData, [playerName], hostName);
 
+    // receive updated player list from server
     socket.on("update-lobby", (players, _maxPlayers, _avatars, newHost) => {
         hostName = newHost;
         renderLobby(gameData, players, hostName);
@@ -148,6 +153,7 @@ function renderLobby(gameData, playerList, hostName) {
         container.appendChild(playerDiv);
     }
 
+    // attach kick buttons to each player row
     document.querySelectorAll(".removePlayerButton[data-player]").forEach(btn => {
         btn.addEventListener("click", () => {
             const playerToKick = btn.getAttribute("data-player");

@@ -1,3 +1,7 @@
+/**
+ * Provides a simple help and options overlay. Lets the user
+ * adjust background music volume and navigate to the rules.
+ */
 import { startMusic, setVolume, getVolume } from './utils/music.js';
 
 export function initHelpPage() {

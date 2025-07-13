@@ -6,17 +6,21 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// available avatar images for players
 const avatarFiles = fs
   .readdirSync(path.join(__dirname, "../../public/images/avatars"))
   .filter(f => /\.(?:png|jpe?g|gif)$/i.test(f));
 
 import { getSession } from '../jwtSession.js';
 
+// maximum number of cards a player can hold
 const HAND_LIMIT = 40;
 
-
+// In-memory storage of lobby state keyed by lobby code
 const lobbies = {};
 
+
+// ---- deck creation helpers ----
 
 function shuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -26,6 +30,7 @@ function shuffle(arr) {
     return arr;
 }
 
+// create a new UNO-like deck based on enabled special cards
 function createDeck(settings = {}) {
     const colors = ['red', 'yellow', 'green', 'blue'];
     const deck = [];
@@ -57,6 +62,7 @@ function createDeck(settings = {}) {
     return shuffle(deck);
 }
 
+// populate player hands and discard pile
 function dealInitialCards(game, count = 5, deckSettings = {}) {
     const minDeck = HAND_LIMIT * game.turnOrder.length + 1;
     while (game.deck.length < minDeck) {
@@ -68,11 +74,13 @@ function dealInitialCards(game, count = 5, deckSettings = {}) {
     game.discard.push(game.deck.pop());
 }
 
+// move turn pointer to next player
 function nextTurn(game) {
     game.current = (game.current + 1) % game.turnOrder.length;
     return game.turnOrder[game.current];
 }
 
+// draw `count` cards for a specific player
 function drawCards(game, player, count) {
     const drawn = [];
     for (let i = 0; i < count; i++) {
@@ -88,6 +96,7 @@ function drawCards(game, player, count) {
     return drawn;
 }
 
+// helpers for socket specific session retrieval
 function getSessionFromSocket(socket) {
     const cookieStr = socket.handshake.headers.cookie || '';
     const cookies = {};
@@ -99,6 +108,7 @@ function getSessionFromSocket(socket) {
     return getSession({ cookies });
 }
 
+// send current card counts to all players
 function broadcastHandCounts(io, gameCode, game) {
     const g = game || lobbies[gameCode]?.game;
     if (!g) return;
@@ -107,6 +117,7 @@ function broadcastHandCounts(io, gameCode, game) {
 
 }
 
+// inform new host after kick or leave
 function notifyHost(io, gameCode, hostName) {
     if (!hostName) return;
     for (const [_id, s] of io.sockets.sockets) {
@@ -117,6 +128,7 @@ function notifyHost(io, gameCode, hostName) {
     }
 }
 
+// check whether a player called UYES in time
 function handleUyesEnd(io, gameCode, game, player) {
     const pressed = !!game.uyesPressed[player];
     delete game.uyesPressed[player];
@@ -141,9 +153,12 @@ function handleUyesEnd(io, gameCode, game, player) {
     }
 }
 
+// ---- socket event handling ----
+
 export function setupSocket(io) {
     io.on("connection", (socket) => {
         socket.data.session = getSessionFromSocket(socket);
+        // client joins or creates a lobby
         socket.on("join-lobby", (gameCode, playerName, maxPlayersFromHost) => {
             if (!lobbies[gameCode]) {
                 if (maxPlayersFromHost) {
@@ -211,6 +226,7 @@ export function setupSocket(io) {
 
 
         });
+        // host removes a player from lobby
         socket.on("kick-player", (gameCode, playerNameToKick) => {
             if (!lobbies[gameCode]) return;
 
@@ -239,6 +255,7 @@ export function setupSocket(io) {
             }
         });
 
+        // host closes the lobby entirely
         socket.on("close-lobby", (gameCode) => {
             const lobby = lobbies[gameCode];
             if (!lobby) return;
@@ -257,6 +274,7 @@ export function setupSocket(io) {
             delete lobbies[gameCode];
             console.log(`\u{1F512} Lobby ${gameCode} geschlossen von ${socket.data.playerName}`);
         });
+        // lobby host changes the game code
         socket.on("change-code", (oldCode, newCode) => {
             if (!lobbies[oldCode]) return;
 
@@ -272,6 +290,7 @@ export function setupSocket(io) {
 
             io.to(newCode).emit("update-code", newCode);
         });
+        // client leaves lobby voluntarily
         socket.on("leave-lobby", (gameCode, playerName) => {
 
             if (!lobbies[gameCode]) return;
@@ -299,6 +318,7 @@ export function setupSocket(io) {
             );
         });
 
+        // host starts the game
         socket.on('start-game', (gameCode) => {
             const lobby = lobbies[gameCode];
             if (!lobby) return;
@@ -349,6 +369,7 @@ export function setupSocket(io) {
             });
         });
 
+        // player attempts to play a card
         socket.on('play-card', (gameCode, card) => {
             const lobby = lobbies[gameCode];
             const game = lobby?.game;
@@ -436,6 +457,7 @@ export function setupSocket(io) {
             io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt, drawStack: game.drawStack });
         });
 
+        // player draws from the pile
         socket.on('draw-card', (gameCode) => {
             const lobby = lobbies[gameCode];
             const game = lobby?.game;
@@ -473,6 +495,7 @@ export function setupSocket(io) {
             io.to(gameCode).emit('player-turn', { player: next, startedAt: game.turnStartedAt, drawStack: game.drawStack });
         });
 
+        // player hits the UYES button
         socket.on('uyes', (gameCode) => {
             const lobby = lobbies[gameCode];
             const game = lobby?.game;
@@ -483,6 +506,7 @@ export function setupSocket(io) {
             io.to(gameCode).emit('player-uyes', { player, active: true });
         });
 
+        // cycle to a new random avatar
         socket.on('change-avatar', (gameCode) => {
             const lobby = lobbies[gameCode];
             if (!lobby) return;
@@ -494,6 +518,7 @@ export function setupSocket(io) {
             io.to(gameCode).emit('avatar-changed', { player, file });
         });
 
+        // player exits the running game
         socket.on('leave-game', (gameCode, playerName) => {
             const lobby = lobbies[gameCode];
             const game = lobby?.game;
@@ -555,9 +580,13 @@ export function setupSocket(io) {
         });
 
 
+        // cleanup happens automatically on disconnect
         socket.on("disconnect", () => {
         });
     });
 }
 
-export function getLobbyMeta(code) {    return lobbies[code] || null;}
+/** Return meta information for a specific lobby code. */
+export function getLobbyMeta(code) {
+    return lobbies[code] || null;
+}

@@ -1,3 +1,7 @@
+/**
+ * Logic for the create game page where the host
+ * configures player count, card count and special cards.
+ */
 import { handleIntro } from './utils/intros.js';
 
 export function initCreateGame() {
