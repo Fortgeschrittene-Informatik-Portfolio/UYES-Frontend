@@ -13,45 +13,24 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-router.get('/start', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/startSite.html'));
-});
+const htmlRoutes = {
+    '/start': 'startSite.html',
+    '/about': 'aboutPage.html',
+    '/help': 'helpPage.html',
+    '/rules': 'rulesPage.html',
+    '/start/game': 'chooseLobby.html',
+    '/start/game/create': 'createGame.html',
+    '/change-settings': 'changeSettings.html',
+    '/start/game/join': 'joinLobby.html',
+    '/lobby': 'lobby.html',
+    '/gameplay': 'gameplay.html'
+};
 
-router.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/aboutPage.html'));
-});
-
-router.get('/help', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/helpPage.html'));
-});
-
-router.get('/rules', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/rulesPage.html'));
-});
-
-router.get('/start/game', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/chooseLobby.html'));
-});
-
-router.get('/start/game/create', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/createGame.html'));
-});
-
-router.get('/change-settings', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/changeSettings.html'));
-});
-
-router.get('/start/game/join', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/joinLobby.html'));
-});
-
-router.get('/lobby', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/lobby.html'));
-});
-
-router.get('/gameplay', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/html/gameplay.html'));
-});
+for (const [route, file] of Object.entries(htmlRoutes)) {
+    router.get(route, (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/html', file));
+    });
+}
 
 router.get("/api/lobbyData", (req, res) => {
     if (!req.session) {
