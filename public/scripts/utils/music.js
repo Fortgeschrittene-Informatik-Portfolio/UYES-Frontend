@@ -1,3 +1,4 @@
+// Simple utility for background music persistence across pages
 const MUSIC_SRC = '/music/background.mp3';
 const BG_MUSIC_TIME_KEY = 'bg-music-time';
 

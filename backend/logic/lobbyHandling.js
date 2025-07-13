@@ -1,3 +1,8 @@
+/**
+ * Helpers for lobby creation. Random "funny" names are used when a
+ * player joins without specifying one. Lobbies are identified by a
+ * nine digit game code.
+ */
 const funnyNames = [
     "U-Norris", "Taylor Swift", "UNO DiCaprio", "Cardi Bitch",
     "Elon Shuffle", "Snoop Draw Two", "Oprah Skipfrey", "Keanu Draw-Reeves",
@@ -19,10 +24,19 @@ function getRandomName() {
     return funnyNames[Math.floor(Math.random() * funnyNames.length)];
 }
 
+/**
+ * Generate a random nine digit lobby code.
+ * @returns {string} numeric string used to join a lobby
+ */
 export function generateGameCode() {
     return Math.floor(100000000 + Math.random() * 900000000).toString();
 }
 
+/**
+ * Create meta information for a new lobby.
+ * @param {{name?:string, settings:object}} param0 player name and lobby settings
+ * @returns {{gameId:string, playerName:string, role:string, settings:object}}
+ */
 export function createLobby({ name, settings }) {
     const gameId = generateGameCode();
     const playerName = name?.trim() || getRandomName();

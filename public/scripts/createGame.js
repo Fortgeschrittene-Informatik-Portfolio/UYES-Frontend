@@ -1,6 +1,8 @@
+// Handles the game creation form and intro sequence
 import { handleIntro } from './utils/intros.js';
 import { setupAmountControls, setupSelectAllCheckbox } from './utils/uiHelpers.js';
 
+/** Initialise form controls for the create game page. */
 export function initCreateGame() {
 
 

@@ -1,6 +1,8 @@
+// Settings page where the host can adjust card rules before starting
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { setupAmountControls, setupSelectAllCheckbox } from './utils/uiHelpers.js';
 
+/** Initialize lobby settings controls and emit changes to players. */
 export function initChangeSettings() {
     const socket = io();
     let gameCode;

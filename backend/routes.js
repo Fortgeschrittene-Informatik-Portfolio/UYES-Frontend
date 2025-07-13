@@ -27,11 +27,13 @@ const htmlRoutes = {
 };
 
 for (const [route, file] of Object.entries(htmlRoutes)) {
+    // Serve the matching HTML file for each path
     router.get(route, (req, res) => {
         res.sendFile(path.join(__dirname, '../public/html', file));
     });
 }
 
+// Return session and lobby information for the current player
 router.get("/api/lobbyData", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });
@@ -51,6 +53,7 @@ router.get("/api/lobbyData", (req, res) => {
     });
 });
 
+// Update lobby settings when the host changes them
 router.post('/api/updateSettings', (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: 'Keine Session aktiv' });
@@ -70,6 +73,7 @@ router.post('/api/updateSettings', (req, res) => {
     res.json({ success: true });
 });
 
+// Create a new lobby and store session data
 router.post("/api/createGame", (req, res) => {
     const lobby = createLobby(req.body);
 
@@ -82,6 +86,7 @@ router.post("/api/createGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+// Join an existing lobby by game code
 router.post("/api/joinGame", (req, res) => {
     const code = String(req.body.code || "").trim();
     const name = (req.body.playerName || "").trim();
@@ -107,6 +112,7 @@ router.post("/api/joinGame", (req, res) => {
     res.redirect("/lobby");
 });
 
+// Change the lobby code while keeping players connected
 router.put("/api/gameCode", (req, res) => {
     if (!req.session) {
         return res.status(400).json({ error: "Keine Session aktiv" });

@@ -1,8 +1,10 @@
+// Lobby waiting room logic and dynamic player list updates
 import { io } from "/socket.io/socket.io.esm.min.js";
 import { helpFunctionality } from './utils/helpMenu.js';
 const socket = io();
 let currentGameCode;
 
+/** Entry point for the lobby page. */
 export async function initLobbyHost() {
     const res = await fetch("/api/lobbyData");
     const gameData = await res.json();
@@ -24,9 +26,11 @@ export async function initLobbyHost() {
 
     renderLobby(gameData, [playerName], hostName);
 
+    // Update player list and host when someone joins or leaves
     socket.on("update-lobby", (players, _maxPlayers, _avatars, newHost) => {
         hostName = newHost;
         renderLobby(gameData, players, hostName);
+        // Disable start button until enough players joined
         checkIfLobbyFull(players, maxPlayers);
         if (playerName === hostName) {
             document.body.classList.remove("Joiner");
@@ -79,6 +83,7 @@ export async function initLobbyHost() {
         window.location.href = "/start/game";
     });
 
+    // Refresh code display when host changes the lobby code
     socket.on("update-code", async (newCode) => {
         currentGameCode = newCode;
         codeElement.textContent = `Game-Code: #${newCode}`;
@@ -111,6 +116,7 @@ export async function initLobbyHost() {
     socket.on("player-turn", redirectToGame);
 
 
+    // Register generic help/exit menu handlers
     helpFunctionality(socket, () => currentGameCode, playerName);
 }
 
@@ -148,6 +154,7 @@ function renderLobby(gameData, playerList, hostName) {
         container.appendChild(playerDiv);
     }
 
+    // Kick buttons for the host
     document.querySelectorAll(".removePlayerButton[data-player]").forEach(btn => {
         btn.addEventListener("click", () => {
             const playerToKick = btn.getAttribute("data-player");
@@ -159,6 +166,7 @@ function renderLobby(gameData, playerList, hostName) {
 function checkIfLobbyFull(currentPlayers, maxPlayers) {
     const startBtn = document.getElementById("startGameplay");
     if (startBtn) {
+        // Start button is only active when lobby is full
         if (currentPlayers.length >= maxPlayers) {
             startBtn.classList.remove("notFull");
         } else {

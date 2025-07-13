@@ -1,5 +1,7 @@
+// Behaviour for the landing page: shows intro dialogs and navigation buttons
 import { handleIntro } from './utils/intros.js';
 
+/** Initialize the start page buttons and intro. */
 export function initStartSite() {
 
     handleIntro({

@@ -1,3 +1,4 @@
+// Display multi-step introductions on first visit
 export function handleIntro({ flagName, lastStepId, resetBtnId, skipBtnId }) {
 
     document.getElementById(resetBtnId)?.addEventListener("click", () => {
