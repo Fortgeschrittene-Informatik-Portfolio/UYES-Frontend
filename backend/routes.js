@@ -13,6 +13,11 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
+// Redirect the base URL to the start page
+router.get('/', (req, res) => {
+    res.redirect('/start');
+});
+
 const htmlRoutes = {
     '/start': 'startSite.html',
     '/about': 'aboutPage.html',

@@ -35,9 +35,11 @@ button, .button {
     box-shadow: 0 0.25em 0 #808080;
     background-color: var(--primary-yellow) ;
     border: solid 0.5cqh white;
+    border: solid 0.5vh white; /* Safari fallback */
     border-radius: 15%;
     font-weight: 800;
     font-size: 2.5cqw;
+    font-size: max(1rem, 2.5vw); /* Safari fallback */
     margin: 1em;
     aspect-ratio: 2.6/1;
 }
