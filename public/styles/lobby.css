@@ -92,9 +92,12 @@
 #refresh-code-button{
     flex-grow: 0;
     font-size: 1.5cqw;
-    width: 30%;
+    font-size: max(1rem, 1.5vw); /* Safari fallback */
+    width: auto;
+    padding: 0.5em 1em;
     text-align: center;
     margin: 2%;
+    white-space: nowrap;
 }
 
 
@@ -226,7 +229,8 @@
     }
     #refresh-code-button{
         font-size: 120%;
-        width: 35%;
+        width: auto;
+        padding: 0.5em 1em;
         margin-right: 5%;
     }
     #helpBtnLobby{
