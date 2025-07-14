@@ -18,17 +18,14 @@
 /* Schriftgröße für bestimmte Intros */
 #intro4 .speech.startsite {
     font-size: 2.5cqw;
-    font-size: max(1rem, 2.5vw);
 }
 
 #intro5 .speech.startsite {
     font-size: 2.5cqw;
-    font-size: max(1rem, 2.5vw);
 }
 
 #intro65 .speech.startsite {
     font-size: 4.5cqw;
-    font-size: max(1.5rem, 4.5vw);
 }
 
 
@@ -37,11 +34,8 @@ button.introduction.startsite, .button.introduction.startsite{
     left: 75%;
     top: 80%;
     width: 7cqw; /* cqw = container width – kann bei kleinen Containern problematisch sein -> media queries */
-    width: 7vw;
     font-size: 2.5cqw;
-    font-size: max(1rem, 2.5vw);
     border: 0.25cqw solid black;
-    border: 0.25vw solid black;
 }
 
 
