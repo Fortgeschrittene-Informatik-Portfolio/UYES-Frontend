@@ -91,12 +91,10 @@
 
 #refresh-code-button{
     flex-grow: 0;
-    font-size: max(1rem, 1.5vw); /* Safari fallback */
-    width: auto;
-    padding: 0.5em 1em;
+    font-size: 1.5cqw;
+    width: 30%;
     text-align: center;
     margin: 2%;
-    white-space: nowrap;
 }
 
 
@@ -122,18 +120,18 @@
         font-weight: 800;
         text-align:center;
         margin: 0;
-        font-size: max(1.5rem, 3vw);
+        font-size: 3cqw;
     }
 
 }
 #hostTag{
     color: black;
-    -webkit-text-stroke: 0.05vw white;
+    -webkit-text-stroke: 0.05cqw white;
     font-weight: 800;
     position: absolute;
     left: 30%;
     /*height: 25%;*/
-    font-size: max(1rem, 1.7vw);
+    font-size: 1.7cqw;
     +p{
         text-decoration: underline;
     }
@@ -159,12 +157,12 @@
             }
         }
         &.takenSlot{
-            font-size: max(1rem, 2vw);
+            font-size: 2cqw;
             +.removePlayerButton{
                 padding: initial;
                 box-shadow: initial;
                 background-color: lightgrey;
-                border: 0.25vw solid dimgrey;
+                border: 0.25cqw solid dimgrey;
                 font-weight: 800;
                 margin: initial;
 
@@ -174,8 +172,8 @@
                 transform: translateX(600%);
 
                 z-index: 5;
-                top: 0.1vw;
-                font-size: max(0.75rem, 1vw);
+                top: 0.1cqw;
+                font-size: 1cqw;
 
                 &:active{
                     transform: translateX(600%) scale(1.2);
@@ -200,7 +198,7 @@
     &.notFull{
         pointer-events: none;
         background-color: darkgrey;
-        border: solid 0.5vh dimgrey;
+        border: solid 0.5cqh dimgrey;
     }
 }
 
@@ -228,8 +226,7 @@
     }
     #refresh-code-button{
         font-size: 120%;
-        width: auto;
-        padding: 0.5em 1em;
+        width: 35%;
         margin-right: 5%;
     }
     #helpBtnLobby{

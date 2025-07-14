@@ -44,20 +44,16 @@ div#menu {
         width: 15%;
         background-color: var(--primary-yellow);
         border: solid 0.5cqh white; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
-        border: solid 0.5vh white; /* Safari fallback */
         border-radius: 15%;
         font-weight: 800;
         font-size: 3.5cqw; /* ❗️cqw = container-width unit – modern, aber nicht überall unterstützt */
-        font-size: max(1rem, 3.5vw);
     }
 
     #start {
         width: 20%;
-        font-size: max(1rem, 3.5vw); /* Safari fallback */
         margin-left: 5%;
         margin-right: 5%;
         font-size: 4.5cqw; /* größerer Start-Button */
-        font-size: max(1.2rem, 4.5vw); /* Safari fallback */
     }
 }
 
@@ -67,7 +63,6 @@ div#menu {
     aspect-ratio: 1/1;
     width: 25%;
     max-width: 100cqh; /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
-    max-width: 100vh;
     background-image: url("../images/group.png");
     background-size: contain; /* Inhalt skalieren, ohne zu beschneiden */
 }
