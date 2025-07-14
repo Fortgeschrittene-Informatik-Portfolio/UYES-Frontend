@@ -27,7 +27,8 @@ app.use(jwtSessionMiddleware);
 // Enable gzip compression for static assets
 app.use(compression());
 // Serve static assets from the public directory
-const staticOptions = process.env.NODE_ENV === 'production' ? { maxAge: '1d' } : { maxAge: 0 };
+const staticOptions =
+  process.env.NODE_ENV === 'production' ? { maxAge: '1d' } : { maxAge: 0 };
 app.use(express.static(PUBLIC_DIR, staticOptions));
 // HTML routes are defined in backend/routes.js
 app.use('/', routes);
@@ -41,15 +42,17 @@ setupSocket(io);
 
 // Start listening for incoming connections
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`🟢 Server läuft auf http://0.0.0.0:${PORT}/start`);
+  console.log(`🟢 Server läuft auf http://0.0.0.0:${PORT}/start`);
 });
 
 function shutdown() {
-    // Gracefully stop accepting new connections
+  // Close Socket.IO connections and stop accepting new connections
+  io.close(() => {
     server.close(() => {
-        console.log('🔴 Server gestoppt');
-        process.exit(0);
+      console.log('🔴 Server gestoppt');
+      process.exit(0);
     });
+  });
 }
 
 process.on('SIGINT', shutdown);
