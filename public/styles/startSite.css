@@ -20,6 +20,11 @@ div#main {
     text-align: center;
     grid-column: 1 / -1;
     grid-row: 2;
+    &.startSite{
+        display: flex;
+        justify-content: center;
+
+    }
 }
 
 /* Unteres Menü */
