@@ -8,7 +8,8 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:css": "postcss public/styles/*.css -d dist/styles"
   },
   "repository": {
     "type": "git",
@@ -30,8 +31,17 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "nodemon": "^3.1.10",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "postcss-nested": "^7.0.2",
     "prettier": "^3.6.2"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
 }
