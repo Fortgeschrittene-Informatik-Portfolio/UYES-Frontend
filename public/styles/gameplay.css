@@ -8,9 +8,11 @@
     pointer-events: none;
     background-color: dimgrey;
     border: solid 0.5cqh darkgrey; /* ❗️cqh = container-height unit – bitte check Kompatibilität */
+    border: solid 0.5vh darkgrey; /* Safari fallback */
     border-radius: 15%;
     font-weight: 800;
     font-size: 2cqw;
+    font-size: max(1rem, 2vw);
 }
 
 #player-hand-container {

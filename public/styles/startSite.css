@@ -48,6 +48,7 @@ div#menu {
         border-radius: 15%;
         font-weight: 800;
         font-size: 3.5cqw; /* ❗️cqw = container-width unit – modern, aber nicht überall unterstützt */
+        font-size: max(1rem, 3.5vw);
     }
 
     #start {
@@ -66,6 +67,7 @@ div#menu {
     aspect-ratio: 1/1;
     width: 25%;
     max-width: 100cqh; /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
+    max-width: 100vh;
     background-image: url("../images/group.png");
     background-size: contain; /* Inhalt skalieren, ohne zu beschneiden */
 }
