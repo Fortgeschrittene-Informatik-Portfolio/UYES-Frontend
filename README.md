@@ -50,3 +50,7 @@ npm run format
 ## Browser Compatibility
 
 The frontend is tested with modern versions of Chrome, Firefox and Edge. CSS is processed with PostCSS and Autoprefixer to automatically add vendor prefixes. When container query units (`cqw`, `cqh`) are unsupported, fallback viewport units are used.
+## Media Credits
+
+Music and sound effects are provided by [Pixabay](https://pixabay.com).
+Avatar images, the start page graphics and the Eichberg image also originate from Pixabay.
