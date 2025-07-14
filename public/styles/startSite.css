@@ -64,6 +64,7 @@ div#menu {
 
 /* Bild (Gruppenbild oder ähnliches) */
 #group {
+    flex-grow: 0;
     justify-self: center;
     aspect-ratio: 1/1;
     width: 25%;
