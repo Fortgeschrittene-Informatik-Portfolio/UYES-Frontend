@@ -21,31 +21,39 @@ button.introduction.createGame {
     left: 72%;
     top: 80%;
     width: 4cqw; /* cqw = container width – kann bei kleinen Containern problematisch sein -> media queries */
+    width: 4vw;
     font-size: 1cqw;
+    font-size: max(0.75rem, 1vw);
 }
 
 .speech.createGame {
     font-size: 1.9cqw;
+    font-size: max(1rem, 1.9vw);
 }
 
 #intro2 .speech.createGame {
     font-size: 2.2cqw;
+    font-size: max(1.2rem, 2.2vw);
 }
 
 #intro7 .speech.createGame {
     font-size: 1.8cqw;
+    font-size: max(1rem, 1.8vw);
 }
 
 #intro8 .speech.createGame {
     font-size: 1.8cqw;
+    font-size: max(1rem, 1.8vw);
 }
 
 #intro9 .speech.createGame {
     font-size: 3cqw;
+    font-size: max(1.2rem, 3vw);
 }
 
 #intro85 .speech.createGame {
     font-size: 2.3cqw;
+    font-size: max(1rem, 2.3vw);
 }
 
 
@@ -121,38 +129,47 @@ body:not(:has(#intro7[open])) {
 
     .speech.createGame {
         font-size: 4.3cqw;
+        font-size: max(1.5rem, 4.3vw);
     }
 
     button.introduction.createGame {
         left: 53%;
         top: 76%;
         width: 17cqw;
+        width: 17vw;
         font-size: 3.6cqw;
+        font-size: max(1.2rem, 3.6vw);
     }
 
     /* Schriftgröße für bestimmte Intros */
     #intro2 .speech.createGame {
         font-size: 4.8cqw;
+        font-size: max(1.5rem, 4.8vw);
     }
 
     #intro3 .speech.createGame {
         font-size: 4.8cqw;
+        font-size: max(1.5rem, 4.8vw);
     }
 
     #intro7 .speech.createGame {
         font-size: 3.9cqw;
+        font-size: max(1.2rem, 3.9vw);
     }
 
     #intro8 .speech.createGame {
         font-size: 4.1cqw;
+        font-size: max(1.2rem, 4.1vw);
     }
 
     #intro85 .speech.createGame {
         font-size: 5.5cqw;
+        font-size: max(1.5rem, 5.5vw);
     }
 
     #intro9 .speech.createGame {
         font-size: 6cqw;
+        font-size: max(1.5rem, 6vw);
     }
 
 }

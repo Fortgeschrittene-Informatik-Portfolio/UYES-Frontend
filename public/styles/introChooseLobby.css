@@ -17,7 +17,9 @@ button.introduction.chooseLobby{
     left: 75%;
     top: 80%;
     width: 7cqw; /* cqw = container width – kann bei kleinen Containern problematisch sein -> media queries */
+    width: 7vw;
     font-size: 1.5cqw;
+    font-size: max(1rem, 1.5vw);
 }
 
 
