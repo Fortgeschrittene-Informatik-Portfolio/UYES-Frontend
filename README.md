@@ -14,12 +14,10 @@ Install the project dependencies:
 npm install
 ```
 
-
 Run the command again whenever new dependencies are introduced (for example,
 after pulling recent updates).
 
 Copy `.env.example` to `.env` to adjust configuration. The server uses `PORT` and `JWT_SECRET` from this file. Defaults are provided if no `.env` is present.
-
 
 Start the application in development mode with automatic reload:
 
@@ -48,3 +46,7 @@ Automatically format files using Prettier:
 ```bash
 npm run format
 ```
+
+## Browser Compatibility
+
+The frontend is tested with modern versions of Chrome, Firefox and Edge. CSS is processed with PostCSS and Autoprefixer to automatically add vendor prefixes. When container query units (`cqw`, `cqh`) are unsupported, fallback viewport units are used.
