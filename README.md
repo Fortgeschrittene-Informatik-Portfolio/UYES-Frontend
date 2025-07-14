@@ -14,12 +14,10 @@ Install the project dependencies:
 npm install
 ```
 
-
 Run the command again whenever new dependencies are introduced (for example,
 after pulling recent updates).
 
 Copy `.env.example` to `.env` to adjust configuration. The server uses `PORT` and `JWT_SECRET` from this file. Defaults are provided if no `.env` is present.
-
 
 Start the application in development mode with automatic reload:
 
@@ -48,3 +46,8 @@ Automatically format files using Prettier:
 ```bash
 npm run format
 ```
+
+## Media Credits
+
+Music and sound effects are provided by [Pixabay](https://pixabay.com).
+Avatar images, the start page graphics and the Eichberg image also originate from Pixabay.
