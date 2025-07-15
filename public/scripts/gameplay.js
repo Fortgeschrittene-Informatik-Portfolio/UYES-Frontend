@@ -7,6 +7,8 @@ let playerName;
 
 let playerAvatars = {};
 let playerList = [];
+let playerId;
+let nameMap = {};
 
 let maxPlayers;
 let avatarSlots = [];
@@ -40,8 +42,10 @@ export async function initGameplay() {
 
     gameCode = data.code;
     playerName = data.name;
+    playerId = data.id;
+    nameMap = data.nameMap || {};
     playerAvatars = data.avatars || {};
-    playerList = data.playerList || [];
+    playerList = (data.playerList || []).map(p => p.id);
 
     const role = data.role;
     if (role !== 'host') {
@@ -77,10 +81,11 @@ export async function initGameplay() {
         alert('Reached maximum amount of cards in hand.');
     });
     socket.on('player-left', ({ players, counts, player }) => {
-        if (player && player !== playerName) {
-            alert(`${player} left the game.`);
+        if (player && player !== playerId) {
+            alert(`${nameMap[player]} left the game.`);
         }
-        playerList = players.slice();
+        playerList = players.map(p => p.id);
+        counts.forEach(c => nameMap[c.id] = c.name);
         updateHandCounts(counts);
     });
     socket.on('kicked', () => {
@@ -191,11 +196,11 @@ export async function initGameplay() {
     exitBtn?.addEventListener('click', () => exitDiv?.classList.add('exitOpen'));
     stopLeaving?.addEventListener('click', () => exitDiv?.classList.remove('exitOpen'));
     leave?.addEventListener('click', () => {
-        socket.emit('leave-game', gameCode, playerName);
+        socket.emit('leave-game', gameCode, playerId);
         window.location.href = '/start/game';
     });
 
-    helpFunctionality(socket, () => gameCode, playerName);
+    helpFunctionality(socket, () => gameCode, playerId);
 
     const overlay = document.getElementById('color-overlay');
     overlay?.querySelectorAll('[data-color]').forEach(el => {
@@ -276,7 +281,7 @@ function highlightTurn(data) {
     const name = typeof data === 'string' ? data : data.player;
     const startedAt = typeof data === 'string' ? Date.now() : data.startedAt;
     drawStack = typeof data === 'object' && data.drawStack ? data.drawStack : 0;
-    myTurn = name === playerName;
+    myTurn = name === playerId;
 
     startTurnTimer(startedAt);
 
@@ -284,16 +289,16 @@ function highlightTurn(data) {
         playerList.push(playerList.shift());
     }
 
-    const turnsUntil = Math.max(0, playerList.indexOf(playerName));
+    const turnsUntil = Math.max(0, playerList.indexOf(playerId));
     const counter = document.getElementById('roundCountTurn');
     if (counter) counter.textContent = String(turnsUntil);
 
     const avatars = document.querySelectorAll('.avatar, #own-avatar');
     avatars.forEach(a => {
-        const match = a.dataset.player === name || a.dataset.playerName === name;
+        const match = a.dataset.player === name || a.dataset.playerId === name;
         a.classList.toggle('active', !!match);
     });
-    document.body.classList.toggle('my-turn', name === playerName);
+    document.body.classList.toggle('my-turn', name === playerId);
     renderHand(myHand);
 }
 
@@ -321,11 +326,11 @@ function setAvatarImages() {
     const order = [2,0,1,3];
     let idx = 0;
     for (const n of playerList) {
-        if (n === playerName) continue;
+        if (n === playerId) continue;
         const slotIndex = order[idx] ?? idx;
         const el = document.getElementById(`player${slotIndex + 1}`);
         if (el) {
-            el.dataset.player = n;
+            el.dataset.playerId = n;
             const file = playerAvatars[n];
             if (file) {
                 el.style.backgroundImage = `url('/images/avatars/${file}')`;
@@ -335,9 +340,9 @@ function setAvatarImages() {
     }
     const own = document.getElementById('own-avatar');
     if (own) {
-        own.dataset.player = playerName;
+        own.dataset.player = playerId;
         own.dataset.orientation = 'self';
-        const file = playerAvatars[playerName];
+        const file = playerAvatars[playerId];
         if (file) {
             own.style.backgroundImage = `url('/images/avatars/${file}')`;
         }
@@ -424,9 +429,9 @@ function showWinner(winner) {
     if (win) {
         const nameEl = win.querySelector('.player-name');
         if (nameEl) {
-            nameEl.textContent = winner;
+            nameEl.textContent = nameMap[winner] || winner;
         } else {
-            win.textContent = winner;
+            win.textContent = nameMap[winner] || winner;
         }
         const file = playerAvatars[winner];
         if (file) {
@@ -460,7 +465,7 @@ function setupAvatarSlots() {
         const avatar = document.createElement('div');
         avatar.className = 'avatar inactive';
         avatar.id = `player${i + 1}`;
-        avatar.dataset.playerName = '';
+        avatar.dataset.playerId = '';
         avatar.dataset.orientation = slotOrientations[i];
         avatar.innerHTML = `
             <div class="player-name"></div>
@@ -492,40 +497,40 @@ function setupAvatarSlots() {
 function updateHandCounts(list) {
     if (!avatarSlots.length) setupAvatarSlots();
 
-    const myData = list.find(p => p.name === playerName);
+    const myData = list.find(p => p.id === playerId);
     const ownCountEl = document.querySelector('#own-avatar .cardsleft');
     if (ownCountEl && myData) {
         ownCountEl.textContent = `${myData.count}x`;
     }
 
-    const names = list.map(p => p.name);
-    const myIndex = names.indexOf(playerName);
+    const ids = list.map(p => p.id);
+    const myIndex = ids.indexOf(playerId);
     const rotated = list
         .slice(myIndex + 1)
         .concat(list.slice(0, myIndex + 1));
 
-    playerList = rotated.map(p => p.name);
+    playerList = rotated.map(p => p.id);
 
-    const others = rotated.filter(p => p.name !== playerName);
+    const others = rotated.filter(p => p.id !== playerId);
 
-    const known = Object.keys(playerOrientation).filter(n => n !== playerName);
-    const samePlayers = known.length === others.length && others.every(p => known.includes(p.name));
+    const known = Object.keys(playerOrientation).filter(n => n !== playerId);
+    const samePlayers = known.length === others.length && others.every(p => known.includes(p.id));
 
     if (!samePlayers) {
         const order = [2,0,1,3];
-        playerOrientation = { [playerName]: 'self' };
+        playerOrientation = { [playerId]: 'self' };
         for (let i = 0; i < avatarSlots.length; i++) {
             const idx = order[i] ?? i;
             const slot = avatarSlots[idx];
             const data = others[i];
             if (data) {
-                slot.dataset.playerName = data.name;
+                slot.dataset.playerId = data.id;
                 slot.querySelector('.player-name').textContent = data.name;
                 slot.classList.remove('inactive');
-                playerOrientation[data.name] = slot.dataset.orientation;
+                playerOrientation[data.id] = slot.dataset.orientation;
                 slot.querySelector('.cardsleft').textContent = `${data.count}x`;
             } else {
-                slot.dataset.playerName = '';
+                slot.dataset.playerId = '';
                 slot.querySelector('.player-name').textContent = '';
                 slot.classList.add('inactive');
                 slot.querySelector('.cardsleft').textContent = '';
@@ -534,7 +539,7 @@ function updateHandCounts(list) {
         setAvatarImages();
     } else {
         for (const data of others) {
-            const slot = avatarSlots.find(s => s.dataset.playerName === data.name);
+            const slot = avatarSlots.find(s => s.dataset.playerId === data.id);
             if (slot) {
                 slot.querySelector('.cardsleft').textContent = `${data.count}x`;
             }
@@ -543,9 +548,9 @@ function updateHandCounts(list) {
     }
 }
 
-function getAvatarElement(name) {
-    return document.querySelector(`#own-avatar[data-player="${name}"]`) ||
-        document.querySelector(`.avatar[data-player-name="${name}"]`);
+function getAvatarElement(id) {
+    return document.querySelector(`#own-avatar[data-player="${id}"]`) ||
+        document.querySelector(`.avatar[data-player-id="${id}"]`);
 }
 
 function toggleUyesBubble({ player, active }) {
@@ -609,7 +614,7 @@ function handleOrderReversed(order) {
     updateDirectionIcon();
 
     if (Array.isArray(order)) {
-        const myIndex = order.indexOf(playerName);
+        const myIndex = order.indexOf(playerId);
         const rotated = order.slice(myIndex + 1).concat(order.slice(0, myIndex + 1));
         playerList = rotated;
     }

@@ -1,5 +1,5 @@
 // Generic help and exit menu used across pages
-export function helpFunctionality(socket, getGameCode, playerName) {
+export function helpFunctionality(socket, getGameCode, playerId) {
     const helpBtn = document.getElementById("helpBtnLobby");
     const helpDiv = document.getElementById("helpButtonClicked");
     const closeHelpBtn = document.getElementById("closeHelpBtn");
@@ -35,7 +35,7 @@ export function helpFunctionality(socket, getGameCode, playerName) {
     }
     if (leave) {
         leave.addEventListener("click", () => {
-            socket.emit("leave-lobby", getGameCode(), playerName);
+            socket.emit("leave-lobby", getGameCode(), playerId);
             window.location.href = "/start/game";
         });
     }

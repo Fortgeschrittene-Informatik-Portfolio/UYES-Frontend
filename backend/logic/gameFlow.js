@@ -87,7 +87,7 @@ function handleUyesEnd(io, gameCode, game, player) {
   if (pressed || hasOne) {
     drawCards(game, player, 1);
     for (const [_id, s] of io.sockets.sockets) {
-      if (s.data.playerName === player && s.rooms.has(gameCode)) {
+      if (s.data.playerId === player && s.rooms.has(gameCode)) {
         s.emit('deal-cards', game.hands[player]);
       }
     }
@@ -132,7 +132,7 @@ export function registerGameHandlers(io, socket) {
 
     for (const [id, s] of io.sockets.sockets) {
       if (s.rooms.has(gameCode)) {
-        const hand = game.hands[s.data.playerName] || [];
+        const hand = game.hands[s.data.playerId] || [];
         s.emit('deal-cards', hand);
       }
     }
@@ -151,7 +151,7 @@ export function registerGameHandlers(io, socket) {
     const lobby = lobbies[gameCode];
     const game = lobby?.game;
     if (!game) return;
-    const player = socket.data.playerName;
+    const player = socket.data.playerId;
     if (game.turnOrder[game.current] !== player) return;
 
     const hand = game.hands[player];
@@ -212,7 +212,7 @@ export function registerGameHandlers(io, socket) {
       const affected = next;
       drawCards(game, affected, 4);
       for (const [_id, s] of io.sockets.sockets) {
-        if (s.data.playerName === affected && s.rooms.has(gameCode)) {
+        if (s.data.playerId === affected && s.rooms.has(gameCode)) {
           s.emit('deal-cards', game.hands[affected]);
         }
       }
@@ -245,7 +245,7 @@ export function registerGameHandlers(io, socket) {
     const lobby = lobbies[gameCode];
     const game = lobby?.game;
     if (!game) return;
-    const player = socket.data.playerName;
+    const player = socket.data.playerId;
     if (game.turnOrder[game.current] !== player) return;
 
     const limit = HAND_LIMIT;
@@ -290,41 +290,45 @@ export function registerGameHandlers(io, socket) {
     const lobby = lobbies[gameCode];
     const game = lobby?.game;
     if (!game) return;
-    const player = socket.data.playerName;
+    const player = socket.data.playerId;
     if (game.turnOrder[game.current] !== player) return;
     game.uyesPressed[player] = true;
     io.to(gameCode).emit('player-uyes', { player, active: true });
   });
 
-  socket.on('leave-game', (gameCode, playerName) => {
+  socket.on('leave-game', (gameCode, playerId) => {
     const lobby = lobbies[gameCode];
     const game = lobby?.game;
-    const name = playerName || socket.data.playerName;
+    const id = playerId || socket.data.playerId;
     if (!lobby) return;
 
-    lobby.players = lobby.players.filter((p) => p !== name);
-    delete lobby.avatars[name];
-    if (lobby.host === name) {
-      lobby.host = lobby.players[0] || null;
-      notifyHost(io, gameCode, lobby.host);
+    lobby.players = lobby.players.filter((p) => p !== id);
+    delete lobby.avatars[id];
+    const name = lobby.names[id];
+    delete lobby.names[id];
+    if (lobby.hostId === id) {
+      lobby.hostId = lobby.players[0] || null;
+      notifyHost(io, gameCode);
     }
     if (lobby.game) {
       lobby.maxPlayers = lobby.players.length;
     }
+    const players = lobby.players.map((pid) => ({ id: pid, name: lobby.names[pid] }));
     io.to(gameCode).emit(
       'update-lobby',
-      lobby.players,
+      players,
       lobby.maxPlayers,
       lobby.avatars,
-      lobby.host,
+      lobby.names[lobby.hostId],
+      lobby.hostId,
     );
 
     if (game) {
-      const idx = game.turnOrder.indexOf(name);
+      const idx = game.turnOrder.indexOf(id);
       if (idx !== -1) {
         game.turnOrder.splice(idx, 1);
-        delete game.hands[name];
-        delete game.uyesPressed[name];
+        delete game.hands[id];
+        delete game.uyesPressed[id];
         if (idx < game.current) {
           game.current--;
         } else if (
@@ -335,14 +339,15 @@ export function registerGameHandlers(io, socket) {
         }
       }
 
-      const counts = game.turnOrder.map((n) => ({
-        name: n,
-        count: game.hands[n]?.length || 0,
+      const counts = game.turnOrder.map((pid) => ({
+        id: pid,
+        name: lobby.names[pid],
+        count: game.hands[pid]?.length || 0,
       }));
       io.to(gameCode).emit('player-left', {
-        players: lobby.players,
+        players,
         counts,
-        player: name,
+        player: id,
       });
       game.turnStartedAt = Date.now();
       io.to(gameCode).emit('player-turn', {
@@ -360,7 +365,7 @@ export function registerGameHandlers(io, socket) {
     } else if (lobby.players.length === 1) {
       const last = lobby.players[0];
       for (const [_id, s] of io.sockets.sockets) {
-        if (s.data.playerName === last && s.rooms.has(gameCode)) {
+        if (s.data.playerId === last && s.rooms.has(gameCode)) {
           s.emit('kicked');
           s.leave(gameCode);
         }
