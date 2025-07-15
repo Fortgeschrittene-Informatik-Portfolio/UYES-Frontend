@@ -59,7 +59,7 @@ div#menu {
 
 /* Bild (Gruppenbild oder ähnliches) */
 #group {
-    left: 25%;
+    left: 50%;
 
     aspect-ratio: 1/1;
     width: 25%;
