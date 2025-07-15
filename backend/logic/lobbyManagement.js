@@ -100,6 +100,11 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
       lobby.hostId,
     );
 
+    // Always log the lobby list when membership changes
+    if (!already) {
+      logLobbyList();
+    }
+
     const runningGame = lobby.game;
     if (runningGame) {
       socket.emit('game-started');
@@ -146,6 +151,8 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
         s.leave(gameCode);
       }
     }
+    // Log lobby status after a player was kicked
+    logLobbyList();
   });
 
   socket.on('close-lobby', (gameCode) => {
@@ -184,6 +191,8 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     }
 
     io.to(newCode).emit('update-code', newCode);
+    // Show updated lobby code in the log
+    logLobbyList();
   });
 
   socket.on('leave-lobby', (gameCode, playerId) => {
@@ -215,5 +224,7 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
       lobby.names[lobby.hostId],
       lobby.hostId,
     );
+    // Log current lobby state after someone leaves
+    logLobbyList();
   });
 }

@@ -32,6 +32,7 @@
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.31.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "nodemon": "^3.1.10",

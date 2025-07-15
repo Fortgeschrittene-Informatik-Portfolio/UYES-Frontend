@@ -1,4 +1,9 @@
-import { lobbies, broadcastHandCounts, notifyHost } from './lobbyManagement.js';
+import {
+  lobbies,
+  broadcastHandCounts,
+  notifyHost,
+  logLobbyList,
+} from './lobbyManagement.js';
 
 const HAND_LIMIT = 40;
 
@@ -126,6 +131,8 @@ export function registerGameHandlers(io, socket) {
     }
     game.current = Math.floor(Math.random() * game.turnOrder.length);
     lobby.game = game;
+    // Log lobby overview when a game starts
+    logLobbyList();
 
     const topCard = game.discard[game.discard.length - 1];
     io.to(gameCode).emit('card-played', { player: null, card: topCard });
@@ -228,6 +235,8 @@ export function registerGameHandlers(io, socket) {
         `\u{1F3C1} Spiel in Lobby ${gameCode} beendet: ${player} hat gewonnen`,
       );
       delete lobby.game;
+      // Log lobby overview when a game ends
+      logLobbyList();
       return;
     }
 
@@ -362,6 +371,7 @@ export function registerGameHandlers(io, socket) {
     if (lobby.players.length === 0) {
       delete lobbies[gameCode];
       console.log(`\u{1F6AB} Lobby ${gameCode} aufgelöst (keine Spieler)`);
+      logLobbyList();
     } else if (lobby.players.length === 1) {
       const last = lobby.players[0];
       for (const [_id, s] of io.sockets.sockets) {
@@ -372,6 +382,10 @@ export function registerGameHandlers(io, socket) {
       }
       delete lobbies[gameCode];
       console.log(`\u{1F6AB} Lobby ${gameCode} aufgelöst (zu wenige Spieler)`);
+      logLobbyList();
+    } else {
+      // Show updated lobby state when a player leaves the game
+      logLobbyList();
     }
   });
 }
