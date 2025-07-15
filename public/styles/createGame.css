@@ -129,10 +129,10 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 2cqw;
-    width: 2cqw;
+    /*height: 2cqw;*/
+    /*width: 2cqw;*/
     background-color: #eee;
-    height: 2vh;
+    height: 2vw;
     width: 2vw;
     border: 0.1em solid black;
   }
