@@ -7,12 +7,14 @@ import cookieParser from 'cookie-parser';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import compression from 'compression';
+import fs from 'fs';
 
 import { jwtSessionMiddleware } from './jwtSession.js';
 import { PORT, PUBLIC_DIR } from './config.js';
 
 import routes from './routes.js';
 import { setupSocket } from './logic/socketHandler.js';
+import { logLobbyList } from './logic/lobbyManagement.js';
 
 const app = express();
 
@@ -43,6 +45,7 @@ setupSocket(io);
 // Start listening for incoming connections
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`🟢 Server läuft auf http://0.0.0.0:${PORT}/start`);
+  fs.writeFileSync(new URL('server.pid', import.meta.url), String(process.pid));
 });
 
 function shutdown() {
@@ -58,3 +61,6 @@ function shutdown() {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 process.on('SIGHUP', shutdown);
+process.on('SIGUSR2', () => {
+  logLobbyList();
+});

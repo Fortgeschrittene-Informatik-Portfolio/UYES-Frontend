@@ -1,6 +1,6 @@
 export const lobbies = {};
 
-function logLobbyList() {
+export function logLobbyList() {
   const entries = Object.entries(lobbies);
   if (entries.length === 0) {
     console.log('Keine offenen Lobbies.');
