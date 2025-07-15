@@ -1,5 +1,22 @@
 export const lobbies = {};
 
+function logLobbyList() {
+  const entries = Object.entries(lobbies);
+  if (entries.length === 0) {
+    console.log('Keine offenen Lobbies.');
+    return;
+  }
+  console.log(`\u{1F4CB} Offene Lobbies (${entries.length}):`);
+  for (const [code, lobby] of entries) {
+    const host = lobby.names[lobby.hostId] || 'unbekannt';
+    const count = lobby.players.length;
+    const state = lobby.game ? 'im Spiel' : 'in Lobby';
+    console.log(
+      `  ${code} | Host: ${host} | Spieler: ${count}/${lobby.maxPlayers} | ${state}`,
+    );
+  }
+}
+
 export function getLobbyMeta(code) {
   return lobbies[code] || null;
 }
@@ -41,6 +58,7 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
           settings: socket.data.session?.settings || {},
         };
         console.log(`\u{1F195} Lobby ${gameCode} erstellt von ${playerName}`);
+        logLobbyList();
       } else {
         socket.emit('lobby-not-found');
         return;
@@ -146,7 +164,10 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     }
     socket.leave(gameCode);
     delete lobbies[gameCode];
-    console.log(`\u{1F512} Lobby ${gameCode} geschlossen von ${socket.data.playerName}`);
+    console.log(
+      `\u{1F512} Lobby ${gameCode} geschlossen von ${socket.data.playerName}`,
+    );
+    logLobbyList();
   });
 
   socket.on('change-code', (oldCode, newCode) => {
@@ -181,6 +202,7 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
 
     if (lobby.players.length === 0) {
       delete lobbies[gameCode];
+      logLobbyList();
       return;
     }
 
