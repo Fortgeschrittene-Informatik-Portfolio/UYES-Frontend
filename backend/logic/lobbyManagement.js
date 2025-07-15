@@ -6,8 +6,11 @@ export function getLobbyMeta(code) {
 
 export function notifyHost(io, gameCode, hostName) {
   if (!hostName) return;
+  const lobby = lobbies[gameCode];
+  const hostId = lobby?.playerIds?.[hostName];
+  if (!hostId) return;
   for (const [_id, s] of io.sockets.sockets) {
-    if (s.data.playerName === hostName && s.rooms.has(gameCode)) {
+    if (s.data.playerId === hostId && s.rooms.has(gameCode)) {
       s.emit('host-assigned');
       break;
     }
@@ -30,11 +33,14 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
       if (maxPlayersFromHost) {
         lobbies[gameCode] = {
           host: playerName,
+          hostId: socket.data.playerId,
           players: [],
+          playerIds: {},
           avatars: {},
           maxPlayers: maxPlayersFromHost || 5,
           settings: socket.data.session?.settings || {},
         };
+        lobbies[gameCode].playerIds[playerName] = socket.data.playerId;
         console.log(`\u{1F195} Lobby ${gameCode} erstellt von ${playerName}`);
       } else {
         socket.emit('lobby-not-found');
@@ -44,6 +50,12 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
 
     const lobby = lobbies[gameCode];
 
+    const existingId = lobby.playerIds[playerName];
+    if (existingId && existingId !== socket.data.playerId) {
+      socket.emit('name-taken');
+      return;
+    }
+
     if (lobby.game && !lobby.players.includes(playerName)) {
       socket.emit('game-in-progress');
       return;
@@ -51,7 +63,7 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
 
     if (
       lobby.players.length >= lobby.maxPlayers &&
-      !lobby.players.includes(playerName)
+      !existingId
     ) {
       socket.emit('lobby-full');
       return;
@@ -60,8 +72,9 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     socket.join(gameCode);
     socket.data.playerName = playerName;
 
-    if (!lobbies[gameCode].players.includes(playerName)) {
+    if (!existingId) {
       lobbies[gameCode].players.push(playerName);
+      lobby.playerIds[playerName] = socket.data.playerId;
       const avatars = lobbies[gameCode].avatars;
       if (!avatars[playerName]) {
         avatars[playerName] =
@@ -99,9 +112,13 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     lobbies[gameCode].players = lobbies[gameCode].players.filter(
       (p) => p !== playerNameToKick,
     );
+    const kickedId = lobbies[gameCode].playerIds[playerNameToKick];
     delete lobbies[gameCode].avatars[playerNameToKick];
+    delete lobbies[gameCode].playerIds[playerNameToKick];
     if (lobbies[gameCode].host === playerNameToKick) {
       lobbies[gameCode].host = lobbies[gameCode].players[0] || null;
+      lobbies[gameCode].hostId =
+        lobbies[gameCode].playerIds[lobbies[gameCode].host] || null;
       notifyHost(io, gameCode, lobbies[gameCode].host);
     }
     if (lobbies[gameCode].game) {
@@ -116,7 +133,7 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     );
 
     for (const [id, s] of io.sockets.sockets) {
-      if (s.data?.playerName === playerNameToKick && s.rooms.has(gameCode)) {
+      if (s.data?.playerId === kickedId && s.rooms.has(gameCode)) {
         s.emit('kicked');
         s.leave(gameCode);
       }
@@ -126,12 +143,13 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
   socket.on('close-lobby', (gameCode) => {
     const lobby = lobbies[gameCode];
     if (!lobby) return;
-    if (lobby.host && socket.data.playerName !== lobby.host) return;
+    if (lobby.hostId && socket.data.playerId !== lobby.hostId) return;
 
     for (const player of lobby.players) {
       if (player === socket.data.playerName) continue;
+      const pid = lobby.playerIds[player];
       for (const [_id, s] of io.sockets.sockets) {
-        if (s.data?.playerName === player && s.rooms.has(gameCode)) {
+        if (s.data?.playerId === pid && s.rooms.has(gameCode)) {
           s.emit('kicked');
           s.leave(gameCode);
         }
@@ -167,8 +185,11 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
       (p) => p !== playerName,
     );
     delete lobbies[gameCode].avatars[playerName];
+    delete lobbies[gameCode].playerIds[playerName];
     if (lobbies[gameCode].host === playerName) {
       lobbies[gameCode].host = lobbies[gameCode].players[0] || null;
+      lobbies[gameCode].hostId =
+        lobbies[gameCode].playerIds[lobbies[gameCode].host] || null;
       notifyHost(io, gameCode, lobbies[gameCode].host);
     }
 
