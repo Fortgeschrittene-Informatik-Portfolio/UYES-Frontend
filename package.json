@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
+    "log-lobbies": "node backend/logLobbies.js",
     "lint": "eslint .",
     "format": "prettier --write .",
     "build:css": "postcss public/styles/*.css -d dist/styles"

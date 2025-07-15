@@ -31,6 +31,13 @@ Or start it once using Node.js:
 npm start
 ```
 
+While the server is running you can log all open lobbies in another
+terminal by sending a signal to the process:
+
+```bash
+npm run log-lobbies
+```
+
 Once the server is running, open `http://localhost:<PORT>` in your browser (replace `<PORT>` with the value from your `.env` or the default `5000`).
 
 ## Code Quality
@@ -50,6 +57,7 @@ npm run format
 ## Browser Compatibility
 
 The frontend is tested with modern versions of Chrome, Firefox and Edge. CSS is processed with PostCSS and Autoprefixer to automatically add vendor prefixes. When container query units (`cqw`, `cqh`) are unsupported, fallback viewport units are used.
+
 ## Media Credits
 
 Music and sound effects are provided by [Pixabay](https://pixabay.com).
