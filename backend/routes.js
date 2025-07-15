@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { createLobby } from './logic/lobbyHandling.js';
+import { createLobby, generatePlayerId } from './logic/lobbyHandling.js';
 import { getLobbyMeta } from './logic/socketHandler.js';
 import { setSession } from './jwtSession.js';
 
@@ -49,6 +49,7 @@ router.get("/api/lobbyData", (req, res) => {
     res.json({
         code: req.session.gameId,
         name: req.session.playerName,
+        id: req.session.playerId,
         players: lobbyMeta?.maxPlayers || req.session.settings?.players || 5,
         role: req.session.role,
         playerList: lobbyMeta?.players || [],
@@ -84,6 +85,7 @@ router.post("/api/createGame", (req, res) => {
 
     req.session.gameId = lobby.gameId;
     req.session.playerName = lobby.playerName;
+    req.session.playerId = lobby.playerId;
     req.session.role = "host";
     req.session.settings = lobby.settings;
     setSession(res, req.session);
@@ -111,6 +113,7 @@ router.post("/api/joinGame", (req, res) => {
     req.session.gameId = code;
     setSession(res, req.session);
     req.session.playerName = name?.trim() !== "" ? name : getRandomName();
+    req.session.playerId = generatePlayerId();
     req.session.role = "joiner";
     setSession(res, req.session);
 

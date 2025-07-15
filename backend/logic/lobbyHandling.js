@@ -32,6 +32,10 @@ export function generateGameCode() {
     return Math.floor(100000000 + Math.random() * 900000000).toString();
 }
 
+export function generatePlayerId() {
+    return Math.random().toString(36).slice(2, 10);
+}
+
 /**
  * Create meta information for a new lobby.
  * @param {{name?:string, settings:object}} param0 player name and lobby settings
@@ -41,9 +45,12 @@ export function createLobby({ name, settings }) {
     const gameId = generateGameCode();
     const playerName = name?.trim() || getRandomName();
 
+    const playerId = Math.random().toString(36).slice(2, 10);
+
 
     return {
         gameId,
+        playerId,
         playerName,
         role: "host",
         settings

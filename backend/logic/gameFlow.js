@@ -100,7 +100,7 @@ export function registerGameHandlers(io, socket) {
   socket.on('start-game', (gameCode) => {
     const lobby = lobbies[gameCode];
     if (!lobby) return;
-    if (lobby.host && socket.data.playerName !== lobby.host) return;
+    if (lobby.hostId && socket.data.playerId !== lobby.hostId) return;
     if (lobby.game) return;
 
     const game = {

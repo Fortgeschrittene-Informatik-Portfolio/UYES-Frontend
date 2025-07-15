@@ -53,6 +53,11 @@ export async function initLobbyHost() {
         window.location.href = "/start/game";
     });
 
+    socket.on("name-taken", () => {
+        alert("❌ Name bereits vergeben");
+        window.location.href = "/start/game";
+    });
+
     socket.on("game-in-progress", () => {
         alert("Game already in progress");
         window.location.href = "/start/game";

@@ -42,6 +42,8 @@ function getSessionFromSocket(socket) {
 export function setupSocket(io) {
   io.on('connection', (socket) => {
     socket.data.session = getSessionFromSocket(socket);
+    socket.data.playerId = socket.data.session?.playerId;
+    socket.data.playerName = socket.data.session?.playerName;
     // Lobby join/leave logic
     registerLobbyHandlers(io, socket, avatarFiles);
     // Game events such as card play and draw
