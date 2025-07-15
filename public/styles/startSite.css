@@ -59,9 +59,11 @@ div#menu {
 
 /* Bild (Gruppenbild oder ähnliches) */
 #group {
-    grid-column: 2;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     aspect-ratio: 1/1;
-    width: 100%;
+    width: 25%;
     max-width: 100cqh; /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */
     background-image: url("../images/group.png");
     background-size: contain; /* Inhalt skalieren, ohne zu beschneiden */
