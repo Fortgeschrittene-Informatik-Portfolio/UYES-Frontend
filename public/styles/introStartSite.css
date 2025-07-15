@@ -1,6 +1,7 @@
 /* Stil des zentralen Dialogs ("eichberg-figur") */
 #eichberg.startsite {
     width: 35%;
+    height: 35%;
     position: absolute;
     top: 15%;
 }
