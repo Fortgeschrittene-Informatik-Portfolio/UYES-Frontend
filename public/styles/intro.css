@@ -31,6 +31,7 @@ body:has(dialog[open]) {
     z-index: 101; /* muss über milch-glas-layer liegen */
     aspect-ratio: 1/1; /* saubere quadratische Form */
 
+
     background-repeat: no-repeat;
     background-color: transparent;
     border: none;

@@ -43,6 +43,7 @@
 #yourTurn {
     grid-row: 3;
     grid-column: 3;
+
     /*position:absolute;*/
     text-align: center;
     font-size: 2cqw;
@@ -57,6 +58,8 @@
     div {
         align-content: center;
         justify-self: center;
+        left: 50%;
+        transform: translateX(-50%);
         aspect-ratio: 1/1;
         width: 30%;
         border: 0.25cqw solid white;
