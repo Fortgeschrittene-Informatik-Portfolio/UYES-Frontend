@@ -4,10 +4,9 @@ export function getLobbyMeta(code) {
   return lobbies[code] || null;
 }
 
-export function notifyHost(io, gameCode, hostName) {
-  if (!hostName) return;
+export function notifyHost(io, gameCode) {
   const lobby = lobbies[gameCode];
-  const hostId = lobby?.playerIds?.[hostName];
+  const hostId = lobby?.hostId;
   if (!hostId) return;
   for (const [_id, s] of io.sockets.sockets) {
     if (s.data.playerId === hostId && s.rooms.has(gameCode)) {
@@ -18,11 +17,13 @@ export function notifyHost(io, gameCode, hostName) {
 }
 
 export function broadcastHandCounts(io, gameCode, game) {
-  const g = game || lobbies[gameCode]?.game;
-  if (!g) return;
-  const counts = g.turnOrder.map((name) => ({
-    name,
-    count: g.hands[name]?.length || 0,
+  const lobby = lobbies[gameCode];
+  const g = game || lobby?.game;
+  if (!g || !lobby) return;
+  const counts = g.turnOrder.map((id) => ({
+    id,
+    name: lobby.names[id],
+    count: g.hands[id]?.length || 0,
   }));
   io.to(gameCode).emit('update-hand-counts', counts);
 }
@@ -32,15 +33,13 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     if (!lobbies[gameCode]) {
       if (maxPlayersFromHost) {
         lobbies[gameCode] = {
-          host: playerName,
           hostId: socket.data.playerId,
           players: [],
-          playerIds: {},
+          names: {},
           avatars: {},
           maxPlayers: maxPlayersFromHost || 5,
           settings: socket.data.session?.settings || {},
         };
-        lobbies[gameCode].playerIds[playerName] = socket.data.playerId;
         console.log(`\u{1F195} Lobby ${gameCode} erstellt von ${playerName}`);
       } else {
         socket.emit('lobby-not-found');
@@ -49,51 +48,44 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     }
 
     const lobby = lobbies[gameCode];
+    const already = lobby.players.includes(socket.data.playerId);
 
-    const existingId = lobby.playerIds[playerName];
-    if (existingId && existingId !== socket.data.playerId) {
-      socket.emit('name-taken');
-      return;
-    }
-
-    if (lobby.game && !lobby.players.includes(playerName)) {
+    if (lobby.game && !already) {
       socket.emit('game-in-progress');
       return;
     }
 
-    if (
-      lobby.players.length >= lobby.maxPlayers &&
-      !existingId
-    ) {
+    if (lobby.players.length >= lobby.maxPlayers && !already) {
       socket.emit('lobby-full');
       return;
     }
 
     socket.join(gameCode);
+    lobby.names[socket.data.playerId] = playerName;
     socket.data.playerName = playerName;
 
-    if (!existingId) {
-      lobbies[gameCode].players.push(playerName);
-      lobby.playerIds[playerName] = socket.data.playerId;
-      const avatars = lobbies[gameCode].avatars;
-      if (!avatars[playerName]) {
-        avatars[playerName] =
+    if (!already) {
+      lobby.players.push(socket.data.playerId);
+      if (!lobby.avatars[socket.data.playerId]) {
+        lobby.avatars[socket.data.playerId] =
           avatarFiles[Math.floor(Math.random() * avatarFiles.length)];
       }
     }
 
+    const players = lobby.players.map((id) => ({ id, name: lobby.names[id] }));
     io.to(gameCode).emit(
       'update-lobby',
-      lobbies[gameCode].players,
-      lobbies[gameCode].maxPlayers,
-      lobbies[gameCode].avatars,
-      lobbies[gameCode].host,
+      players,
+      lobby.maxPlayers,
+      lobby.avatars,
+      lobby.names[lobby.hostId],
+      lobby.hostId,
     );
 
-    const runningGame = lobbies[gameCode].game;
+    const runningGame = lobby.game;
     if (runningGame) {
       socket.emit('game-started');
-      const hand = runningGame.hands[playerName] || [];
+      const hand = runningGame.hands[socket.data.playerId] || [];
       socket.emit('deal-cards', hand);
       const topCard = runningGame.discard[runningGame.discard.length - 1];
       socket.emit('card-played', { player: null, card: topCard });
@@ -106,34 +98,32 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     }
   });
 
-  socket.on('kick-player', (gameCode, playerNameToKick) => {
-    if (!lobbies[gameCode]) return;
+  socket.on('kick-player', (gameCode, playerIdToKick) => {
+    const lobby = lobbies[gameCode];
+    if (!lobby) return;
 
-    lobbies[gameCode].players = lobbies[gameCode].players.filter(
-      (p) => p !== playerNameToKick,
-    );
-    const kickedId = lobbies[gameCode].playerIds[playerNameToKick];
-    delete lobbies[gameCode].avatars[playerNameToKick];
-    delete lobbies[gameCode].playerIds[playerNameToKick];
-    if (lobbies[gameCode].host === playerNameToKick) {
-      lobbies[gameCode].host = lobbies[gameCode].players[0] || null;
-      lobbies[gameCode].hostId =
-        lobbies[gameCode].playerIds[lobbies[gameCode].host] || null;
-      notifyHost(io, gameCode, lobbies[gameCode].host);
+    lobby.players = lobby.players.filter((p) => p !== playerIdToKick);
+    delete lobby.names[playerIdToKick];
+    delete lobby.avatars[playerIdToKick];
+    if (lobby.hostId === playerIdToKick) {
+      lobby.hostId = lobby.players[0] || null;
+      notifyHost(io, gameCode);
     }
-    if (lobbies[gameCode].game) {
-      lobbies[gameCode].maxPlayers = lobbies[gameCode].players.length;
+    if (lobby.game) {
+      lobby.maxPlayers = lobby.players.length;
     }
+    const players = lobby.players.map((id) => ({ id, name: lobby.names[id] }));
     io.to(gameCode).emit(
       'update-lobby',
-      lobbies[gameCode].players,
-      lobbies[gameCode].maxPlayers,
-      lobbies[gameCode].avatars,
-      lobbies[gameCode].host,
+      players,
+      lobby.maxPlayers,
+      lobby.avatars,
+      lobby.names[lobby.hostId],
+      lobby.hostId,
     );
 
-    for (const [id, s] of io.sockets.sockets) {
-      if (s.data?.playerId === kickedId && s.rooms.has(gameCode)) {
+    for (const [_id, s] of io.sockets.sockets) {
+      if (s.data?.playerId === playerIdToKick && s.rooms.has(gameCode)) {
         s.emit('kicked');
         s.leave(gameCode);
       }
@@ -145,9 +135,8 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     if (!lobby) return;
     if (lobby.hostId && socket.data.playerId !== lobby.hostId) return;
 
-    for (const player of lobby.players) {
-      if (player === socket.data.playerName) continue;
-      const pid = lobby.playerIds[player];
+    for (const pid of lobby.players) {
+      if (pid === socket.data.playerId) continue;
       for (const [_id, s] of io.sockets.sockets) {
         if (s.data?.playerId === pid && s.rooms.has(gameCode)) {
           s.emit('kicked');
@@ -157,9 +146,7 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     }
     socket.leave(gameCode);
     delete lobbies[gameCode];
-    console.log(
-      `\u{1F512} Lobby ${gameCode} geschlossen von ${socket.data.playerName}`,
-    );
+    console.log(`\u{1F512} Lobby ${gameCode} geschlossen von ${socket.data.playerName}`);
   });
 
   socket.on('change-code', (oldCode, newCode) => {
@@ -178,34 +165,33 @@ export function registerLobbyHandlers(io, socket, avatarFiles) {
     io.to(newCode).emit('update-code', newCode);
   });
 
-  socket.on('leave-lobby', (gameCode, playerName) => {
-    if (!lobbies[gameCode]) return;
+  socket.on('leave-lobby', (gameCode, playerId) => {
+    const lobby = lobbies[gameCode];
+    if (!lobby) return;
 
-    lobbies[gameCode].players = lobbies[gameCode].players.filter(
-      (p) => p !== playerName,
-    );
-    delete lobbies[gameCode].avatars[playerName];
-    delete lobbies[gameCode].playerIds[playerName];
-    if (lobbies[gameCode].host === playerName) {
-      lobbies[gameCode].host = lobbies[gameCode].players[0] || null;
-      lobbies[gameCode].hostId =
-        lobbies[gameCode].playerIds[lobbies[gameCode].host] || null;
-      notifyHost(io, gameCode, lobbies[gameCode].host);
+    lobby.players = lobby.players.filter((p) => p !== playerId);
+    delete lobby.avatars[playerId];
+    delete lobby.names[playerId];
+    if (lobby.hostId === playerId) {
+      lobby.hostId = lobby.players[0] || null;
+      notifyHost(io, gameCode);
     }
 
     socket.leave(gameCode);
 
-    if (lobbies[gameCode].players.length === 0) {
+    if (lobby.players.length === 0) {
       delete lobbies[gameCode];
       return;
     }
 
+    const players = lobby.players.map((id) => ({ id, name: lobby.names[id] }));
     io.to(gameCode).emit(
       'update-lobby',
-      lobbies[gameCode].players,
-      lobbies[gameCode].maxPlayers,
-      lobbies[gameCode].avatars,
-      lobbies[gameCode].host,
+      players,
+      lobby.maxPlayers,
+      lobby.avatars,
+      lobby.names[lobby.hostId],
+      lobby.hostId,
     );
   });
 }

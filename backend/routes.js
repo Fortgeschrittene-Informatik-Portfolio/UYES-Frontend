@@ -46,15 +46,18 @@ router.get("/api/lobbyData", (req, res) => {
 
     const lobbyMeta = getLobbyMeta(req.session.gameId);
 
+    const players = lobbyMeta?.players?.map(id => ({ id, name: lobbyMeta.names[id] })) || [];
     res.json({
         code: req.session.gameId,
         name: req.session.playerName,
         id: req.session.playerId,
         players: lobbyMeta?.maxPlayers || req.session.settings?.players || 5,
         role: req.session.role,
-        playerList: lobbyMeta?.players || [],
+        playerList: players,
         avatars: lobbyMeta?.avatars || {},
-        host: lobbyMeta?.host || null,
+        host: lobbyMeta ? lobbyMeta.names[lobbyMeta.hostId] : null,
+        hostId: lobbyMeta?.hostId || null,
+        nameMap: lobbyMeta?.names || {},
         settings: lobbyMeta?.settings || req.session.settings || {}
     });
 });

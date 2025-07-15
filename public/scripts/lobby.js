@@ -8,12 +8,13 @@ let currentGameCode;
 export async function initLobbyHost() {
     const res = await fetch("/api/lobbyData");
     const gameData = await res.json();
+    let nameMap = gameData.nameMap || {};
 
     currentGameCode = gameData.code;
     const playerName = gameData.name;
     const maxPlayers = gameData.players;
     const role = gameData.role;
-    let hostName = gameData.host || (role === "host" ? playerName : null);
+    let hostId = gameData.hostId || (role === "host" ? gameData.id : null);
 
     socket.emit("join-lobby", currentGameCode, playerName, maxPlayers);
 
@@ -24,15 +25,16 @@ export async function initLobbyHost() {
         document.body.classList.add("Joiner");
     }
 
-    renderLobby(gameData, [playerName], hostName);
+    renderLobby(gameData, gameData.playerList, hostId, nameMap);
 
     // Update player list and host when someone joins or leaves
-    socket.on("update-lobby", (players, _maxPlayers, _avatars, newHost) => {
-        hostName = newHost;
-        renderLobby(gameData, players, hostName);
+    socket.on("update-lobby", (players, _maxPlayers, _avatars, newHostName, newHostId) => {
+        hostId = newHostId;
+        nameMap = Object.fromEntries(players.map(p => [p.id, p.name]));
+        renderLobby(gameData, players, hostId, nameMap);
         // Disable start button until enough players joined
         checkIfLobbyFull(players, maxPlayers);
-        if (playerName === hostName) {
+        if (gameData.id === hostId) {
             document.body.classList.remove("Joiner");
         } else {
             document.body.classList.add("Joiner");
@@ -122,7 +124,7 @@ export async function initLobbyHost() {
 
 
     // Register generic help/exit menu handlers
-    helpFunctionality(socket, () => currentGameCode, playerName);
+    helpFunctionality(socket, () => currentGameCode, gameData.id);
 }
 
 
@@ -132,7 +134,7 @@ export async function initLobbyHost() {
 
 
 
-function renderLobby(gameData, playerList, hostName) {
+function renderLobby(gameData, playerList, hostId, nameMap) {
     const container = document.getElementById("player-lobby-container");
     container.innerHTML = "";
     const lobbyTag = document.createElement("h2");
@@ -143,13 +145,14 @@ function renderLobby(gameData, playerList, hostName) {
         const playerDiv = document.createElement("div");
         playerDiv.className = "player-lobby-fields";
 
-        if (playerList[i]) {
-            const isCurrent = playerList[i] === gameData.name;
-            const label = playerList[i] === hostName ? "host:" : "";
+        const data = playerList[i];
+        if (data) {
+            const isCurrent = data.id === gameData.id;
+            const label = data.id === hostId ? "host:" : "";
             playerDiv.innerHTML = `
                 ${label ? `<p id="hostTag">${label}</p>` : ""}
-                <p class="takenSlot">${playerList[i]}${isCurrent ? " (you)" : ""}</p>
-                ${isCurrent ? "" : `<button class="removePlayerButton" data-player="${playerList[i]}">Kick</button>`}
+                <p class="takenSlot">${data.name}${isCurrent ? " (you)" : ""}</p>
+                ${isCurrent ? "" : `<button class="removePlayerButton" data-player-id="${data.id}">Kick</button>`}
             `;
         } else {
             playerDiv.innerHTML = `
@@ -160,9 +163,9 @@ function renderLobby(gameData, playerList, hostName) {
     }
 
     // Kick buttons for the host
-    document.querySelectorAll(".removePlayerButton[data-player]").forEach(btn => {
+    document.querySelectorAll(".removePlayerButton[data-player-id]").forEach(btn => {
         btn.addEventListener("click", () => {
-            const playerToKick = btn.getAttribute("data-player");
+            const playerToKick = btn.getAttribute("data-player-id");
             socket.emit("kick-player", currentGameCode, playerToKick);
         });
     });
