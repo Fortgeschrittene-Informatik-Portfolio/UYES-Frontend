@@ -20,12 +20,6 @@ div#main {
     text-align: center;
     grid-column: 1 / -1;
     grid-row: 2;
-    &.startSite{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-    }
 }
 
 /* Unteres Menü */
@@ -65,8 +59,9 @@ div#menu {
 
 /* Bild (Gruppenbild oder ähnliches) */
 #group {
-    flex-grow: 0;
-    justify-self: center;
+    left: 50%;
+    transform: translateX(-50%);
+
     aspect-ratio: 1/1;
     width: 25%;
     max-width: 100cqh; /* ❗️Auch hier: moderne Einheit – checke auf Mobilgeräten */

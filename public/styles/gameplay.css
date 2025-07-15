@@ -1,8 +1,9 @@
 #UYES {
     position: absolute;
     top: 65%;
-    justify-self: center;
     left: 50%;
+    transform: translateX(-50%);
+
 
     aspect-ratio: 2.5/1;
     width: 10%;
