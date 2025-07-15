@@ -38,6 +38,9 @@ terminal by sending a signal to the process:
 npm run log-lobbies
 ```
 
+Lobby changes like players joining, leaving or starting a game will also log an
+updated overview automatically.
+
 Once the server is running, open `http://localhost:<PORT>` in your browser (replace `<PORT>` with the value from your `.env` or the default `5000`).
 
 ## Code Quality
